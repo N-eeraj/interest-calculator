@@ -6,16 +6,20 @@
   "author": "N-eeraj",
   "type": "module",
   "scripts": {
-    "dev": "node --watch --import tsx src/server.ts"
+    "dev": "node --watch --env-file=.env --import tsx src/server/index.ts"
   },
   "imports": {
-    "#src/*": "./src/*.ts"
+    "#src/*": "./src/*.ts",
+    "#server/*": "./src/server/*.ts"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/node": "^22.19.13",
     "tsx": "^4.21.0"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "express": "^5.2.1"
   }
 }
