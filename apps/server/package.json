@@ -1,0 +1,21 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "N-eeraj",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch --import tsx src/server.ts"
+  },
+  "imports": {
+    "#src/*": "./src/*.ts"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "tsx": "^4.21.0"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
