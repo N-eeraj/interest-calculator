@@ -5,10 +5,18 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
+import {
+  queryClient,
+  trpc,
+} from "@/TRPCQueryProvider";
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
+  context: {
+    queryClient,
+    trpc,
+  },
 });
 
 declare module "@tanstack/react-router" {

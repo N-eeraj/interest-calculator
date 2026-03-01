@@ -25,18 +25,21 @@ function makeQueryClient() {
     },
   });
 }
+export const queryClient = makeQueryClient();
+
+function makeTRPCClient() {
+  return createTRPCClient<AppRouter>({
+    links: [
+      httpBatchLink({
+        url: import.meta.env.VITE_TRPC_URL,
+      }),
+    ],
+  })
+}
+export const trpc = makeTRPCClient();
 
 export default function TRPCQueryProvider({ children }: PropsWithChildren) {
-  const queryClient = makeQueryClient();
-  const [trpcClient] = useState(() =>
-    createTRPCClient<AppRouter>({
-      links: [
-        httpBatchLink({
-          url: import.meta.env.VITE_TRPC_URL,
-        }),
-      ],
-    }),
-  );
+  const [trpcClient] = useState(() => trpc);
 
   return (
     <QueryClientProvider client={queryClient}>
