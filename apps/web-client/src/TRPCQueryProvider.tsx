@@ -10,9 +10,7 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
-import {
-  TRPCProvider,
-} from "@/utils/trpc";
+import { TRPCProvider } from "@/utils/trpc";
 import {
   type AppRouter,
 } from "@/index";

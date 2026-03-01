@@ -1,7 +1,5 @@
 import cors from "cors";
-import {
-  ALLOWED_ORIGINS,
-} from "#src/server/config";
+import { ALLOWED_ORIGINS } from "#src/server/config";
 /**
  * Express CORS middleware allowing requests from origins listed in `ALLOWED_ORIGINS`.
  */

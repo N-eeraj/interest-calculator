@@ -1,6 +1,4 @@
-import {
-  initTRPC,
-} from "@trpc/server";
+import { initTRPC } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
 
 const createContext = ({}: trpcExpress.CreateExpressContextOptions) => ({});
@@ -14,7 +12,7 @@ const appRouter = t.router({
         success: true,
         message: "Reached tRPC Server",
         data: "pong"
-      };
+      } as const;
     }),
 });
 
