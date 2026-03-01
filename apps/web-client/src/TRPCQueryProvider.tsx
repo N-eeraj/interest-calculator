@@ -32,6 +32,10 @@ function makeTRPCClient() {
     links: [
       httpBatchLink({
         url: import.meta.env.VITE_TRPC_URL,
+        headers() {
+          const token = localStorage.getItem("token");
+          return token ? { Authorization: `Bearer ${token}` } : {};
+        },
       }),
     ],
   })

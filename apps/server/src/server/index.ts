@@ -1,7 +1,7 @@
 import express from "express";
 
-import corsMiddleware from "#src/middlewares/cors";
-import trpcAppRouter from "#src/app/index";
+import corsMiddleware from "#middlewares/cors";
+import trpcAppRouter from "#app/router";
 import { PORT } from "#server/config";
 
 const app = express();

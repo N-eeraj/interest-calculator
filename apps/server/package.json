@@ -10,7 +10,10 @@
   },
   "imports": {
     "#src/*": "./src/*.ts",
-    "#server/*": "./src/server/*.ts"
+    "#server/*": "./src/server/*.ts",
+    "#middlewares/*": "./src/middlewares/*.ts",
+    "#app/*": "./src/app/*.ts",
+    "#procedures/*": "./src/app/procedures/*.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

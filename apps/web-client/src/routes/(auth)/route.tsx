@@ -22,7 +22,7 @@ export const Route = createFileRoute("/(auth)")({
     try {
       await context.queryClient.fetchQuery({
         queryKey: ["auth.me"],
-        queryFn: () => context.trpc.ping.query(), // [TODO]: replace ping with auth.me
+        queryFn: () => context.trpc.auth.me.query(),
         staleTime: 0,
       });
     } catch (error) {
