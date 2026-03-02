@@ -9,6 +9,7 @@ import {
   queryClient,
   trpc,
 } from "@/TRPCQueryProvider";
+import "@assets/tailwind.css";
 
 // Create a new router instance
 const router = createRouter({
