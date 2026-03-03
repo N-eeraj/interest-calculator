@@ -46,6 +46,7 @@
 }
 
 :root {
+  --radius: 4px;
   --background: #f8fafc;
   --foreground: #1e1b4b;
   --card: rgba(255, 255, 255, 0.85);
@@ -119,5 +120,11 @@
   }
   body {
     @apply bg-background text-foreground;
+
+    a,
+    button,
+    label {
+      @apply cursor-pointer disabled:cursor-not-allowed;
+    }
   }
 }

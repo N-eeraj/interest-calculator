@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
 
-import Button, {
+import DsButton from "@components/ds/Button";
+import {
   variants,
   sizes,
-} from "@components/ds/Button";
+} from "@components/ds/Button/definitions";
 
 const meta = {
   title: "Design System/Button",
-  component: Button,
+  component: DsButton,
   parameters: {
     layout: "centered",
   },
@@ -39,7 +40,7 @@ const meta = {
     children: "Button",
     onClick: fn(),
   },
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof DsButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
