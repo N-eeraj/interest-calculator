@@ -6,7 +6,9 @@
   "author": "N-eeraj",
   "type": "module",
   "scripts": {
-    "dev": "node --watch --env-file=.env --import tsx src/server/index.ts"
+    "dev": "node --watch --env-file=.env --import tsx src/server/index.ts",
+    "db:generate": "npx drizzle-kit generate",
+    "db:migrate": "npx drizzle-kit migrate"
   },
   "imports": {
     "#src/*": "./src/*.ts",
