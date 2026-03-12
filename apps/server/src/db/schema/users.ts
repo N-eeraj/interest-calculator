@@ -5,7 +5,7 @@ import {
   timestamp,
 } from "drizzle-orm/mysql-core";
 
-export const usersTable = mysqlTable("users", {
+const usersTable = mysqlTable("users", {
   id: serial("id")
     .primaryKey(),
   name: varchar("name", {
@@ -32,3 +32,5 @@ export const usersTable = mysqlTable("users", {
     .onUpdateNow()
     .notNull(),
 });
+
+export default usersTable;
