@@ -1,29 +1,28 @@
 import {
   mysqlTable,
   serial,
+  bigint,
   varchar,
   timestamp,
 } from "drizzle-orm/mysql-core";
+import users from "#db/schema/users";
 
-const usersTable = mysqlTable("users", {
+const tokensTable = mysqlTable("tokens", {
   id: serial("id")
     .primaryKey(),
-  name: varchar("name", {
-    length: 50,
-  })
-    .notNull(),
-  email: varchar("email", {
-    length: 50,
+  userId: bigint("user_id", {
+    mode: "number",
+    unsigned: true,
   })
     .notNull()
-    .unique(),
-  password: varchar("password", {
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
+  token: varchar({
     length: 255,
   })
+    .unique()
     .notNull(),
-  avatarUrl: varchar("avatar_url", {
-    length: 255,
-  }),
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),
@@ -33,4 +32,4 @@ const usersTable = mysqlTable("users", {
     .notNull(),
 });
 
-export default usersTable;
+export default tokensTable;
