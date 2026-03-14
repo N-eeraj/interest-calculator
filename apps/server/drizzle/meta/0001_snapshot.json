@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "1c385c9b-6e4a-4112-b0be-1c3fdb2696da",
-  "prevId": "f3384688-3077-4a94-b5a4-591c9d1d4067",
+  "id": "a8cd8721-9ed6-4ebc-a6cb-8f8ae6beba29",
+  "prevId": "b4828a63-4b7f-45a6-9c64-e074b18ca2a0",
   "tables": {
     "tokens": {
       "name": "tokens",
