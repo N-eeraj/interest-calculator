@@ -1,0 +1,12 @@
+{
+  "name": "@app/schemas",
+  "version": "1.0.0",
+  "description": "Zod schemas for validations",
+  "type": "module",
+  "imports": {
+    "#messages": "./src/validationMessages.ts"
+  },
+  "exports": {
+    "./*": "./src/*.ts"
+  }
+}

@@ -1,17 +1,36 @@
-import z from "zod";
-import { protectedProcedure } from "#app/trpc";
+import {
+  registrationSchema,
+} from "@app/schemas/auth";
+import {
+  profileSchema,
+} from "@app/schemas/profile";
+
+import {
+  publicProcedure,
+  protectedProcedure,
+} from "#app/trpc";
 
 const auth = {
+  /**
+   * Register a new user using the provided registration details.
+  */
+  register: publicProcedure
+    .input(registrationSchema)
+    .output(profileSchema)
+    .query(async ({ input }) => {
+      return {
+        id: 1,
+        name: "",
+        email: "",
+        avatar_url: null,
+      };
+    }),
   /**
    * Fetch details of current logged in user using the authentication token passed.
   */
   me: protectedProcedure
-    .output(z.object({ success: z.boolean(), message: z.string() }))
     .query(async () => {
-      return {
-        success: true,
-        message: "123",
-      };
+      return ;
     }),
 };
 
