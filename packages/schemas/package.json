@@ -4,6 +4,7 @@
   "description": "Zod schemas for validations",
   "type": "module",
   "imports": {
+    "#schemas/*": "./src/*.ts",
     "#messages": "./src/validationMessages.ts"
   },
   "exports": {

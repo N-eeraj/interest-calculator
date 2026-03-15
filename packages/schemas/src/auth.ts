@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { AUTH } from "#messages";
+import { profileSchema } from "#schemas/profile";
 
 export const registrationSchema = z.object({
   name: z.string({ error: AUTH.register.name.required })
@@ -18,4 +19,8 @@ export const registrationSchema = z.object({
     }
     return AUTH.register.password.format
   }}),
-})
+});
+
+export const authSuccessSchema = profileSchema.extend({
+  token: z.string(),
+});
