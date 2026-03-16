@@ -28,14 +28,14 @@ const auth = {
     .input(registrationSchema)
     .output(authSuccessSchema)
     .mutation(async ({ input }) => {
-      const existingUser = await db
+      const existingUsers = await db
         .select({
           id: users.id,
         })
         .from(users)
         .where(eq(users.email, input.email.toLowerCase()));
 
-      if (existingUser.length) {
+      if (existingUsers.length) {
         throw new TRPCError({
           code: "CONFLICT",
           message: "Email already taken",

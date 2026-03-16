@@ -6,7 +6,7 @@ import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 export default function DevTools() {
   return (
     <>
-      <TanStackRouterDevtools position="top-left" />
+      <TanStackRouterDevtools position="top-right" />
       <ReactQueryDevtools
         buttonPosition="bottom-left" />
       <TanStackDevtools

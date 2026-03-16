@@ -5,7 +5,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "dev:server": "turbo run dev --filter=server",
-    "dev:client": "turbo run dev --filter=client",
+    "dev:web-client": "turbo run dev --filter=web-client",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
