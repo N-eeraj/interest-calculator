@@ -2,11 +2,11 @@ import {
   createRootRouteWithContext,
   Outlet,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import TRPCQueryProvider, {
   queryClient,
   trpc,
 } from "@/TRPCQueryProvider";
+import TanStackDevTools from "@components/TanStackDevTools";
 
 interface RouterContext {
   queryClient: typeof queryClient;
@@ -17,7 +17,7 @@ export default function RootLayout() {
   return (
     <TRPCQueryProvider>
       <Outlet />
-      <TanStackRouterDevtools />
+      <TanStackDevTools />
     </TRPCQueryProvider>
   );
 }

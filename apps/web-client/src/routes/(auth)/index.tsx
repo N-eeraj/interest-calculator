@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/utils/trpc";
+import { useTRPC } from "@utils/trpc";
 
 export const Route = createFileRoute("/(auth)/")({
   component: RouteComponent,
