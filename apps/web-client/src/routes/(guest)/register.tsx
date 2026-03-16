@@ -1,53 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMutation } from "@tanstack/react-query";
-import { useForm } from "@tanstack/react-form";
-
-import {
-  registrationSchema,
-  type RegistrationSchema,
-} from "@app/schemas/auth";
 
 import Input from "@components/ds/Input";
 import Button from "@components/ds/Button";
-import { useTRPC } from "@utils/trpc";
+import DsErrorMessage from "@components/ds/ErrorMessage";
+import useRegister from "@hooks/auth/useRegister";
 
 export const Route = createFileRoute("/(guest)/register")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const trpc = useTRPC();
-  const registerMutation = useMutation(
-    trpc.auth.register.mutationOptions({
-      onError: (error) => {
-        console.log(error.message);
-      },
-      onSuccess: (response) => {
-        console.log(response);
-      },
-    })
-  );
-
-  const form = useForm({
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-    } satisfies RegistrationSchema,
-    validators: {
-      onSubmit: registrationSchema,
-    },
-    onSubmit: ({ value }) => registerMutation.mutate(value),
-  });
+  const {
+    form,
+    onSubmit,
+  } = useRegister();
 
   return (
     <>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          e.stopPropagation()
-          form.handleSubmit()
-        }}>
+      <form onSubmit={onSubmit}>
         <form.Field
           name="name"
           children={(field) => (
@@ -59,9 +29,7 @@ function RouteComponent() {
                 placeholder="Full Name" />
 
               {!field.state.meta.isValid && (
-                <em>
-                  {field.state.meta.errors[0]?.message}
-                </em>
+                <DsErrorMessage errors={field.state.meta.errors} />
               )}
             </>
           )}
@@ -78,9 +46,7 @@ function RouteComponent() {
                 placeholder="Email" />
 
               {!field.state.meta.isValid && (
-                <em>
-                  {field.state.meta.errors[0]?.message}
-                </em>
+                <DsErrorMessage errors={field.state.meta.errors} />
               )}
             </>
           )}
@@ -97,9 +63,7 @@ function RouteComponent() {
                 placeholder="Password" />
 
               {!field.state.meta.isValid && (
-                <em>
-                  {field.state.meta.errors[0]?.message}
-                </em>
+                <DsErrorMessage errors={field.state.meta.errors} />
               )}
             </>
           )}
