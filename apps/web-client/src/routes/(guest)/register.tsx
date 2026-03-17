@@ -24,9 +24,10 @@ function RouteComponent() {
             <>
               <Input
                 name={field.name}
+                label="Full Name"
+                placeholder="Enter your name"
                 value={field.state.value as string}
-                onChange={(e) => field.handleChange(e.target.value)}
-                placeholder="Full Name" />
+                onChange={(e) => field.handleChange(e.target.value)} />
 
               {!field.state.meta.isValid && (
                 <DsErrorMessage errors={field.state.meta.errors} />
@@ -40,10 +41,11 @@ function RouteComponent() {
             <>
               <Input
                 name={field.name}
-                value={field.state.value as string}
                 type="email"
-                onChange={(e) => field.handleChange(e.target.value)}
-                placeholder="Email" />
+                label="Email"
+                placeholder="Enter email address"
+                value={field.state.value as string}
+                onChange={(e) => field.handleChange(e.target.value)} />
 
               {!field.state.meta.isValid && (
                 <DsErrorMessage errors={field.state.meta.errors} />
@@ -58,9 +60,10 @@ function RouteComponent() {
               <Input
                 name={field.name}
                 type="password"
+                label="Password"
+                placeholder="Enter password"
                 value={field.state.value as string}
-                onChange={(e) => field.handleChange(e.target.value)}
-                placeholder="Password" />
+                onChange={(e) => field.handleChange(e.target.value)} />
 
               {!field.state.meta.isValid && (
                 <DsErrorMessage errors={field.state.meta.errors} />

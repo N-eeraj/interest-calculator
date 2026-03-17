@@ -24,10 +24,14 @@ const meta = {
     disabled: {
       control: "boolean",
     },
+    label: {
+      control: "text",
+    },
   },
   args: {
     disabled: false,
     theme: "primary",
+    label: "Enter Value",
     placeholder: "Enter value in config",
     onChange: fn(),
     onInput: fn(),
