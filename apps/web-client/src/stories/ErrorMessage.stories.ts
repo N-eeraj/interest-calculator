@@ -8,8 +8,6 @@ const meta = {
   parameters: {
     layout: "centered",
   },
-  argTypes: {
-  },
   args: {
     errors: [
       {

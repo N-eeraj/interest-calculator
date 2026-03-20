@@ -127,4 +127,8 @@
       @apply cursor-pointer disabled:cursor-not-allowed;
     }
   }
+
+  ::selection {
+    @apply bg-primary/60 text-primary-foreground;
+  }
 }

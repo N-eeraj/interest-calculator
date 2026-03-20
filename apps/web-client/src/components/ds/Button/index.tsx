@@ -1,8 +1,14 @@
 import { Button } from "@components/ui/button";
 import clsx from "clsx";
-import { Fragment, type ComponentProps } from "react";
+import {
+  Fragment,
+  type ComponentProps,
+} from "react";
 import { Spinner } from "@components/ui/spinner";
-import { variantClassMap, type Variant } from "./definitions";
+import {
+  variantClassMap,
+  type Variant,
+} from "./definitions";
 
 interface Props extends Omit<ComponentProps<typeof Button>, "variant"> {
   loading?: boolean;

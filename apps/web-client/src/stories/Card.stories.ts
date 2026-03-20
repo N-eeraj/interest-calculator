@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import DsSpinner from "@components/ds/Spinner";
+import DsCard from "@components/ds/Card";
 
 const meta = {
-  title: "Design System/Spinner",
-  component: DsSpinner,
+  title: "Design System/Card",
+  component: DsCard,
   parameters: {
     layout: "centered",
   },
   args: {
-    className: "size-12",
+    children: "Hello",
   },
-} satisfies Meta<typeof DsSpinner>;
+} satisfies Meta<typeof DsCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
