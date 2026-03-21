@@ -10,6 +10,7 @@ interface Props {
 
 export default function LoginForm({ className }: Props) {
   const {
+    mutation,
     form,
     onSubmit,
   } = useLogin();
@@ -58,7 +59,9 @@ export default function LoginForm({ className }: Props) {
         )}
       />
 
-      <Button className="mt-2">
+      <Button
+        loading={mutation.isPending}
+        className="mt-2">
         Submit
       </Button>
     </form>

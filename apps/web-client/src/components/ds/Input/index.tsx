@@ -24,12 +24,15 @@ export default function DsInput({
 }: Props) {
   const id = useId();
   const Wrapper = label ? "div" : Fragment;
-
-  return (
-    <Wrapper className={clsx(
+  const wrapperProps = label ? {
+    className: clsx(
       className,
       'flex flex-col gap-y-1'
-    )}>
+    )
+  } : {};
+
+  return (
+    <Wrapper {...wrapperProps}>
       {label && (
         <label
           htmlFor={id}

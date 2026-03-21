@@ -10,6 +10,7 @@ interface Props {
 
 export default function RegisterForm({ className }: Props) {
   const {
+    mutation,
     form,
     onSubmit,
   } = useRegister();
@@ -75,7 +76,9 @@ export default function RegisterForm({ className }: Props) {
         )}
       />
 
-      <Button className="mt-2">
+      <Button
+        loading={mutation.isPending}
+        className="mt-2">
         Submit
       </Button>
     </form>

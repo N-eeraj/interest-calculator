@@ -24,6 +24,9 @@ export default function DsButton({
   ...props
 }: Props) {
   const ChildWrapper = loading ? "div" : Fragment;
+  const childWrapperProps = loading ? {
+    className: clsx(loading && "invisible")
+  } : {};
 
   return (
     <Button
@@ -36,7 +39,7 @@ export default function DsButton({
       {...props}
     >
       {loading && <Spinner className="absolute top-1/2 left-1/2 -translate-1/2" />}
-      <ChildWrapper className={clsx(loading && "invisible")}>
+      <ChildWrapper {...childWrapperProps}>
         {children}
       </ChildWrapper>
     </Button>

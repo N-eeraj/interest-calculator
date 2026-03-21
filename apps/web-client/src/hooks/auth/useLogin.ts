@@ -1,6 +1,7 @@
 import type { SubmitEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
+import { useNavigate } from "@tanstack/react-router";
 
 import {
   loginSchema,
@@ -11,13 +12,18 @@ import { useTRPC } from "@utils/trpc";
 
 export default function useLogin() {
   const trpc = useTRPC();
-  const loginMutation = useMutation(
+  const navigate = useNavigate();
+
+  const mutation = useMutation(
     trpc.auth.login.mutationOptions({
       onError: (error) => {
         console.log(error.message);
       },
       onSuccess: (response) => {
-        console.log(response);
+        localStorage.setItem("token", response.token);
+        navigate({
+          href: "/",
+        });
       },
     })
   );
@@ -30,7 +36,7 @@ export default function useLogin() {
     validators: {
       onSubmit: loginSchema,
     },
-    onSubmit: ({ value }) => loginMutation.mutate(value),
+    onSubmit: ({ value }) => mutation.mutate(value),
   });
 
   const onSubmit = (event: SubmitEvent) => {
@@ -40,6 +46,7 @@ export default function useLogin() {
   };
 
   return {
+    mutation,
     form,
     onSubmit,
   };

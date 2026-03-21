@@ -5,10 +5,9 @@ import { eq } from "drizzle-orm";
 import {
   loginSchema,
   registrationSchema,
-} from "@app/schemas/auth";
-import {
   authSuccessSchema,
 } from "@app/schemas/auth";
+import { profileSchema } from "@app/schemas/profile";
 
 import {
   publicProcedure,
@@ -114,8 +113,30 @@ const auth = {
    * Fetch details of current logged in user using the authentication token passed.
   */
   me: protectedProcedure
-    .query(async () => {
-      return ;
+    .output(profileSchema)
+    .query(async ({ ctx }) => {
+      const [userFound] = await db
+        .select({
+          id: users.id,
+          name: users.name,
+          email: users.email,
+          password: users.password,
+          avatarUrl: users.avatarUrl,
+        })
+        .from(users)
+        .leftJoin(tokens, eq(users.id, tokens.userId))
+        .where(eq(tokens.token, ctx.token));
+
+      if (!userFound) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid token",
+        });
+      }
+
+      return {
+        ...userFound,
+      };
     }),
 };
 
