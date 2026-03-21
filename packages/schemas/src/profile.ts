@@ -7,3 +7,4 @@ export const profileSchema = z.object({
   avatarUrl: z.string()
     .nullable(),
 });
+export type ProfileSchema = z.infer<typeof profileSchema>;

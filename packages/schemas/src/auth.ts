@@ -20,7 +20,6 @@ export const registrationSchema = z.object({
       return AUTH.register.password.format
     }}),
 });
-
 export type RegistrationSchema = z.infer<typeof registrationSchema>;
 
 export const loginSchema = z.object({
@@ -29,9 +28,9 @@ export const loginSchema = z.object({
     password: z.string({ error: AUTH.login.password.required })
       .nonempty(AUTH.login.password.required)
 });
-
 export type LoginSchema = z.infer<typeof loginSchema>;
 
 export const authSuccessSchema = profileSchema.extend({
   token: z.string(),
 });
+export type AuthSuccessSchema = z.infer<typeof authSuccessSchema>;
