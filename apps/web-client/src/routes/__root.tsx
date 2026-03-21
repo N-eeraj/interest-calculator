@@ -2,11 +2,16 @@ import {
   createRootRouteWithContext,
   Outlet,
 } from "@tanstack/react-router";
-import TRPCQueryProvider, {
+import { useQuery } from "@tanstack/react-query";
+
+import {
   queryClient,
   trpc,
 } from "@/TRPCQueryProvider";
 import TanStackDevTools from "@components/TanStackDevTools";
+import SplashScreen from "@components/SplashScreen";
+import ServerError from "@components/ServerError";
+import { useTRPC } from "@utils/trpc";
 
 interface RouterContext {
   queryClient: typeof queryClient;
@@ -14,11 +19,23 @@ interface RouterContext {
 }
 
 export default function RootLayout() {
+  const trpc = useTRPC();
+  const {
+    isPending,
+    error,
+  } = useQuery(
+    trpc.ping.queryOptions(),
+  );
+
+  if (isPending) return <SplashScreen />;
+
+  if (error) return <ServerError />;
+
   return (
-    <TRPCQueryProvider>
+    <>
       <Outlet />
       <TanStackDevTools />
-    </TRPCQueryProvider>
+    </>
   );
 }
 

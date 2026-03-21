@@ -5,7 +5,7 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import {
+import TRPCQueryProvider, {
   queryClient,
   trpc,
 } from "@/TRPCQueryProvider";
@@ -32,7 +32,9 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
+    <TRPCQueryProvider>
       <RouterProvider router={router} />
+    </TRPCQueryProvider>
     </StrictMode>,
   );
 }
