@@ -11,6 +11,7 @@ import {
 import TanStackDevTools from "@components/TanStackDevTools";
 import SplashScreen from "@components/SplashScreen";
 import ServerError from "@components/ServerError";
+import { Toaster } from "@components/ui/sonner"
 import { useTRPC } from "@utils/trpc";
 
 interface RouterContext {
@@ -35,6 +36,7 @@ export default function RootLayout() {
     <>
       <Outlet />
       <TanStackDevTools />
+      <Toaster />
     </>
   );
 }

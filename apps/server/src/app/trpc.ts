@@ -1,5 +1,10 @@
-import { initTRPC, TRPCError } from "@trpc/server";
+import {
+  initTRPC,
+  TRPCError,
+} from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
+import z, { ZodError } from "zod";
+
 
 export const createContext = async ({ req }: trpcExpress.CreateExpressContextOptions) => {
   return {
@@ -8,7 +13,20 @@ export const createContext = async ({ req }: trpcExpress.CreateExpressContextOpt
 };
 export type Context = Awaited<ReturnType<typeof createContext>>;
 
-const t = initTRPC.context<Context>().create();
+const t = initTRPC.context<Context>().create({
+  errorFormatter({ shape, error }) {
+    type ErrorResponse = typeof shape & Partial<ReturnType<typeof z.flattenError>>;
+    const errorResponse: ErrorResponse = {
+      ...shape,
+    };
+    if (error.cause instanceof ZodError) {
+      const zodErrors = z.flattenError(error.cause);
+      errorResponse.formErrors = zodErrors.formErrors;
+      errorResponse.fieldErrors = zodErrors.fieldErrors;
+    }
+    return errorResponse;
+  },
+});
 
 const authMiddleware = t.middleware(({ ctx, next }) => {
   const token = ctx.req.headers.authorization?.replace("Bearer ", "");
