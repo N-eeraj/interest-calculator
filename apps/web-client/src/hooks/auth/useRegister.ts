@@ -2,7 +2,6 @@ import type { SubmitEvent } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
-import { toast } from "sonner";
 
 import {
   registrationSchema,
@@ -10,6 +9,7 @@ import {
 } from "@app/schemas/auth";
 
 import { useTRPC } from "@utils/trpc";
+import handleFormError from "@utils/handleError";
 
 export default function useRegister() {
   const trpc = useTRPC();
@@ -18,23 +18,7 @@ export default function useRegister() {
   const mutation = useMutation(
     trpc.auth.register.mutationOptions({
       onError: (error) => {
-        if (error.shape?.fieldErrors) {
-          Object.entries(error.shape.fieldErrors)
-            .forEach(([field, messages]) => {
-              if (!Array.isArray(messages)) return;
-              form.setFieldMeta(field as FieldName, (prev) => ({
-                ...prev,
-                errorMap: {
-                  ...prev.errorMap,
-                  onServer: messages.map((message) => ({
-                    message: String(message),
-                  })),
-                },
-              }));
-            })
-        } else {
-          toast.error((error.shape?.formErrors as Array<string> ?? [])?.[0] || error.message);
-        }
+        handleFormError(form, error);
       },
       onSuccess: (response) => {
         localStorage.setItem("token", response.token);
@@ -56,7 +40,6 @@ export default function useRegister() {
     },
     onSubmit: ({ value }) => mutation.mutate(value),
   });
-  type FieldName = keyof typeof form.state.values;
 
   const onSubmit = (event: SubmitEvent) => {
     event.preventDefault();
