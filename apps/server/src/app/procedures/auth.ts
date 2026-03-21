@@ -3,6 +3,7 @@ import crypto from "crypto"
 import { eq } from "drizzle-orm";
 
 import {
+  loginSchema,
   registrationSchema,
 } from "@app/schemas/auth";
 import {
@@ -42,7 +43,7 @@ const auth = {
         });
       }
 
-      const hashedPassword = await bcrypt.hash(input.password, 12)
+      const hashedPassword = await bcrypt.hash(input.password, 12);
       const [result] = await db.insert(users)
         .values({
           ...input,
@@ -61,7 +62,52 @@ const auth = {
         ...input,
         id: result.insertId,
         token,
-        avatar_url: null,
+        avatarUrl: null,
+      };
+    }),
+  /**
+   * Login a user using the provided credentials.
+  */
+  login: publicProcedure
+    .input(loginSchema)
+    .output(authSuccessSchema)
+    .mutation(async ({ input }) => {
+      const [userFound] = await db
+        .select({
+          id: users.id,
+          name: users.name,
+          email: users.email,
+          password: users.password,
+          avatarUrl: users.avatarUrl,
+        })
+        .from(users)
+        .where(eq(users.email, input.email.toLowerCase()));
+
+      if (!userFound) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid user credentials",
+        });
+      }
+
+      const passwordCompare = await bcrypt.compare(input.password, userFound.password);
+      if (!passwordCompare) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Invalid user credentials",
+        });
+      }
+
+      const token = crypto.randomBytes(32).toString("hex");
+      await db.insert(tokens)
+        .values({
+          token,
+          userId: userFound.id,
+        });
+
+      return {
+        ...userFound,
+        token
       };
     }),
   /**

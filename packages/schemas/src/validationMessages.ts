@@ -32,4 +32,12 @@ export const AUTH = {
       ...NEW_PASSWORD,
     },
   },
+  login: {
+    email: {
+      ...EMAIL_VALIDATIONS,
+    },
+    password: {
+      ...PASSWORD,
+    },
+  },
 } as const;
