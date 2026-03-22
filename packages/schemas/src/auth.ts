@@ -31,7 +31,11 @@ export const loginSchema = z.object({
 });
 export type LoginSchema = z.infer<typeof loginSchema>;
 
-export const authSuccessSchema = profileSchema.extend({
-  token: z.string(),
+export const tokensSchema = z.object({
+  refreshToken: z.string(),
+  accessToken: z.string(),
 });
+export type TokensSchema = z.infer<typeof tokensSchema>;
+
+export const authSuccessSchema = profileSchema.extend(tokensSchema.shape);
 export type AuthSuccessSchema = z.infer<typeof authSuccessSchema>;
