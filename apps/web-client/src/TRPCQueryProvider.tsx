@@ -10,10 +10,11 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
-import { TRPCProvider } from "@utils/trpc";
 import {
   type AppRouter,
 } from "@/index";
+import { TRPCProvider } from "@utils/trpc";
+import { getCookie } from "@utils/cookies";
 
 // create a new [tanstack] query client
 function makeQueryClient() {
@@ -33,8 +34,8 @@ function makeTRPCClient() {
       httpBatchLink({
         url: import.meta.env.VITE_TRPC_URL,
         headers() {
-          const token = localStorage.getItem("token");
-          return token ? { Authorization: `Bearer ${token}` } : {};
+          const accessToken = getCookie("accessToken");
+          return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
         },
       }),
     ],

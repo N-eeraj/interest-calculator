@@ -10,6 +10,7 @@ import {
 
 import { useTRPC } from "@utils/trpc";
 import handleFormError from "@utils/handleError";
+import { setCookie } from "@utils/cookies";
 
 export default function useRegister() {
   const trpc = useTRPC();
@@ -20,8 +21,10 @@ export default function useRegister() {
       onError: (error) => {
         handleFormError(form, error);
       },
-      onSuccess: (response) => {
-        localStorage.setItem("token", response.token);
+      onSuccess: ({ accessToken, refreshToken }) => {
+        setCookie("accessToken", accessToken, { maxAge: 900 }); // 15 minutes
+        setCookie("refreshToken", refreshToken, { maxAge: 25_92_000 }); // 30 days
+
         navigate({
           href: "/",
         });

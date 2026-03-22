@@ -3,13 +3,18 @@ import {
   Outlet,
   redirect,
 } from "@tanstack/react-router";
+import {
+  getCookie,
+  removeCookie,
+} from "@utils/cookies";
 
 export const Route = createFileRoute("/(auth)")({
   beforeLoad: async ({ context, location }) => {
-    const token = localStorage.getItem("token");
+    const refreshToken = getCookie("refreshToken");
 
-    // check token in localstorage
-    if (!token) {
+    // check tokens in cookies
+    if (!refreshToken) {
+      removeCookie("accessToken");
       throw redirect({
         to: "/login",
         search: {
@@ -27,7 +32,8 @@ export const Route = createFileRoute("/(auth)")({
       });
     } catch (error) {
       // log user out and redirect to login if failed
-      localStorage.removeItem("token");
+      removeCookie("accessToken");
+      removeCookie("refreshToken");
 
       throw redirect({
         to: "/login",
