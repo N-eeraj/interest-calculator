@@ -1,7 +1,7 @@
 import { publicProcedure } from "#app/trpc";
 
 const ping = publicProcedure
-  .query(async () => {
+  .query(() => {
     return {
       success: true,
       message: "Reached tRPC Server",

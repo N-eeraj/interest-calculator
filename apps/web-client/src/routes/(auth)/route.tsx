@@ -4,23 +4,16 @@ import {
   redirect,
 } from "@tanstack/react-router";
 
+import SplashScreen from "@components/SplashScreen";
+import {
+  refreshAccessToken,
+  clearTokensAndLogout,
+} from "@hooks/useAuthRefreshQuery";
 import {
   getAccessToken,
   getRefreshToken,
-  setAccessToken,
   removeAccessToken,
-  removeRefreshToken,
 } from "@utils/tokens";
-
-function clearTokensAndLogout() {
-  removeAccessToken();
-  removeRefreshToken();
-
-  throw redirect({
-    to: "/login",
-    search: { redirect: location.href },
-  });
-}
 
 export const Route = createFileRoute("/(auth)")({
   beforeLoad: async ({ context, location }) => {
@@ -40,18 +33,7 @@ export const Route = createFileRoute("/(auth)")({
 
     // refresh access token
     if (!accessToken) {
-      try {
-        const {
-          accessToken
-        } = await context.queryClient.fetchQuery({
-          queryKey: ["auth.refresh"],
-          queryFn: () => context.trpc.auth.refresh.query({ refreshToken }),
-          staleTime: 0,
-        });
-        setAccessToken(accessToken);
-      } catch {
-        clearTokensAndLogout();
-      }
+      await refreshAccessToken();
     }
 
     // validate token
@@ -65,5 +47,6 @@ export const Route = createFileRoute("/(auth)")({
       clearTokensAndLogout();
     }
   },
+  pendingComponent: () => <SplashScreen />,
   component: () => <Outlet />,
 });
