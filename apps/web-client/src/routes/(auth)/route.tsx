@@ -5,11 +5,13 @@ import {
 } from "@tanstack/react-router";
 import {
   getCookie,
+  setCookie,
   removeCookie,
 } from "@utils/cookies";
 
 export const Route = createFileRoute("/(auth)")({
   beforeLoad: async ({ context, location }) => {
+    const accessToken = getCookie("accessToken");
     const refreshToken = getCookie("refreshToken");
 
     // check tokens in cookies
@@ -21,6 +23,26 @@ export const Route = createFileRoute("/(auth)")({
           redirect: location.pathname,
         },
       });
+    }
+    if (!accessToken) {
+      try {
+        const {
+          accessToken
+        } = await context.queryClient.fetchQuery({
+          queryKey: ["auth.refresh"],
+          queryFn: () => context.trpc.auth.refresh.query({ refreshToken }),
+          staleTime: 0,
+        });
+        setCookie("accessToken", accessToken, { maxAge: 900 }); // 15 minutes
+      } catch {
+        // log user out and redirect to login if failed
+        removeCookie("refreshToken");
+  
+        throw redirect({
+          to: "/login",
+          search: { redirect: location.href },
+        });
+      }
     }
 
     // validate token

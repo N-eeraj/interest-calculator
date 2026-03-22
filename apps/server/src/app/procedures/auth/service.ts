@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, {
+  type SignOptions,
+} from "jsonwebtoken";
 import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
@@ -9,8 +11,13 @@ import type {
   AuthSuccessSchema,
   LoginSchema,
   TokensSchema,
+  RefreshSchemaInput,
+  RefreshSchemaOutput,
 } from "@app/schemas/auth";
-import type { ProfileSchema } from "@app/schemas/profile";
+import {
+  profileSchema,
+  type ProfileSchema,
+} from "@app/schemas/profile";
 
 import { db } from "#db/index";
 import {
@@ -20,20 +27,36 @@ import {
 import { JWT_SECRET } from "#server/config";
 
 export default class AuthService {
-  private static TOKEN_EXPIRY_TIME = 2_59_20_00_000; // 30 days in ms
+  private static TOKEN_EXPIRY_TIME: number = 2_59_20_00_000; // 30 days in ms
+  private static REFRESH_TOKEN_EXPIRES_IN: SignOptions["expiresIn"] = "30d";
+  private static ACCESS_TOKEN_EXPIRES_IN: SignOptions["expiresIn"] = "15m";
 
-  private static async authenticate(user: ProfileSchema): Promise<TokensSchema> {
-    const refreshToken = jwt.sign(user, JWT_SECRET, {
-      expiresIn: "30d",
-    });
-    const accessToken = jwt.sign(user, JWT_SECRET, {
-      expiresIn: "15m",
-    });
-  
+  private static hashToken(token: string): string {
     const hashedToken = crypto
       .createHash("sha256")
-      .update(refreshToken)
+      .update(token)
       .digest("hex");
+    return hashedToken;
+  }
+
+  private static async authenticate(user: ProfileSchema): Promise<TokensSchema> {
+    const payload = profileSchema.parse(user);
+
+    const refreshToken = jwt.sign(
+      {
+        ...payload,
+        jti: crypto.randomUUID()
+      },
+      JWT_SECRET,
+      {
+        expiresIn: this.REFRESH_TOKEN_EXPIRES_IN,
+      }
+    );
+    const accessToken = jwt.sign(payload, JWT_SECRET, {
+      expiresIn: this.ACCESS_TOKEN_EXPIRES_IN,
+    });
+  
+    const hashedToken = this.hashToken(refreshToken);
     await db.insert(tokens)
       .values({
         token: hashedToken,
@@ -128,28 +151,39 @@ export default class AuthService {
     };
   }
 
-  static async user(token: string): Promise<ProfileSchema> {
-    const [userFound] = await db
-      .select({
-        id: users.id,
-        name: users.name,
-        email: users.email,
-        password: users.password,
-        avatarUrl: users.avatarUrl,
-      })
-      .from(users)
-      .leftJoin(tokens, eq(users.id, tokens.userId))
-      .where(eq(tokens.token, token));
+  static async refresh({ refreshToken }: RefreshSchemaInput): Promise<RefreshSchemaOutput> {
+    const hashedToken = this.hashToken(refreshToken);
 
-    if (!userFound) {
+    const [tokenFound] = await db
+      .select({
+        token: tokens.token,
+      })
+      .from(tokens)
+      .where(eq(tokens.token, hashedToken))
+      .limit(1);
+
+    if (!tokenFound) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Invalid token",
       });
     }
 
+    const jwtPayload = jwt.verify(refreshToken, JWT_SECRET);
+    const { data } = profileSchema.safeParse(jwtPayload);
+    if (!data) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid token",
+      });
+    }
+
+    const accessToken = jwt.sign(data, JWT_SECRET, {
+      expiresIn: this.ACCESS_TOKEN_EXPIRES_IN,
+    });
+
     return {
-      ...userFound,
+      accessToken,
     };
   }
 }

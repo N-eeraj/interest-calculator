@@ -2,6 +2,8 @@ import {
   loginSchema,
   registrationSchema,
   authSuccessSchema,
+  refreshSchemaInput,
+  refreshSchemaOutput,
 } from "@app/schemas/auth";
 import { profileSchema } from "@app/schemas/profile";
 
@@ -19,8 +21,8 @@ const auth = {
     .input(registrationSchema)
     .output(authSuccessSchema)
     .mutation(async ({ input }) => {
-      const response = await AuthService.register(input);
-      return response;
+      const data = await AuthService.register(input);
+      return data;
     }),
 
   /**
@@ -30,18 +32,28 @@ const auth = {
     .input(loginSchema)
     .output(authSuccessSchema)
     .mutation(async ({ input }) => {
-      const response = await AuthService.login(input);
-      return response;
+      const data = await AuthService.login(input);
+      return data;
     }),
 
   /**
-   * Fetch details of current logged in user using the authentication token passed.
+   * Refresh access token using the refresh token passed.
+  */
+  refresh: publicProcedure
+    .input(refreshSchemaInput)
+    .output(refreshSchemaOutput)
+    .query(({ input }) => {
+      const data = AuthService.refresh(input);
+      return data;
+    }),
+
+  /**
+   * Return details of logged in user using the access token.
   */
   me: protectedProcedure
     .output(profileSchema)
     .query(async ({ ctx }) => {
-      const response = AuthService.user(ctx.token);
-      return response;
+      return ctx.user;
     }),
 };
 

@@ -3,8 +3,11 @@ import {
   TRPCError,
 } from "@trpc/server";
 import * as trpcExpress from "@trpc/server/adapters/express";
+import jwt from "jsonwebtoken";
 import z, { ZodError } from "zod";
 
+import { profileSchema } from "@app/schemas/profile";
+import { JWT_SECRET } from "#server/config";
 
 export const createContext = async ({ req }: trpcExpress.CreateExpressContextOptions) => {
   return {
@@ -29,23 +32,30 @@ const t = initTRPC.context<Context>().create({
 });
 
 const authMiddleware = t.middleware(({ ctx, next }) => {
-  const token = ctx.req.headers.authorization?.replace("Bearer ", "");
+  const accessToken = ctx.req.headers.authorization?.replace("Bearer ", "");
 
   // handle missing token
-  if (!token) {
+  if (!accessToken) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "Missing authentication token",
+      message: "Missing access token",
     })
   }
 
-  // validate token and fetch user
-  const user = {};
+  // validate/decode token and get user data
+  const jwtPayload = jwt.verify(accessToken, JWT_SECRET);
+  const { data: user } = profileSchema.safeParse(jwtPayload);
+  if (!user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Invalid token",
+    });
+  }
 
   return next({
     ctx: {
       ...ctx,
-      token,
+      accessToken,
       user,
     },
   });
