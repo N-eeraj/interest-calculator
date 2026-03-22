@@ -3,7 +3,7 @@ import jwt, {
   type SignOptions,
 } from "jsonwebtoken";
 import crypto from "crypto";
-import { eq } from "drizzle-orm";
+import { eq, ExtractTablesWithRelations } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
 import type {
@@ -25,6 +25,8 @@ import {
   users,
 } from "#db/schemas/index";
 import { JWT_SECRET } from "#server/config";
+import { MySqlTransaction } from "drizzle-orm/mysql-core";
+import { MySql2PreparedQueryHKT, MySql2QueryResultHKT } from "drizzle-orm/mysql2";
 
 export default class AuthService {
   private static TOKEN_EXPIRY_TIME: number = 2_59_20_00_000; // 30 days in ms
@@ -39,7 +41,15 @@ export default class AuthService {
     return hashedToken;
   }
 
-  private static async authenticate(user: ProfileSchema): Promise<TokensSchema> {
+  private static async authenticate(
+    user: ProfileSchema,
+    tx?: MySqlTransaction<
+      MySql2QueryResultHKT,
+      MySql2PreparedQueryHKT,
+      Record<string, never>,
+      ExtractTablesWithRelations<Record<string, never>>
+    >,
+  ): Promise<TokensSchema> {
     const payload = profileSchema.parse(user);
 
     const refreshToken = jwt.sign(
@@ -57,7 +67,8 @@ export default class AuthService {
     });
   
     const hashedToken = this.hashToken(refreshToken);
-    await db.insert(tokens)
+    await (tx ?? db)
+      .insert(tokens)
       .values({
         token: hashedToken,
         userId: user.id,
@@ -86,30 +97,35 @@ export default class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const [result] = await db.insert(users)
-      .values({
+
+    const data = await db.transaction(async (tx) => {
+      const [result] = await tx
+        .insert(users)
+        .values({
+          email,
+          name,
+          avatarUrl: null,
+          password: hashedPassword,
+        });
+      const user = {
         email,
         name,
+        id: result.insertId,
         avatarUrl: null,
-        password: hashedPassword,
-      });
-    const user = {
-      email,
-      name,
-      id: result.insertId,
-      avatarUrl: null,
-    };
+      };
+  
+      const {
+        accessToken,
+        refreshToken,
+      } = await this.authenticate(user, tx);
+      return {
+        ...user,
+        accessToken,
+        refreshToken,
+      };
+    })
 
-    const {
-      accessToken,
-      refreshToken,
-    } = await this.authenticate(user);
-
-    return {
-      ...user,
-      accessToken,
-      refreshToken,
-    };
+    return data;
   }
 
   static async login({ email, password }: LoginSchema): Promise<AuthSuccessSchema> {
