@@ -1,22 +1,52 @@
 import bcrypt from "bcrypt";
-import crypto from "crypto"
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { eq } from "drizzle-orm";
+import { TRPCError } from "@trpc/server";
+
+import type {
+  RegistrationSchema,
+  AuthSuccessSchema,
+  LoginSchema,
+  TokensSchema,
+} from "@app/schemas/auth";
+import type { ProfileSchema } from "@app/schemas/profile";
 
 import { db } from "#db/index";
 import {
   tokens,
   users,
 } from "#db/schemas/index";
-import { TRPCError } from "@trpc/server";
-
-import {
-  type RegistrationSchema,
-  type AuthSuccessSchema,
-  type LoginSchema,
-} from "@app/schemas/auth";
-import { type ProfileSchema } from "@app/schemas/profile";
+import { JWT_SECRET } from "#server/config";
 
 export default class AuthService {
+  private static TOKEN_EXPIRY_TIME = 2_59_20_00_000; // 30 days in ms
+
+  private static async authenticate(user: ProfileSchema): Promise<TokensSchema> {
+    const refreshToken = jwt.sign(user, JWT_SECRET, {
+      expiresIn: "30d",
+    });
+    const accessToken = jwt.sign(user, JWT_SECRET, {
+      expiresIn: "15m",
+    });
+  
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
+    await db.insert(tokens)
+      .values({
+        token: hashedToken,
+        userId: user.id,
+        expiresAt: new Date(Date.now() + this.TOKEN_EXPIRY_TIME),
+      });
+
+    return {
+      refreshToken,
+      accessToken,
+    };
+  }
+
   static async register({ email, name, password }: RegistrationSchema): Promise<AuthSuccessSchema> {
     const existingUsers = await db
       .select({
@@ -40,20 +70,22 @@ export default class AuthService {
         avatarUrl: null,
         password: hashedPassword,
       });
-
-    const token = crypto.randomBytes(32).toString("hex");
-    await db.insert(tokens)
-      .values({
-        token,
-        userId: result.insertId,
-      });
-
-    return {
+    const user = {
       email,
       name,
       id: result.insertId,
-      token,
       avatarUrl: null,
+    };
+
+    const {
+      accessToken,
+      refreshToken,
+    } = await this.authenticate(user);
+
+    return {
+      ...user,
+      accessToken,
+      refreshToken,
     };
   }
 
@@ -84,16 +116,15 @@ export default class AuthService {
       });
     }
 
-    const token = crypto.randomBytes(32).toString("hex");
-    await db.insert(tokens)
-      .values({
-        token,
-        userId: userFound.id,
-      });
+    const {
+      accessToken,
+      refreshToken,
+    } = await this.authenticate(userFound);
 
     return {
       ...userFound,
-      token
+      accessToken,
+      refreshToken,
     };
   }
 
