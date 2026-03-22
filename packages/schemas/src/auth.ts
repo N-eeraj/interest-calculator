@@ -7,7 +7,8 @@ export const registrationSchema = z.object({
     .trim()
     .nonempty(AUTH.register.name.required),
   email: z.email({ error: AUTH.register.email.required })
-    .trim(),
+    .trim()
+    .toLowerCase(),
   password: z.string({ error: AUTH.register.password.required })
     .nonempty(AUTH.register.password.required)
     .min(6, AUTH.register.password.minLength)
