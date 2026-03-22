@@ -39,3 +39,12 @@ export type TokensSchema = z.infer<typeof tokensSchema>;
 
 export const authSuccessSchema = profileSchema.extend(tokensSchema.shape);
 export type AuthSuccessSchema = z.infer<typeof authSuccessSchema>;
+
+export const refreshSchemaInput = z.object({
+  refreshToken: z.string(),
+});
+export const refreshSchemaOutput = z.object({
+  accessToken: z.string(),
+});
+export type RefreshSchemaInput = z.infer<typeof refreshSchemaInput>;
+export type RefreshSchemaOutput = z.infer<typeof refreshSchemaOutput>;
