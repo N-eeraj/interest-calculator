@@ -3,11 +3,13 @@ import {
   Outlet,
   redirect,
 } from "@tanstack/react-router";
+import { getCookie } from "@utils/cookies";
 
 export const Route = createFileRoute("/(guest)")({
   beforeLoad: async () => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    const accessToken = getCookie("accessToken");
+    const refreshToken = getCookie("refreshToken");
+    if (accessToken || refreshToken) {
       throw redirect({
         to: "/",
       });
