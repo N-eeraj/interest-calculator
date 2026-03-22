@@ -15,6 +15,20 @@
       "when": 1773499062554,
       "tag": "0001_1773499061_create_tokens",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1774170238065,
+      "tag": "0002_1774170236_add_expires_at_to_tokens",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1774170323894,
+      "tag": "0003_1774170322_truncate_tokens",
+      "breakpoints": true
     }
   ]
 }

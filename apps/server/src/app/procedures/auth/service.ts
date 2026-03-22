@@ -6,7 +6,7 @@ import { db } from "#db/index";
 import {
   tokens,
   users,
-} from "#db/schema/index";
+} from "#db/schemas/index";
 import { TRPCError } from "@trpc/server";
 
 import {
@@ -23,7 +23,7 @@ export default class AuthService {
         id: users.id,
       })
       .from(users)
-      .where(eq(users.email, email.toLowerCase()));
+      .where(eq(users.email, email));
 
     if (existingUsers.length) {
       throw new TRPCError({
@@ -67,7 +67,7 @@ export default class AuthService {
         avatarUrl: users.avatarUrl,
       })
       .from(users)
-      .where(eq(users.email, email.toLowerCase()));
+      .where(eq(users.email, email));
 
     if (!userFound) {
       throw new TRPCError({
