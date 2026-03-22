@@ -3,20 +3,33 @@ import {
   Outlet,
   redirect,
 } from "@tanstack/react-router";
+
 import {
-  getCookie,
-  setCookie,
-  removeCookie,
-} from "@utils/cookies";
+  getAccessToken,
+  getRefreshToken,
+  setAccessToken,
+  removeAccessToken,
+  removeRefreshToken,
+} from "@utils/tokens";
+
+function clearTokensAndLogout() {
+  removeAccessToken();
+  removeRefreshToken();
+
+  throw redirect({
+    to: "/login",
+    search: { redirect: location.href },
+  });
+}
 
 export const Route = createFileRoute("/(auth)")({
   beforeLoad: async ({ context, location }) => {
-    const accessToken = getCookie("accessToken");
-    const refreshToken = getCookie("refreshToken");
+    const accessToken = getAccessToken();
+    const refreshToken = getRefreshToken();
 
     // check tokens in cookies
     if (!refreshToken) {
-      removeCookie("accessToken");
+      removeAccessToken();
       throw redirect({
         to: "/login",
         search: {
@@ -24,6 +37,8 @@ export const Route = createFileRoute("/(auth)")({
         },
       });
     }
+
+    // refresh access token
     if (!accessToken) {
       try {
         const {
@@ -33,15 +48,9 @@ export const Route = createFileRoute("/(auth)")({
           queryFn: () => context.trpc.auth.refresh.query({ refreshToken }),
           staleTime: 0,
         });
-        setCookie("accessToken", accessToken, { maxAge: 900 }); // 15 minutes
+        setAccessToken(accessToken);
       } catch {
-        // log user out and redirect to login if failed
-        removeCookie("refreshToken");
-  
-        throw redirect({
-          to: "/login",
-          search: { redirect: location.href },
-        });
+        clearTokensAndLogout();
       }
     }
 
@@ -53,14 +62,7 @@ export const Route = createFileRoute("/(auth)")({
         staleTime: 0,
       });
     } catch (error) {
-      // log user out and redirect to login if failed
-      removeCookie("accessToken");
-      removeCookie("refreshToken");
-
-      throw redirect({
-        to: "/login",
-        search: { redirect: location.href },
-      });
+      clearTokensAndLogout();
     }
   },
   component: () => <Outlet />,

@@ -14,7 +14,7 @@ import {
   type AppRouter,
 } from "@/index";
 import { TRPCProvider } from "@utils/trpc";
-import { getCookie } from "@utils/cookies";
+import { getAccessToken } from "@utils/tokens";
 
 // create a new [tanstack] query client
 function makeQueryClient() {
@@ -34,7 +34,7 @@ function makeTRPCClient() {
       httpBatchLink({
         url: import.meta.env.VITE_TRPC_URL,
         headers() {
-          const accessToken = getCookie("accessToken");
+          const accessToken = getAccessToken();
           return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
         },
       }),
