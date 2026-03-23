@@ -4,6 +4,8 @@ import {
   RouterProvider,
   createRouter,
 } from "@tanstack/react-router";
+
+import ThemeProvider from "@components/theme/Provider";
 import { routeTree } from "./routeTree.gen";
 import TRPCQueryProvider, {
   queryClient,
@@ -32,9 +34,13 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-    <TRPCQueryProvider>
-      <RouterProvider router={router} />
-    </TRPCQueryProvider>
+      <TRPCQueryProvider>
+        <ThemeProvider
+          defaultTheme="system"
+          storageKey="vite-ui-theme">
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </TRPCQueryProvider>
     </StrictMode>,
   );
 }
