@@ -21,6 +21,28 @@ const meta = {
     placeholder: {
       control: "text",
     },
+    type: {
+      control: "select",
+      options: [
+        "text",
+        "password",
+        "email",
+        "number",
+        "tel",
+        "url",
+        "search",
+        "date",
+        "time",
+        "checkbox",
+        "radio",
+        "range",
+        "color",
+        "file",
+        "submit",
+        "button",
+        "hidden"
+      ],
+    },
     disabled: {
       control: "boolean",
     },
@@ -32,6 +54,7 @@ const meta = {
     disabled: false,
     theme: "primary",
     label: "Enter Value",
+    type: "text",
     placeholder: "Enter value in config",
     onChange: fn(),
     onInput: fn(),

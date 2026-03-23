@@ -12,6 +12,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@material-symbols-svg/react": "^0.1.23",
     "@tailwindcss/vite": "^4.2.1",
     "@tanstack/react-devtools": "^0.10.0",
     "@tanstack/react-form": "^1.28.5",

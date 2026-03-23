@@ -1,10 +1,19 @@
-import { Input } from "@components/ui/input";
-import clsx from "clsx";
 import {
   Fragment,
   useId,
+  useState,
   type ComponentProps,
+  type HTMLAttributes,
+  type HTMLInputTypeAttribute,
 } from "react";
+import clsx from "clsx";
+import {
+  VisibilityFill,
+  VisibilityOffFill,
+} from "@material-symbols-svg/react";
+
+import { Input } from "@components/ui/input";
+import DsButton from "@components/ds/Button";
 import {
   themeVariants,
   themeLabelVariants,
@@ -14,20 +23,36 @@ import {
 interface Props extends Omit<ComponentProps<typeof Input>, "variant"> {
   label?: string;
   theme?: Theme;
+  labelWrapperProps?: HTMLAttributes<HTMLDivElement>;
+  inputWrapperProps?: HTMLAttributes<HTMLDivElement>;
 }
 
 export default function DsInput({
   theme = "primary",
   label,
+  type,
   className,
+  inputWrapperProps = {},
+  labelWrapperProps = {},
   ...props
 }: Props) {
   const id = useId();
+
+  const [inputType, setInputType] = useState<HTMLInputTypeAttribute>(type ?? "text");
+  const togglePasswordType = () => {
+    setInputType((prev) => {
+      if (prev === "password") return "text";
+      return "password";
+    });
+  };
+
   const Wrapper = label ? "div" : Fragment;
   const wrapperProps = label ? {
+    ...labelWrapperProps,
     className: clsx(
       className,
-      'flex flex-col gap-y-1'
+      labelWrapperProps.className,
+      "flex flex-col gap-y-1",
     )
   } : {};
 
@@ -44,15 +69,38 @@ export default function DsInput({
         </label>
       )}
 
-      <Input
-        id={id}
+      <div
+        {...inputWrapperProps}
         className={clsx(
-          "rounded-full dark:rounded ring focus-visible:ring-2 dark:shadow-md focus-visible:border-0 transition-all duration-300",
-          themeVariants[theme],
-          label ? '' : className,
+          inputWrapperProps.className,
+          "relative",
+        )}>
+        <Input
+          id={id}
+          type={type === "password" ? inputType : type}
+          className={clsx(
+            "rounded-full dark:rounded ring focus-visible:ring-2 dark:shadow-md focus-visible:border-0 transition-all duration-300",
+            themeVariants[theme],
+            label ? "" : className,
+          )}
+          {...props}
+        />
+
+        {type === "password" && (
+          <DsButton
+            size="icon-xs"
+            variant={theme === "primary" ? "default" : "secondary"}
+            type="button"
+            tabIndex={-1}
+            className="absolute top-1/2 right-0 p-0 -translate-x-1/4 -translate-y-1/2"
+            onClick={togglePasswordType}>
+            {inputType === "password"
+              ? <VisibilityFill />
+              : <VisibilityOffFill />
+            }
+          </DsButton>
         )}
-        {...props}
-      />
+      </div>
     </Wrapper>
   );
 }
