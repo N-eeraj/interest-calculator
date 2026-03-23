@@ -4,6 +4,7 @@ import {
   authSuccessSchema,
   refreshSchemaInput,
   refreshSchemaOutput,
+  logoutSchema,
 } from "@app/schemas/auth";
 import { profileSchema } from "@app/schemas/profile";
 
@@ -34,6 +35,15 @@ const auth = {
     .mutation(async ({ input }) => {
       const data = await AuthService.login(input);
       return data;
+    }),
+
+  /**
+   * Login a user using the provided credentials.
+  */
+  logout: protectedProcedure
+    .input(logoutSchema)
+    .mutation(async ({ input }) => {
+      await AuthService.logout(input);
     }),
 
   /**

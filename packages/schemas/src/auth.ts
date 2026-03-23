@@ -40,11 +40,16 @@ export type TokensSchema = z.infer<typeof tokensSchema>;
 export const authSuccessSchema = profileSchema.extend(tokensSchema.shape);
 export type AuthSuccessSchema = z.infer<typeof authSuccessSchema>;
 
-export const refreshSchemaInput = z.object({
-  refreshToken: z.string(),
+const refreshTokenSchema = tokensSchema.pick({
+  refreshToken: true,
 });
-export const refreshSchemaOutput = z.object({
-  accessToken: z.string(),
+
+export const logoutSchema = refreshTokenSchema;
+export type LogoutSchema = z.infer<typeof logoutSchema>;
+
+export const refreshSchemaInput = refreshTokenSchema;
+export const refreshSchemaOutput = tokensSchema.pick({
+  accessToken: true,
 });
 export type RefreshSchemaInput = z.infer<typeof refreshSchemaInput>;
 export type RefreshSchemaOutput = z.infer<typeof refreshSchemaOutput>;

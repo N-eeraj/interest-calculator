@@ -13,6 +13,7 @@ import type {
   TokensSchema,
   RefreshSchemaInput,
   RefreshSchemaOutput,
+  LogoutSchema,
 } from "@app/schemas/auth";
 import {
   profileSchema,
@@ -165,6 +166,21 @@ export default class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  static async logout({ refreshToken }: LogoutSchema): Promise<void> {
+    const hashedToken = this.hashToken(refreshToken);
+
+    const [result] = await db
+      .delete(tokens)
+      .where(eq(tokens.token, hashedToken));
+
+    if (!result.affectedRows) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Invalid token",
+      });
+    }
   }
 
   static async refresh({ refreshToken }: RefreshSchemaInput): Promise<RefreshSchemaOutput> {
