@@ -44,8 +44,8 @@ export default function ThemeToggle() {
       <DropdownMenuTrigger asChild>
         <DsButton
           variant="outline"
-          size="icon"
-          className="p-5">
+          size="icon-sm"
+          className="p-2">
           <Icon className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all" />
           <span className="sr-only">
             Toggle theme

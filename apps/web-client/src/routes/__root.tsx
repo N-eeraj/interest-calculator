@@ -19,6 +19,8 @@ interface RouterContext {
   trpc: typeof trpc;
 }
 
+const showDevTools = import.meta.env.VITE_TS_DEV_TOOLS?.toUpperCase() === "TRUE";
+
 export default function RootLayout() {
   const trpc = useTRPC();
   const {
@@ -35,7 +37,7 @@ export default function RootLayout() {
   return (
     <>
       <Outlet />
-      <TanStackDevTools />
+      {showDevTools && <TanStackDevTools />}
       <Toaster />
     </>
   );

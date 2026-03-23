@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-router";
 
 import SplashScreen from "@components/SplashScreen";
+import Navbar from "@/components/navbar";
 import {
   refreshAccessToken,
   clearTokensAndLogout,
@@ -48,5 +49,14 @@ export const Route = createFileRoute("/(auth)")({
     }
   },
   pendingComponent: () => <SplashScreen />,
-  component: () => <Outlet />,
+  component: () => {
+    return (
+      <>
+        <Navbar className="sticky top-0 mb-5" />
+        <main className="min-h-[calc(100svh-84px)] px-3 md:px-5 pb-8">
+          <Outlet />
+        </main>
+      </>
+    );
+  },
 });

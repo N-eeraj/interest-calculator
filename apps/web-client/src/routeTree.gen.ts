@@ -14,6 +14,7 @@ import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as authIndexRouteImport } from './routes/(auth)/index'
 import { Route as guestRegisterRouteImport } from './routes/(guest)/register'
 import { Route as guestLoginRouteImport } from './routes/(guest)/login'
+import { Route as authProfileRouteImport } from './routes/(auth)/profile'
 
 const guestRouteRoute = guestRouteRouteImport.update({
   id: '/(guest)',
@@ -38,13 +39,20 @@ const guestLoginRoute = guestLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => guestRouteRoute,
 } as any)
+const authProfileRoute = authProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => authRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
+  '/profile': typeof authProfileRoute
   '/login': typeof guestLoginRoute
   '/register': typeof guestRegisterRoute
   '/': typeof authIndexRoute
 }
 export interface FileRoutesByTo {
+  '/profile': typeof authProfileRoute
   '/login': typeof guestLoginRoute
   '/register': typeof guestRegisterRoute
   '/': typeof authIndexRoute
@@ -53,19 +61,21 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)': typeof authRouteRouteWithChildren
   '/(guest)': typeof guestRouteRouteWithChildren
+  '/(auth)/profile': typeof authProfileRoute
   '/(guest)/login': typeof guestLoginRoute
   '/(guest)/register': typeof guestRegisterRoute
   '/(auth)/': typeof authIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/register' | '/'
+  fullPaths: '/profile' | '/login' | '/register' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/'
+  to: '/profile' | '/login' | '/register' | '/'
   id:
     | '__root__'
     | '/(auth)'
     | '/(guest)'
+    | '/(auth)/profile'
     | '/(guest)/login'
     | '/(guest)/register'
     | '/(auth)/'
@@ -113,14 +123,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof guestLoginRouteImport
       parentRoute: typeof guestRouteRoute
     }
+    '/(auth)/profile': {
+      id: '/(auth)/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof authProfileRouteImport
+      parentRoute: typeof authRouteRoute
+    }
   }
 }
 
 interface authRouteRouteChildren {
+  authProfileRoute: typeof authProfileRoute
   authIndexRoute: typeof authIndexRoute
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
+  authProfileRoute: authProfileRoute,
   authIndexRoute: authIndexRoute,
 }
 
