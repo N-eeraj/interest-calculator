@@ -40,7 +40,7 @@ export const Route = createFileRoute("/(auth)")({
     // validate token
     try {
       await context.queryClient.fetchQuery({
-        queryKey: ["auth.me"],
+        queryKey: [["auth", "me"], { type: "query" }],
         queryFn: () => context.trpc.auth.me.query(),
         staleTime: 0,
       });
