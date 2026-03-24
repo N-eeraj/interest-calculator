@@ -2,12 +2,19 @@ import {
   createFileRoute,
   Link,
 } from "@tanstack/react-router";
+import * as z from "zod";
 
 import LoginForm from "@components/auth/login/Form";
 import DsCard from "@components/ds/Card";
 
+const searchSchema = z.object({
+  redirect: z.string()
+    .optional(),
+});
+
 export const Route = createFileRoute("/(guest)/login")({
   component: RouteComponent,
+  validateSearch: searchSchema,
 });
 
 function RouteComponent() {

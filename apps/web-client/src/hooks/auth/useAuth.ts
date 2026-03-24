@@ -1,5 +1,8 @@
 import type { SubmitEvent } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import {
+  useNavigate,
+  useSearch,
+} from "@tanstack/react-router";
 import type { AnyFormApi } from "@tanstack/react-form";
 
 import type { AuthSuccessSchema } from "@app/schemas/auth";
@@ -11,6 +14,10 @@ import {
 } from "@utils/tokens";
 
 export default function useAuth(form: AnyFormApi) {
+  const loginSearchParams = useSearch({
+    from: "/(guest)/login",
+  });
+
   const navigate = useNavigate();
 
   const onError = (error: unknown) => {
@@ -22,7 +29,7 @@ export default function useAuth(form: AnyFormApi) {
     setRefreshToken(refreshToken);
 
     navigate({
-      href: "/",
+      href: loginSearchParams.redirect ?? "/",
     });
   };
 
