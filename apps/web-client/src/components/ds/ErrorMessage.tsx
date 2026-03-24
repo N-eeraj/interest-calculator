@@ -2,7 +2,7 @@ interface Props {
   errors?: Array<{ message: string } | undefined>;
 }
 
-export default function ErrorMessage({ errors }: Props) {
+export default function DsErrorMessage({ errors }: Props) {
   if (!errors?.length) return;
 
   return (

@@ -5,14 +5,12 @@ import users from "#db/schemas/users";
 
 export default class ProfileService {
   static async update(userId: number, { name, email }: ProfileUpdateSchema) {
-    const updateData: ProfileUpdateSchema = {
-      ...(name && { name }),
-      ...(email && { email }),
-    };
-
     await db
       .update(users)
-      .set(updateData)
+      .set({
+        name,
+        email,
+      })
       .where(eq(users.id, userId));
   }
 }

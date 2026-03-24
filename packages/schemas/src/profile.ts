@@ -17,5 +17,4 @@ export const profileUpdateSchema = profileSchema
     name: true,
     email: true,
   })
-  .partial();
 export type ProfileUpdateSchema = z.infer<typeof profileUpdateSchema>;

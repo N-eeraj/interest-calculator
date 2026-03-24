@@ -66,7 +66,9 @@ export default function LogoutConfirmation({ ...props }: ComponentProps<typeof D
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
-            <DsButton variant="secondary-outline">
+            <DsButton
+              disabled={isLoggingOut}
+              variant="secondary-outline">
               Cancel
             </DsButton>
           </DialogClose>

@@ -1,5 +1,5 @@
-import Input from "@components/ds/Input";
-import Button from "@components/ds/Button";
+import DsInput from "@components/ds/Input";
+import DsButton from "@components/ds/Button";
 import DsErrorMessage from "@components/ds/ErrorMessage";
 import useRegister from "@hooks/auth/useRegister";
 import clsx from "clsx";
@@ -17,6 +17,7 @@ export default function RegisterForm({ className }: Props) {
 
   return (
     <form
+      inert={mutation.isPending}
       className={clsx(
         "flex flex-col gap-y-4",
         className,
@@ -26,7 +27,7 @@ export default function RegisterForm({ className }: Props) {
         name="name"
         children={(field) => (
           <div className="space-y-1">
-            <Input
+            <DsInput
               name={field.name}
               label="Full Name"
               placeholder="Enter your name"
@@ -43,7 +44,7 @@ export default function RegisterForm({ className }: Props) {
         name="email"
         children={(field) => (
           <div className="space-y-1">
-            <Input
+            <DsInput
               name={field.name}
               type="email"
               label="Email"
@@ -61,7 +62,7 @@ export default function RegisterForm({ className }: Props) {
         name="password"
         children={(field) => (
           <div className="space-y-1">
-            <Input
+            <DsInput
               name={field.name}
               type="password"
               label="Password"
@@ -76,11 +77,11 @@ export default function RegisterForm({ className }: Props) {
         )}
       />
 
-      <Button
+      <DsButton
         loading={mutation.isPending}
         className="mt-2">
         Submit
-      </Button>
+      </DsButton>
     </form>
   );
 }

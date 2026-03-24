@@ -52,8 +52,8 @@ export const Route = createFileRoute("/(auth)")({
   component: () => {
     return (
       <>
-        <Navbar className="sticky top-0 mb-5" />
-        <main className="min-h-[calc(100svh-84px)] px-3 md:px-5 pb-8">
+        <Navbar className="sticky top-0 mb-10" />
+        <main className="min-h-[calc(100svh-124px)] px-3 md:px-5 pb-8">
           <Outlet />
         </main>
       </>

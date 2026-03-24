@@ -1,5 +1,5 @@
-import Input from "@components/ds/Input";
-import Button from "@components/ds/Button";
+import DsInput from "@components/ds/Input";
+import DsButton from "@components/ds/Button";
 import DsErrorMessage from "@components/ds/ErrorMessage";
 import useLogin from "@hooks/auth/useLogin";
 import clsx from "clsx";
@@ -17,6 +17,7 @@ export default function LoginForm({ className }: Props) {
 
   return (
     <form
+      inert={mutation.isPending}
       className={clsx(
         "flex flex-col gap-y-4",
         className,
@@ -26,7 +27,7 @@ export default function LoginForm({ className }: Props) {
         name="email"
         children={(field) => (
           <div className="space-y-1">
-            <Input
+            <DsInput
               name={field.name}
               type="email"
               label="Email"
@@ -44,7 +45,7 @@ export default function LoginForm({ className }: Props) {
         name="password"
         children={(field) => (
           <div className="space-y-1">
-            <Input
+            <DsInput
               name={field.name}
               type="password"
               label="Password"
@@ -59,11 +60,11 @@ export default function LoginForm({ className }: Props) {
         )}
       />
 
-      <Button
+      <DsButton
         loading={mutation.isPending}
         className="mt-2">
         Submit
-      </Button>
+      </DsButton>
     </form>
   );
 }
