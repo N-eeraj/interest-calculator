@@ -34,6 +34,7 @@ export default function DsButton({
       className={clsx(
         "relative transition-all duration-300",
         variant ? variantClassMap[variant] : variantClassMap.default,
+        !loading && "disabled:grayscale-50",
         className,
       )}
       {...props}

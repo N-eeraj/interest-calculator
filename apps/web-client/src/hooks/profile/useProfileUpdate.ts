@@ -7,19 +7,13 @@ import {
   type ProfileUpdateSchema,
 } from "@app/schemas/profile";
 
-import {
-  useAuthRefreshMutation,
-  useAuthRefreshQuery,
-} from "@hooks/useAuthRefreshQuery";
+import { useAuthRefreshMutation } from "@hooks/useAuthRefreshQuery";
+import useProfile from "@hooks/profile/useProfile";
 import { useTRPC } from "@utils/trpc";
 
 export default function useProfileUpdate() {
   const trpc = useTRPC();
-  const {
-    data,
-    isLoading,
-    isRefetching
-  } = useAuthRefreshQuery(trpc.auth.me.queryOptions());
+  const { data } = useProfile();
 
   const form = useForm({
     defaultValues: {
@@ -48,9 +42,8 @@ export default function useProfileUpdate() {
   };
 
   return {
-    isFetchingData: isLoading || isRefetching,
     form,
     onSubmit,
-    isSubmitting: mutation.isPending || mutation.isRefreshingToken,
+    isSubmitting: mutation.isSubmittingData,
   };
 }

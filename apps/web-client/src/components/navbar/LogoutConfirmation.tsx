@@ -47,14 +47,12 @@ export default function LogoutConfirmation({ ...props }: ComponentProps<typeof D
     });
   };
 
-  const isLoggingOut = mutation.isPending || mutation.isRefreshingToken;
-
   return (
     <Dialog
       {...props}>
       <DialogContent
         className="sm:max-w-sm"
-        onInteractOutside={(e) => isLoggingOut && e.preventDefault()}>
+        onInteractOutside={(e) => mutation.isSubmittingData && e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>
             Confirm Logout
@@ -67,14 +65,14 @@ export default function LogoutConfirmation({ ...props }: ComponentProps<typeof D
         <DialogFooter>
           <DialogClose asChild>
             <DsButton
-              disabled={isLoggingOut}
+              disabled={mutation.isSubmittingData}
               variant="secondary-outline">
               Cancel
             </DsButton>
           </DialogClose>
           <DsButton
             variant="destructive"
-            loading={isLoggingOut}
+            loading={mutation.isSubmittingData}
             onClick={confirmLogout}>
             Logout
           </DsButton>

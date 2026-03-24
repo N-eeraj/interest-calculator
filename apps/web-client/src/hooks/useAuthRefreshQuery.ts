@@ -49,6 +49,16 @@ export async function refreshAccessToken() {
   }
 }
 
+interface TokenRefreshLoading {
+  isRefreshingToken: boolean;
+}
+interface QueryRefreshLoading extends TokenRefreshLoading {
+  isFetchingData: boolean;
+}
+interface MutationRefreshLoading extends TokenRefreshLoading {
+  isSubmittingData: boolean;
+}
+
 export function useAuthRefreshQuery<
   TQueryFnData = unknown,
   TError = unknown,
@@ -56,7 +66,7 @@ export function useAuthRefreshQuery<
   TQueryKey extends readonly unknown[] = readonly unknown[]
 >(
   options: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>
-): UseQueryResult<TData, TError> & { isRefreshingToken: boolean } {
+): UseQueryResult<TData, TError> & QueryRefreshLoading {
   const query = useQuery<TQueryFnData, TError, TData, TQueryKey>(options);
   const [isRefreshingToken, setIsRefreshingToken] = useState(false);
 
@@ -84,6 +94,7 @@ export function useAuthRefreshQuery<
   return {
     ...query,
     isRefreshingToken,
+    isFetchingData: query.isPending || query.isLoading || isRefreshingToken,
   };
 }
 
@@ -94,7 +105,7 @@ export function useAuthRefreshMutation<
   TContext = unknown
 >(
   options?: UseMutationOptions<TData, TError, TVariables, TContext>
-): UseMutationResult<TData, TError, TVariables, TContext> & { isRefreshingToken: boolean } {
+): UseMutationResult<TData, TError, TVariables, TContext> & MutationRefreshLoading {
   const [isRefreshingToken, setIsRefreshingToken] = useState(false);
 
   const mutation = useMutation<TData, TError, TVariables, TContext>({
@@ -127,5 +138,6 @@ export function useAuthRefreshMutation<
   return {
     ...mutation,
     isRefreshingToken,
+    isSubmittingData: mutation.isPending || isRefreshingToken,
   };
 }
