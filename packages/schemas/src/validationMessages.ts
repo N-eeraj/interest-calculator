@@ -4,6 +4,7 @@ const NAME_VALIDATIONS = {
 
 const EMAIL_VALIDATIONS = {
   required: "Please enter an email",
+  valid: "Please enter a valid email",
 } as const;
 
 const PASSWORD = {
@@ -39,5 +40,14 @@ export const AUTH = {
     password: {
       ...PASSWORD,
     },
+  },
+} as const;
+
+export const PROFILE = {
+  name: {
+    ...NAME_VALIDATIONS,
+  },
+  email: {
+    ...EMAIL_VALIDATIONS,
   },
 } as const;
