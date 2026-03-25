@@ -59,6 +59,7 @@ export default function ProfilePicture() {
 
   const deleteProfilePictureMutation = useAuthRefreshMutation(trpc.profile.picture.delete.mutationOptions({
     onSuccess: () => {
+      setIsRemoveConfirmationOpen(false);
       queryClient.invalidateQueries({
         queryKey: trpc.auth.me.queryOptions().queryKey,
       });

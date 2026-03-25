@@ -51,7 +51,9 @@ export default class AuthService {
       ExtractTablesWithRelations<Record<string, never>>
     >,
   ): Promise<TokensSchema> {
-    const payload = profileSchema.parse(user);
+    const payload = {
+      id: user.id,
+    };
 
     const refreshToken = jwt.sign(
       {
@@ -210,9 +212,15 @@ export default class AuthService {
       });
     }
 
-    const accessToken = jwt.sign(data, JWT_SECRET, {
-      expiresIn: this.ACCESS_TOKEN_EXPIRES_IN,
-    });
+    const accessToken = jwt.sign(
+      {
+        id: data.id,
+      },
+      JWT_SECRET,
+      {
+        expiresIn: this.ACCESS_TOKEN_EXPIRES_IN,
+      }
+    );
 
     return {
       accessToken,

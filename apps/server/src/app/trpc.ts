@@ -5,9 +5,15 @@ import {
 import * as trpcExpress from "@trpc/server/adapters/express";
 import jwt from "jsonwebtoken";
 import z, { ZodError } from "zod";
+import { eq } from "drizzle-orm";
 
-import { profileSchema } from "@app/schemas/profile";
+import {
+  profileSchema,
+  ProfileSchema,
+} from "@app/schemas/profile";
 import { JWT_SECRET } from "#server/config";
+import { db } from "#db/index";
+import { users } from "#db/schemas/index";
 
 export const createContext = async ({ req }: trpcExpress.CreateExpressContextOptions) => {
   return {
@@ -31,7 +37,7 @@ const t = initTRPC.context<Context>().create({
   },
 });
 
-const authMiddleware = t.middleware(({ ctx, next }) => {
+const authMiddleware = t.middleware(async ({ ctx, next }) => {
   const accessToken = ctx.req.headers.authorization?.replace("Bearer ", "");
 
   // handle missing token
@@ -44,7 +50,24 @@ const authMiddleware = t.middleware(({ ctx, next }) => {
 
   // validate/decode token and get user data
   const jwtPayload = jwt.verify(accessToken, JWT_SECRET);
-  const { data: user } = profileSchema.safeParse(jwtPayload);
+  const { data: jwtData } = profileSchema.pick({ id: true })
+    .safeParse(jwtPayload);
+  if (!jwtData) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Invalid token",
+    });
+  }
+
+  const [user]: Array<ProfileSchema> = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      avatarUrl: users.avatarUrl,
+    })
+    .from(users)
+    .where(eq(users.id, jwtData.id));
   if (!user) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
