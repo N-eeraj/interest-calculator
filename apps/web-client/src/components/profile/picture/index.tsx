@@ -7,9 +7,11 @@ import z from "zod";
 import { PhotoW500 } from "@material-symbols-svg/react/icons/photo";
 import { DeleteW500 } from "@material-symbols-svg/react/icons/delete";
 import { toast } from "sonner";
+import clsx from "clsx";
 
-import { profilePicture } from "@app/schemas/profile";
+import { profilePictureSchema } from "@app/schemas/profile";
 
+import { queryClient } from "@/TRPCQueryProvider";
 import DsButton from "@components/ds/Button";
 import {
   DropdownMenu,
@@ -27,8 +29,11 @@ import {
   DialogTitle,
 } from "@components/ui/dialog";
 import useProfile from "@hooks/profile/useProfile";
+import { useAuthRefreshMutation } from "@hooks/useAuthRefreshQuery";
+import { useTRPC } from "@utils/trpc";
 
 export default function ProfilePicture() {
+  const trpc = useTRPC();
   const { data } = useProfile();
 
   const [isRemoveConfirmationOpen, setIsRemoveConfirmationOpen] = useState(false);
@@ -38,6 +43,31 @@ export default function ProfilePicture() {
   const avatarImage = tempUrl ?? data?.avatarUrl;
   const initials = data?.name.split(" ").map(([initial]) => initial).slice(0, 2);
 
+  const updateProfilePictureMutation = useAuthRefreshMutation(trpc.profile.picture.update.mutationOptions({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: trpc.auth.me.queryOptions().queryKey,
+      });
+      setTempUrl(null);
+    },
+    onError: (error) => {
+      const [formError] = (error.shape?.formErrors ?? []) as Array<string>;
+      toast.error(formError ?? error.message);
+      setTempUrl(null);
+    },
+  }));
+
+  const deleteProfilePictureMutation = useAuthRefreshMutation(trpc.profile.picture.delete.mutationOptions({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: trpc.auth.me.queryOptions().queryKey,
+      });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  }));
+
   const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const [file] = event.target.files ?? [];
     if (!file) return;
@@ -46,7 +76,7 @@ export default function ProfilePicture() {
     const {
       data,
       error,
-    } = profilePicture.safeParse(file);
+    } = profilePictureSchema.safeParse(file);
 
     if (error) {
       const [errorMessage] = z.treeifyError(error).errors;
@@ -55,6 +85,11 @@ export default function ProfilePicture() {
     if (!data) return;
 
     setTempUrl(URL.createObjectURL(data));
+    updateProfilePictureMutation.mutate(data);
+  };
+
+  const confirmRemove = () => {
+    deleteProfilePictureMutation.mutate();
   };
 
   return (
@@ -62,7 +97,11 @@ export default function ProfilePicture() {
       <DropdownMenu>
         <DropdownMenuTrigger
           asChild
-          className="w-1/2 max-w-40 aspect-square rounded-full outline-2 outline-primary drop-shadow-xl drop-shadow-secondary/50">
+          disabled={updateProfilePictureMutation.isSubmittingData || deleteProfilePictureMutation.isSubmittingData}
+          className={clsx(
+            "w-1/2 max-w-40 aspect-square rounded-full outline-2 outline-primary drop-shadow-xl drop-shadow-secondary/50",
+            (updateProfilePictureMutation.isSubmittingData || deleteProfilePictureMutation.isSubmittingData) ? "cursor-not-allowed opacity-75" : "cursor-pointer"
+          )}>
           {avatarImage
             ? (
               <img
@@ -114,7 +153,8 @@ export default function ProfilePicture() {
         open={isRemoveConfirmationOpen}
         onOpenChange={setIsRemoveConfirmationOpen}>
         <DialogContent
-          className="sm:max-w-sm">
+          className="sm:max-w-sm"
+          onInteractOutside={(e) => deleteProfilePictureMutation.isSubmittingData && e.preventDefault()}>
           <DialogHeader>
             <DialogTitle>
               Remove Picture
@@ -127,12 +167,15 @@ export default function ProfilePicture() {
           <DialogFooter>
             <DialogClose asChild>
               <DsButton
+                disabled={deleteProfilePictureMutation.isSubmittingData}
                 variant="secondary-outline">
                 Cancel
               </DsButton>
             </DialogClose>
             <DsButton
-              variant="destructive">
+              variant="destructive"
+              loading={deleteProfilePictureMutation.isSubmittingData}
+              onClick={confirmRemove}>
               Remove
             </DsButton>
           </DialogFooter>

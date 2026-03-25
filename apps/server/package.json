@@ -34,6 +34,7 @@
     "cors": "^2.8.6",
     "drizzle-orm": "^0.45.1",
     "express": "^5.2.1",
+    "file-type": "^21.3.4",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.19.1",
     "node-cron": "^4.2.1"

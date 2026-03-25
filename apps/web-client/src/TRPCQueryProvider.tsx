@@ -5,6 +5,9 @@ import {
 import {
   createTRPCClient,
   httpBatchLink,
+  httpLink,
+  isNonJsonSerializable,
+  splitLink,
 } from "@trpc/client";
 import {
   useState,
@@ -33,12 +36,22 @@ export const queryClient = makeQueryClient();
 function makeTRPCClient() {
   return createTRPCClient<AppRouter>({
     links: [
-      httpBatchLink({
-        url: import.meta.env.VITE_TRPC_URL,
-        headers() {
-          const accessToken = getAccessToken();
-          return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
-        },
+      splitLink({
+        condition: (op) => isNonJsonSerializable(op.input),
+        true: httpLink({
+          url: import.meta.env.VITE_TRPC_URL,
+          headers() {
+            const accessToken = getAccessToken();
+            return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+          },
+        }),
+        false: httpBatchLink({
+          url: import.meta.env.VITE_TRPC_URL,
+          headers() {
+            const accessToken = getAccessToken();
+            return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
+          },
+        }),
       }),
     ],
   })

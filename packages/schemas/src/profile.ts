@@ -19,7 +19,7 @@ export const profileUpdateSchema = profileSchema
   })
 export type ProfileUpdateSchema = z.infer<typeof profileUpdateSchema>;
 
-export const profilePicture = z.file({ error: PROFILE.picture.required })
+export const profilePictureSchema = z.file({ error: PROFILE.picture.required })
   .max(1_048_576, { error: PROFILE.picture.maxSize })
   .mime([
     "image/jpg",
@@ -30,4 +30,4 @@ export const profilePicture = z.file({ error: PROFILE.picture.required })
     "image/heic",
     "image/gif",
   ], { error: PROFILE.picture.valid })
-export type ProfilePicture = z.infer<typeof profilePicture>;
+export type ProfilePictureSchema = z.infer<typeof profilePictureSchema>;
