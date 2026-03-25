@@ -1,6 +1,6 @@
-import { Devices } from "@material-symbols-svg/react/rounded/w700";
-import { WbSunnyFill } from "@material-symbols-svg/react/rounded/w600";
-import { DarkModeFill } from "@material-symbols-svg/react/rounded/w100";
+import { DevicesW700 } from "@material-symbols-svg/react/icons/devices";
+import { WbSunnyFillW600 } from "@material-symbols-svg/react/icons/wb-sunny";
+import { DarkModeFillW100 } from "@material-symbols-svg/react/icons/dark-mode";
 
 import DsButton from "@components/ds/Button";
 import {
@@ -29,13 +29,13 @@ export default function ThemeToggle() {
   let Icon;
   switch (theme) {
     case "system":
-      Icon = Devices;
+      Icon = DevicesW700;
       break;
     case "light":
-      Icon = WbSunnyFill;
+      Icon = WbSunnyFillW600;
       break;
     case "dark":
-      Icon = DarkModeFill;
+      Icon = DarkModeFillW100;
       break;
   }
 

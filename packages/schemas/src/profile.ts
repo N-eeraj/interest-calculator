@@ -18,3 +18,16 @@ export const profileUpdateSchema = profileSchema
     email: true,
   })
 export type ProfileUpdateSchema = z.infer<typeof profileUpdateSchema>;
+
+export const profilePicture = z.file({ error: PROFILE.picture.required })
+  .max(1_048_576, { error: PROFILE.picture.maxSize })
+  .mime([
+    "image/jpg",
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/avif",
+    "image/heic",
+    "image/gif",
+  ], { error: PROFILE.picture.valid })
+export type ProfilePicture = z.infer<typeof profilePicture>;

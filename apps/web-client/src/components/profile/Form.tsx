@@ -1,10 +1,14 @@
+import type { HTMLAttributes } from "react";
+import clsx from "clsx";
+
 import DsInput from "@components/ds/Input";
 import DsButton from "@components/ds/Button";
 import DsErrorMessage from "@components/ds/ErrorMessage";
-
 import useProfileUpdate from "@hooks/profile/useProfileUpdate";
 
-export default function ProfileUpdateForm() {
+type Props = Pick<HTMLAttributes<HTMLFormElement>, "className">;
+
+export default function ProfileUpdateForm({ className }: Props) {
   const {
     form,
     onSubmit,
@@ -14,7 +18,10 @@ export default function ProfileUpdateForm() {
   return (    
       <form
         inert={isSubmitting}
-        className="flex flex-col gap-y-4 max-w-sm mx-auto"
+        className={clsx(
+          "flex flex-col gap-y-4",
+          className,
+        )}
         onSubmit={onSubmit}>
         <form.Field
           name="name"
@@ -52,7 +59,9 @@ export default function ProfileUpdateForm() {
           )}
         />
   
-        <DsButton loading={isSubmitting}>
+        <DsButton
+          loading={isSubmitting}
+          className="mt-4">
           Update
         </DsButton>
       </form>

@@ -50,4 +50,9 @@ export const PROFILE = {
   email: {
     ...EMAIL_VALIDATIONS,
   },
+  picture: {
+    required: "Please select an image",
+    maxSize: "Please use a smaller file (Max 1MB)",
+    valid: "Invalid file format, use (jpg, jpeg, png, webp, avif, heic, gif)",
+  },
 } as const;

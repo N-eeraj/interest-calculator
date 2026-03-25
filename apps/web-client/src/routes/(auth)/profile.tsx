@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 
+import ProfilePicture from "@components/profile/picture";
 import ProfileUpdateForm from "@components/profile/Form";
 import useProfile from "@hooks/profile/useProfile";
 
@@ -13,8 +14,9 @@ function RouteComponent() {
   if (isFetchingData) return;
 
   return (
-    <section>
-      <ProfileUpdateForm />
+    <section className="flex flex-col items-center gap-y-8 pt-5">
+      <ProfilePicture />
+      <ProfileUpdateForm className="w-11/12 max-w-sm" />
     </section>
   );
 }

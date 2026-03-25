@@ -79,5 +79,5 @@ export default function LogoutConfirmation({ ...props }: ComponentProps<typeof D
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
