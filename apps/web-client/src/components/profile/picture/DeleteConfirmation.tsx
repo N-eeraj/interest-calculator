@@ -1,5 +1,3 @@
-import type { ComponentProps } from "react";
-
 import DsButton from "@components/ds/Button";
 import {
   Dialog,
@@ -10,25 +8,29 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@components/ui/dialog";
-import useLogout from "@hooks/auth/useLogout";
+import useProfilePictureDelete from "@hooks/profile/picture/useProfilePictureDelete";
 
-export default function LogoutConfirmation({ ...props }: ComponentProps<typeof Dialog>) {
+export default function DeleteConfirmation() {
   const {
+    open,
     isSubmittingData,
-    mutate,
-  } = useLogout();
+    setIsRemoveConfirmationOpen,
+    confirmRemove,
+  } = useProfilePictureDelete()
 
   return (
-    <Dialog {...props}>
+    <Dialog
+      open={open}
+      onOpenChange={setIsRemoveConfirmationOpen}>
       <DialogContent
         className="sm:max-w-sm"
         onInteractOutside={(e) => isSubmittingData && e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>
-            Confirm Logout
+            Remove Picture
           </DialogTitle>
           <DialogDescription>
-            You are about to log out from this device.
+            You are about to remove your profile picture.
             Are you sure you want to continue?
           </DialogDescription>
         </DialogHeader>
@@ -43,8 +45,8 @@ export default function LogoutConfirmation({ ...props }: ComponentProps<typeof D
           <DsButton
             variant="destructive"
             loading={isSubmittingData}
-            onClick={mutate}>
-            Logout
+            onClick={confirmRemove}>
+            Remove
           </DsButton>
         </DialogFooter>
       </DialogContent>

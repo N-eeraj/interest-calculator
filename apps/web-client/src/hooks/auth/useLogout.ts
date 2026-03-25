@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
+import { queryClient } from "@/TRPCQueryProvider";
 import { useAuthRefreshMutation } from "@hooks/useAuthRefreshQuery";
 import { useTRPC } from "@utils/trpc";
 import {
@@ -17,8 +18,14 @@ export default function useLogout() {
     onSuccess: () => {
       removeAccessToken();
       removeRefreshToken();
+
+      queryClient.invalidateQueries({
+        queryKey: trpc.auth.me.queryOptions().queryKey,
+      });
+
       navigate({
-        href: "/login",
+        to: "/login",
+        replace: true,
       });
     },
     onError: (error) => {

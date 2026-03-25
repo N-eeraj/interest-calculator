@@ -7,6 +7,7 @@ import {
   type ProfileUpdateSchema,
 } from "@app/schemas/profile";
 
+import { queryClient } from "@/TRPCQueryProvider";
 import { useAuthRefreshMutation } from "@hooks/useAuthRefreshQuery";
 import useProfile from "@hooks/profile/useProfile";
 import { useTRPC } from "@utils/trpc";
@@ -28,6 +29,9 @@ export default function useProfileUpdate() {
 
   const mutation = useAuthRefreshMutation(trpc.profile.update.mutationOptions({
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: trpc.auth.me.queryOptions().queryKey,
+      });
       toast.success("Updated profile details");
     },
     onError: (error) => {
