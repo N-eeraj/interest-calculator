@@ -29,6 +29,13 @@
       "when": 1774170323894,
       "tag": "0003_1774170322_truncate_tokens",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1774542405086,
+      "tag": "0004_1774542403_create_schemes_and_scheme_rates",
+      "breakpoints": true
     }
   ]
 }
