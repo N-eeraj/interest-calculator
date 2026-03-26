@@ -1,0 +1,17 @@
+{
+  "name": "@app/definitions",
+  "version": "1.0.0",
+  "description": "Shared enums, constants and types",
+  "type": "module",
+  "imports": {
+    "#enums/*": "./src/enums/*.ts",
+    "#constants/*": "./src/constants/*.ts",
+    "#types/*": "./src/types/*.d.ts"
+  },
+  "exports": {
+    "./*": "./src/*.ts",
+    "./enums/*": "./src/enums/*.ts",
+    "./constants/*": "./src/constants/*.ts",
+    "./types/*": "./src/types/*.d.ts"
+  }
+}
