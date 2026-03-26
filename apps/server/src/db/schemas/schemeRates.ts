@@ -6,6 +6,7 @@ import {
   mysqlTable,
   serial,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/mysql-core";
 import { sql } from "drizzle-orm";
 
@@ -50,6 +51,7 @@ const schemeRates = mysqlTable("scheme_rates", {
   check("tenure_months_min_max_check", sql`${table.tenureMonths} BETWEEN 3 AND 120`),
   check("rates_min_check", sql`${table.regularRate} > 1 AND ${table.seniorRate} > 1`),
   check("senior_rate_greater_than_regular_rate_check", sql`${table.seniorRate} >= ${table.regularRate}`),
+  uniqueIndex("unique_scheme_tenure").on(table.schemeId, table.tenureMonths),
 ]);
 
 export default schemeRates;
