@@ -59,7 +59,7 @@ export default class ProfileService {
     }
   }
 
-  static async pictureUpdate(userId: number, file: ProfilePictureSchema) {
+  static async avatarUpdate(userId: number, file: ProfilePictureSchema) {
     await this.deleteCurrentProfilePicture(userId);
 
     const fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1);
@@ -83,7 +83,7 @@ export default class ProfileService {
     }
   }
 
-  static async pictureDelete(userId: number) {
+  static async avatarDelete(userId: number) {
     await this.deleteCurrentProfilePicture(userId);
   }
 }

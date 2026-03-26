@@ -8,8 +8,8 @@ import z, { ZodError } from "zod";
 import { eq } from "drizzle-orm";
 
 import {
-  profileSchema,
-  ProfileSchema,
+  profileIdSchema,
+  type ProfileSchema,
 } from "@app/schemas/profile";
 import { JWT_SECRET } from "#server/config";
 import { db } from "#db/index";
@@ -50,8 +50,7 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
 
   // validate/decode token and get user data
   const jwtPayload = jwt.verify(accessToken, JWT_SECRET);
-  const { data: jwtData } = profileSchema.pick({ id: true })
-    .safeParse(jwtPayload);
+  const { data: jwtData } = profileIdSchema.safeParse(jwtPayload);
   if (!jwtData) {
     throw new TRPCError({
       code: "UNAUTHORIZED",

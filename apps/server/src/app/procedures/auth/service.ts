@@ -16,7 +16,7 @@ import type {
   LogoutSchema,
 } from "@app/schemas/auth";
 import {
-  profileSchema,
+  profileIdSchema,
   type ProfileSchema,
 } from "@app/schemas/profile";
 
@@ -204,7 +204,7 @@ export default class AuthService {
     }
 
     const jwtPayload = jwt.verify(refreshToken, JWT_SECRET);
-    const { data } = profileSchema.safeParse(jwtPayload);
+    const { data } = profileIdSchema.safeParse(jwtPayload);
     if (!data) {
       throw new TRPCError({
         code: "UNAUTHORIZED",

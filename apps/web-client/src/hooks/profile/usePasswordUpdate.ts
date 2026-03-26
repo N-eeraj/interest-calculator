@@ -30,7 +30,7 @@ export default function usePasswordUpdate() {
       queryClient.invalidateQueries({
         queryKey: trpc.auth.me.queryOptions().queryKey,
       });
-      toast.success("Updated profile details");
+      toast.success("Updated password");
     },
     onError: (error) => {
       console.log(error);

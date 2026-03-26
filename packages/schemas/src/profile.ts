@@ -12,6 +12,8 @@ export const profileSchema = z.object({
 });
 export type ProfileSchema = z.infer<typeof profileSchema>;
 
+export const profileIdSchema = profileSchema.pick({ id: true });
+
 export const profileUpdateSchema = profileSchema
   .pick({
     name: true,

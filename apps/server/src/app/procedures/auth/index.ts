@@ -38,7 +38,7 @@ const auth = {
     }),
 
   /**
-   * Login a user using the provided credentials.
+   * Logout currently logged in user.
    */
   logout: protectedProcedure
     .input(logoutSchema)

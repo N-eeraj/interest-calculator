@@ -67,7 +67,7 @@ const profile = {
         }
 
         if (data) {
-          await ProfileService.pictureUpdate(ctx.user.id, data);
+          await ProfileService.avatarUpdate(ctx.user.id, data);
         }
       }),
 
@@ -76,7 +76,7 @@ const profile = {
      */
     delete: protectedProcedure
       .mutation(async ({ ctx }) => {
-        await ProfileService.pictureDelete(ctx.user.id);
+        await ProfileService.avatarDelete(ctx.user.id);
       }),
   },
 };
