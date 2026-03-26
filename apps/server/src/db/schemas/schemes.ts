@@ -15,7 +15,8 @@ const schemes = mysqlTable("schemes", {
   id: serial("id")
     .primaryKey(),
   type: mysqlEnum("type", SchemeType)
-    .notNull(),
+    .notNull()
+    .unique(),
   investmentType: mysqlEnum("investment_type", InvestmentType)
     .notNull(),
   compoundingType: mysqlEnum("compounding_type", CompoundingType)
