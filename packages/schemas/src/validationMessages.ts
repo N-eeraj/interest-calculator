@@ -55,4 +55,12 @@ export const PROFILE = {
     maxSize: "Please use a smaller file (Max 1MB)",
     valid: "Invalid file format, use (jpg, jpeg, png, webp, avif, heic, gif)",
   },
+  updatePassword: {
+    password: {
+      ...PASSWORD,
+    },
+    newPassword: {
+      ...NEW_PASSWORD,
+    },
+  },
 } as const;

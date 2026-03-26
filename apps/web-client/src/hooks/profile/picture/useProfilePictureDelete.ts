@@ -17,7 +17,7 @@ export default function useProfilePictureDelete() {
     setIsRemoveConfirmationOpen,
   } = use(ProfilePictureContext);
 
-  const deleteProfilePictureMutation = useAuthRefreshMutation(trpc.profile.picture.delete.mutationOptions({
+  const deleteProfilePictureMutation = useAuthRefreshMutation(trpc.profile.avatar.delete.mutationOptions({
     onSuccess: () => {
       setIsRemoveConfirmationOpen(false);
       queryClient.invalidateQueries({

@@ -20,6 +20,6 @@ const config: StorybookConfig = {
     "@storybook/addon-essentials",
     "@storybook/addon-themes",
   ],
-  "framework": getAbsolutePath('@storybook/react-vite')
+  "framework": getAbsolutePath("@storybook/react-vite"),
 };
 export default config;

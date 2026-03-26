@@ -23,7 +23,7 @@ export default function useProfilePictureUpdate() {
   const avatarImage = tempUrl ?? data?.avatarUrl;
   const initials = data?.name.split(" ").map(([initial]) => initial).slice(0, 2);
 
-  const updateProfilePictureMutation = useAuthRefreshMutation(trpc.profile.picture.update.mutationOptions({
+  const updateProfilePictureMutation = useAuthRefreshMutation(trpc.profile.avatar.update.mutationOptions({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: trpc.auth.me.queryOptions().queryKey,

@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 
 import {
   ProfileUpdateSchema,
+  PasswordUpdateSchema,
   ProfilePictureSchema,
 } from "@app/schemas/profile";
 
@@ -25,6 +26,14 @@ export default class ProfileService {
         email,
       })
       .where(eq(users.id, userId));
+  }
+
+  static async passwordUpdate(userId: number, { password, newPassword }: PasswordUpdateSchema) {
+    console.log({
+      userId,
+      password,
+      newPassword,
+    });
   }
 
   private static async deleteCurrentProfilePicture(userId: number) {

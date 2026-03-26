@@ -14,7 +14,8 @@ import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as authIndexRouteImport } from './routes/(auth)/index'
 import { Route as guestRegisterRouteImport } from './routes/(guest)/register'
 import { Route as guestLoginRouteImport } from './routes/(guest)/login'
-import { Route as authProfileRouteImport } from './routes/(auth)/profile'
+import { Route as authProfileIndexRouteImport } from './routes/(auth)/profile/index'
+import { Route as authProfileUpdatePasswordRouteImport } from './routes/(auth)/profile/update-password'
 
 const guestRouteRoute = guestRouteRouteImport.update({
   id: '/(guest)',
@@ -39,46 +40,61 @@ const guestLoginRoute = guestLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => guestRouteRoute,
 } as any)
-const authProfileRoute = authProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
+const authProfileIndexRoute = authProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
   getParentRoute: () => authRouteRoute,
 } as any)
+const authProfileUpdatePasswordRoute =
+  authProfileUpdatePasswordRouteImport.update({
+    id: '/profile/update-password',
+    path: '/profile/update-password',
+    getParentRoute: () => authRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/profile': typeof authProfileRoute
   '/login': typeof guestLoginRoute
   '/register': typeof guestRegisterRoute
   '/': typeof authIndexRoute
+  '/profile/update-password': typeof authProfileUpdatePasswordRoute
+  '/profile/': typeof authProfileIndexRoute
 }
 export interface FileRoutesByTo {
-  '/profile': typeof authProfileRoute
   '/login': typeof guestLoginRoute
   '/register': typeof guestRegisterRoute
   '/': typeof authIndexRoute
+  '/profile/update-password': typeof authProfileUpdatePasswordRoute
+  '/profile': typeof authProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)': typeof authRouteRouteWithChildren
   '/(guest)': typeof guestRouteRouteWithChildren
-  '/(auth)/profile': typeof authProfileRoute
   '/(guest)/login': typeof guestLoginRoute
   '/(guest)/register': typeof guestRegisterRoute
   '/(auth)/': typeof authIndexRoute
+  '/(auth)/profile/update-password': typeof authProfileUpdatePasswordRoute
+  '/(auth)/profile/': typeof authProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/profile' | '/login' | '/register' | '/'
+  fullPaths:
+    | '/login'
+    | '/register'
+    | '/'
+    | '/profile/update-password'
+    | '/profile/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/profile' | '/login' | '/register' | '/'
+  to: '/login' | '/register' | '/' | '/profile/update-password' | '/profile'
   id:
     | '__root__'
     | '/(auth)'
     | '/(guest)'
-    | '/(auth)/profile'
     | '/(guest)/login'
     | '/(guest)/register'
     | '/(auth)/'
+    | '/(auth)/profile/update-password'
+    | '/(auth)/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -123,24 +139,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof guestLoginRouteImport
       parentRoute: typeof guestRouteRoute
     }
-    '/(auth)/profile': {
-      id: '/(auth)/profile'
+    '/(auth)/profile/': {
+      id: '/(auth)/profile/'
       path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof authProfileRouteImport
+      fullPath: '/profile/'
+      preLoaderRoute: typeof authProfileIndexRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/(auth)/profile/update-password': {
+      id: '/(auth)/profile/update-password'
+      path: '/profile/update-password'
+      fullPath: '/profile/update-password'
+      preLoaderRoute: typeof authProfileUpdatePasswordRouteImport
       parentRoute: typeof authRouteRoute
     }
   }
 }
 
 interface authRouteRouteChildren {
-  authProfileRoute: typeof authProfileRoute
   authIndexRoute: typeof authIndexRoute
+  authProfileUpdatePasswordRoute: typeof authProfileUpdatePasswordRoute
+  authProfileIndexRoute: typeof authProfileIndexRoute
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
-  authProfileRoute: authProfileRoute,
   authIndexRoute: authIndexRoute,
+  authProfileUpdatePasswordRoute: authProfileUpdatePasswordRoute,
+  authProfileIndexRoute: authProfileIndexRoute,
 }
 
 const authRouteRouteWithChildren = authRouteRoute._addFileChildren(

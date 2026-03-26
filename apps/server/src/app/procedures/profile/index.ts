@@ -4,6 +4,7 @@ import { octetInputParser } from "@trpc/server/http";
 
 import {
   profileUpdateSchema,
+  passwordUpdateSchema,
   profilePictureSchema,
 } from "@app/schemas/profile";
 
@@ -21,9 +22,18 @@ const profile = {
     }),
 
   /**
+   * Updates logged in user's password.
+   */
+  passwordUpdate: protectedProcedure
+    .input(passwordUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      await ProfileService.passwordUpdate(ctx.user.id, input);
+    }),
+
+  /**
    * Profile picture.
    */
-  picture: {
+  avatar: {
     /**
      * Update profile picture.
      */

@@ -19,6 +19,23 @@ export const profileUpdateSchema = profileSchema
   })
 export type ProfileUpdateSchema = z.infer<typeof profileUpdateSchema>;
 
+export const passwordUpdateSchema = z.object({
+  password: z.string({ error: PROFILE.updatePassword.password.required })
+    .nonempty(PROFILE.updatePassword.password.required),
+  newPassword: z.string({ error: PROFILE.updatePassword.newPassword.required })
+    .nonempty(PROFILE.updatePassword.newPassword.required)
+    .min(6, PROFILE.updatePassword.newPassword.minLength)
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/, { error: (issue) => {
+      if (issue.input) {
+        if (!/[a-z]/.test(issue.input)) return PROFILE.updatePassword.newPassword.lowercaseRequired
+        if (!/[A-Z]/.test(issue.input)) return PROFILE.updatePassword.newPassword.uppercaseRequired
+        if (!/\d/.test(issue.input)) return PROFILE.updatePassword.newPassword.numberRequired
+      }
+      return PROFILE.updatePassword.newPassword.format
+    }}),
+});
+export type PasswordUpdateSchema = z.infer<typeof passwordUpdateSchema>;
+
 export const profilePictureSchema = z.file({ error: PROFILE.picture.required })
   .max(1_048_576, { error: PROFILE.picture.maxSize })
   .mime([

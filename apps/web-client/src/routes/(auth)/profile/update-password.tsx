@@ -1,36 +1,34 @@
-import type { HTMLAttributes } from "react";
-import clsx from "clsx";
-
-import DsInput from "@components/ds/Input";
+import { createFileRoute } from "@tanstack/react-router"
 import DsButton from "@components/ds/Button";
+import DsInput from "@components/ds/Input";
 import DsErrorMessage from "@components/ds/ErrorMessage";
-import useProfileUpdate from "@hooks/profile/useProfileUpdate";
+import usePasswordUpdate from "@hooks/profile/usePasswordUpdate";
 
-type Props = Pick<HTMLAttributes<HTMLFormElement>, "className">;
+export const Route = createFileRoute("/(auth)/profile/update-password")({
+  component: RouteComponent,
+})
 
-export default function ProfileUpdateForm({ className }: Props) {
+function RouteComponent() {
   const {
+    isSubmitting,
     form,
     onSubmit,
-    isSubmitting,
-  } = useProfileUpdate();
+  } = usePasswordUpdate();
 
-  return (    
+  return (  
     <form
       inert={isSubmitting}
-      className={clsx(
-        "flex flex-col gap-y-4",
-        className,
-      )}
+      className={"flex flex-col gap-y-4 w-11/12 max-w-sm mx-auto"}
       onSubmit={onSubmit}>
       <form.Field
-        name="name"
+        name="password"
         children={(field) => (
           <div className="space-y-1">
             <DsInput
               name={field.name}
-              label="Email"
-              placeholder="Enter name"
+              type="password"
+              label="Password"
+              placeholder="Enter your password"
               value={field.state.value as string}
               onChange={(e) => field.handleChange(e.target.value)} />
 
@@ -41,14 +39,14 @@ export default function ProfileUpdateForm({ className }: Props) {
         )}
       />
       <form.Field
-        name="email"
+        name="newPassword"
         children={(field) => (
           <div className="space-y-1">
             <DsInput
               name={field.name}
-              type="email"
-              label="Email"
-              placeholder="Enter email address"
+              type="password"
+              label="New Password"
+              placeholder="Enter new password"
               value={field.state.value as string}
               onChange={(e) => field.handleChange(e.target.value)} />
 

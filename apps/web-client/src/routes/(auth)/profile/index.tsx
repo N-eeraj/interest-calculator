@@ -1,11 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router"
+import {
+  Link,
+  createFileRoute,
+} from "@tanstack/react-router"
 
 import ProfilePicture from "@components/profile/picture";
 import ProfileUpdateForm from "@components/profile/Form";
+import DsButton from "@components/ds/Button";
 import useProfile from "@hooks/profile/useProfile";
 import ProfilePictureContextProvider from "@contexts/ProfilePicture";
 
-export const Route = createFileRoute("/(auth)/profile")({
+export const Route = createFileRoute("/(auth)/profile/")({
   component: RouteComponent,
 })
 
@@ -19,7 +23,18 @@ function RouteComponent() {
       <ProfilePictureContextProvider>
         <ProfilePicture />
       </ProfilePictureContextProvider>
-      <ProfileUpdateForm className="w-11/12 max-w-sm" />
+
+      <div className="w-11/12 max-w-sm space-y-6">
+        <ProfileUpdateForm />
+
+        <Link to="/profile/update-password">
+          <DsButton
+            variant="secondary"
+            className="w-full">
+            Change Password
+          </DsButton>
+        </Link>
+      </div>
     </section>
   );
 }
