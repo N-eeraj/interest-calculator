@@ -1,5 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
+import { TRPCError } from "@trpc/server";
+import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 
 import {
@@ -29,11 +31,40 @@ export default class ProfileService {
   }
 
   static async passwordUpdate(userId: number, { password, newPassword }: PasswordUpdateSchema) {
-    console.log({
-      userId,
-      password,
-      newPassword,
-    });
+    const [user] = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        password: users.password,
+        avatarUrl: users.avatarUrl,
+      })
+      .from(users)
+      .where(eq(users.id, userId));
+
+    if (!user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Invalid user",
+      });
+    }
+
+    const passwordCompare = await bcrypt.compare(password, user.password);
+    if (!passwordCompare) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Incorrect password",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    await db
+      .update(users)
+      .set({
+        password: hashedPassword,
+      })
+      .where(eq(users.id, userId));
   }
 
   private static async deleteCurrentProfilePicture(userId: number) {

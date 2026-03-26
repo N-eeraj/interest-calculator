@@ -11,6 +11,7 @@ import { queryClient } from "@/TRPCQueryProvider";
 import { useAuthRefreshMutation } from "@hooks/useAuthRefreshQuery";
 import useProfile from "@hooks/profile/useProfile";
 import { useTRPC } from "@utils/trpc";
+import handleFormError from "@utils/handleError";
 
 export default function useProfileUpdate() {
   const trpc = useTRPC();
@@ -35,7 +36,7 @@ export default function useProfileUpdate() {
       toast.success("Updated profile details");
     },
     onError: (error) => {
-      console.log(error);
+      handleFormError(form, error);
     },
   }));
 

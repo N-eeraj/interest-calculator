@@ -1,5 +1,6 @@
 import type { SubmitEvent } from "react";
 import { useForm } from "@tanstack/react-form";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 import {
@@ -7,12 +8,13 @@ import {
   type PasswordUpdateSchema,
 } from "@app/schemas/profile";
 
-import { queryClient } from "@/TRPCQueryProvider";
 import { useAuthRefreshMutation } from "@hooks/useAuthRefreshQuery";
 import { useTRPC } from "@utils/trpc";
+import handleFormError from "@utils/handleError";
 
 export default function usePasswordUpdate() {
   const trpc = useTRPC();
+  const navigate = useNavigate();
 
   const form = useForm({
     defaultValues: {
@@ -27,13 +29,13 @@ export default function usePasswordUpdate() {
 
   const mutation = useAuthRefreshMutation(trpc.profile.passwordUpdate.mutationOptions({
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: trpc.auth.me.queryOptions().queryKey,
-      });
       toast.success("Updated password");
+      navigate({
+        to: "/profile",
+      });
     },
     onError: (error) => {
-      console.log(error);
+      handleFormError(form, error);
     },
   }));
 
