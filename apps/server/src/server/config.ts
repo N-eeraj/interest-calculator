@@ -18,3 +18,4 @@ export const JWT_SECRET: string = process.env.JWT_SECRET;
 
 
 export const PUBLIC_PATH = "storage/files/public" as const;
+export const PRIVATE_PATH = "storage/files/private" as const;
