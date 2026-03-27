@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "b285b6de-ae59-45da-8865-b3f25eb4cc5a",
+  "id": "20fa6244-65b8-46f7-abdb-4c1518baab3e",
   "prevId": "1fdeeafa-f589-4b23-a5ad-92c33fd0fe87",
   "tables": {
     "investments": {
