@@ -1,0 +1,9 @@
+{
+  "name": "@app/utils",
+  "version": "1.0.0",
+  "description": "Shared enums, constants and types",
+  "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  }
+}
