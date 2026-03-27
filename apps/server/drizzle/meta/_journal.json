@@ -6,49 +6,49 @@
       "idx": 0,
       "version": "5",
       "when": 1773499030280,
-      "tag": "0000_1773499029_create_users",
+      "tag": "0000_create_users",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
       "when": 1773499062554,
-      "tag": "0001_1773499061_create_tokens",
+      "tag": "0001_create_tokens",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "5",
       "when": 1774170238065,
-      "tag": "0002_1774170236_add_expires_at_to_tokens",
+      "tag": "0002_add_expires_at_to_tokens",
       "breakpoints": true
     },
     {
       "idx": 3,
       "version": "5",
       "when": 1774170323894,
-      "tag": "0003_1774170322_truncate_tokens",
+      "tag": "0003_truncate_tokens",
       "breakpoints": true
     },
     {
       "idx": 4,
       "version": "5",
       "when": 1774542405086,
-      "tag": "0004_1774542403_create_schemes_and_scheme_rates",
+      "tag": "0004_create_schemes_and_scheme_rates",
       "breakpoints": true
     },
     {
       "idx": 5,
       "version": "5",
       "when": 1774632862062,
-      "tag": "0005_1774632860_add_unique_constraints_schemes_rates",
+      "tag": "0005_add_unique_constraints_schemes_rates",
       "breakpoints": true
     },
     {
       "idx": 6,
       "version": "5",
-      "when": 1774633319205,
-      "tag": "0006_1774633317_create_investments",
+      "when": 1774633560832,
+      "tag": "0006_create_investments",
       "breakpoints": true
     }
   ]
