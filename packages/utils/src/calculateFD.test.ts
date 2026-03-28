@@ -161,7 +161,7 @@ describe("calculateFD", () => {
       expect(calculateFD(principalAmount, tenure, interestRate))
         .toBe(expected);
     });
-  })
+  });
 
   it("throws error for negative principal", () => {
     expect(() => calculateFD(-1000, 12, 5)).toThrow("Invalid principal amount");
