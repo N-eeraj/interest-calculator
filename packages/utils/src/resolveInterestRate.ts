@@ -13,6 +13,15 @@ interface TenureRateMap {
   };
 }
 
+/**
+ * Resolves the applicable interest rate from a list of scheme rates based on tenure and senior status.
+ * 
+ * @param schemeRates - Array of scheme rate objects, each containing tenure ranges and rates
+ * @param tenure - Tenure in months
+ * @param isSenior - Whether the applicant is a senior citizen
+ * 
+ * @returns The applicable interest rate
+ */
 export default function resolveInterestRate(
   schemeRates: Array<SchemeRates>,
   tenure: number,

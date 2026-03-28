@@ -1,12 +1,11 @@
-import resolveInterestRate, {
-  type SchemeRates,
-} from "./resolveInterestRate";
 import {
   describe,
-  test,
   expect,
   it,
 } from "vitest";
+import resolveInterestRate, {
+  type SchemeRates,
+} from "./resolveInterestRate";
 
 describe("resolveInterestRate", () => {
   const RATES: Array<SchemeRates> = [
