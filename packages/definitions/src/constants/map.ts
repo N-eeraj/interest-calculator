@@ -5,7 +5,13 @@ import {
 } from "#enums/schemes";
 import { SortByOption } from "#enums/sort";
 
-export const SCHEMES = {
+interface SchemeDetails {
+  shortName: string;
+  name: string;
+  description: string;
+}
+
+export const SCHEMES: Record<SchemeType, SchemeDetails> = {
   [SchemeType.FD]: {
     shortName: "FD",
     name: "Fixed Deposit",
@@ -23,17 +29,18 @@ export const SCHEMES = {
   },
 } as const;
 
-export const COMPOUNDING_TYPE_OPTIONS = {
-  [CompoundingType.QUARTERLY]: "Quarterly",
+export const COMPOUNDING_TYPE_OPTIONS: Record<CompoundingType, string> = {
   [CompoundingType.NONE]: "None",
+  [CompoundingType.QUARTERLY]: "Quarterly",
+  [CompoundingType.YEARLY]: "Yearly",
 } as const;
 
-export const INVESTMENT_TYPE_OPTIONS = {
+export const INVESTMENT_TYPE_OPTIONS: Record<InvestmentType, string> = {
   [InvestmentType.LUMP_SUM]: "Lump Sum",
   [InvestmentType.RECURRING]: "Recurring",
 } as const;
 
-export const SORT_BY_OPTIONS = {
+export const SORT_BY_OPTIONS: Record<SortByOption, string> = {
   [SortByOption.DATE]: "Create At",
   [SortByOption.RATE]: "Interest Rate",
   [SortByOption.AMOUNT]: "Maturity Amount",
