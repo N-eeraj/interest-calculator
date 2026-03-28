@@ -4,7 +4,7 @@ interface Returns {
 }
 
 /**
- * Calculates the monthly payout and total returns for a MIS.
+ * Calculates the returns for a MIS.
  *
  * @param principalAmount - The principal amount invested
  * @param tenure - The tenure in months
@@ -28,9 +28,10 @@ export default function calculateMIS(
   }
 
   const monthlyPayout = +(principalAmount * interestRate / 1200).toFixed(2);
+  const totalReturns = +(monthlyPayout * tenure).toFixed(2)
 
   return {
     monthlyPayout,
-    totalReturns: +(monthlyPayout * tenure).toFixed(2),
+    totalReturns,
   };
 }
