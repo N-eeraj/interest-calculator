@@ -6,7 +6,7 @@ import usePasswordUpdate from "@hooks/profile/usePasswordUpdate";
 
 export const Route = createFileRoute("/(auth)/profile/update-password")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   const {

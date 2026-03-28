@@ -11,7 +11,7 @@ import ProfilePictureContextProvider from "@contexts/ProfilePicture";
 
 export const Route = createFileRoute("/(auth)/profile/")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
   const { isFetchingData } = useProfile();

@@ -112,13 +112,13 @@ export function useAuthRefreshMutation<
     ...options,
     onError: async (error, variables, context, mutationInstance) => {
       if (
-        typeof error === 'object' &&
+        typeof error === "object" &&
         error !== null &&
-        'data' in error &&
+        "data" in error &&
         error.data &&
-        typeof error.data === 'object' &&
-        'code' in error.data &&
-        (error.data as any).code === 'UNAUTHORIZED'
+        typeof error.data === "object" &&
+        "code" in error.data &&
+        (error.data as any).code === "UNAUTHORIZED"
       ) {
         setIsRefreshingToken(true);
         try {
