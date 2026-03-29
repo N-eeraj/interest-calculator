@@ -7,6 +7,7 @@
     "dev:server": "turbo run dev --filter=server",
     "dev:web-client": "turbo run dev --filter=web-client",
     "lint": "turbo run lint",
+    "test": "vitest --coverage",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },

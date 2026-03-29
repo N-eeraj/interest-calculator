@@ -1,4 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type {
+  Meta,
+  StoryObj,
+} from "@storybook/react-vite";
 
 import DsProgress from "@components/ds/Progress";
 

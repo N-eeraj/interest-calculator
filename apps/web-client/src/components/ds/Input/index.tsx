@@ -7,10 +7,9 @@ import {
   type HTMLInputTypeAttribute,
 } from "react";
 import clsx from "clsx";
-import {
-  VisibilityFill,
-  VisibilityOffFill,
-} from "@material-symbols-svg/react";
+
+import { VisibilityFillW400 } from "@material-symbols-svg/react/icons/visibility";
+import { VisibilityOffFillW400 } from "@material-symbols-svg/react/icons/visibility-off";
 
 import { Input } from "@components/ui/input";
 import DsButton from "@components/ds/Button";
@@ -95,8 +94,8 @@ export default function DsInput({
             className="absolute top-1/2 right-0 p-0 -translate-x-1/4 -translate-y-1/2"
             onClick={togglePasswordType}>
             {inputType === "password"
-              ? <VisibilityFill />
-              : <VisibilityOffFill />
+              ? <VisibilityFillW400 />
+              : <VisibilityOffFillW400 />
             }
           </DsButton>
         )}

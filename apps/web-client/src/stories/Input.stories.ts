@@ -1,4 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type {
+  Meta,
+  StoryObj,
+} from "@storybook/react-vite";
 import { fn } from "storybook/test";
 
 import DsInput from "@components/ds/Input";

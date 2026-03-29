@@ -1,7 +1,7 @@
 import type {
   AnyFormApi,
   AnyFieldMetaBase,
-} from '@tanstack/form-core';
+} from "@tanstack/form-core";
 import { toast } from "sonner";
 
 type FieldError = { message: string };
@@ -29,6 +29,6 @@ export default function handleFormError(
     });
   } else {
     const formErrors = shape?.formErrors as string[] | undefined;
-    toast.error(formErrors?.[0] ?? (error as any)?.message ?? 'Unknown error');
+    toast.error(formErrors?.[0] ?? (error as any)?.message ?? "Unknown error");
   }
 }
