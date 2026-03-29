@@ -14,7 +14,7 @@ describe("calculateRD", () => {
       interestRate: 5,
       expected: {
         maturityAmount: 6164.32,
-        totalDeposits: 6000,
+        totalDeposit: 6000,
         interestEarned: 164.32,
       },
     },
@@ -25,7 +25,7 @@ describe("calculateRD", () => {
       interestRate: 6,
       expected: {
         maturityAmount: 12210.7,
-        totalDeposits: 12000,
+        totalDeposit: 12000,
         interestEarned: 210.7,
       },
     },
@@ -36,7 +36,7 @@ describe("calculateRD", () => {
       interestRate: 7,
       expected: {
         maturityAmount: 258197.81,
-        totalDeposits: 240000,
+        totalDeposit: 240000,
         interestEarned: 18197.81,
       },
     },
@@ -47,7 +47,7 @@ describe("calculateRD", () => {
       interestRate: 4,
       expected: {
         maturityAmount: 4529.97,
-        totalDeposits: 4500,
+        totalDeposit: 4500,
         interestEarned: 29.97,
       },
     },
@@ -58,7 +58,7 @@ describe("calculateRD", () => {
       interestRate: 3,
       expected: {
         maturityAmount: 1943872.73,
-        totalDeposits: 1800000,
+        totalDeposit: 1800000,
         interestEarned: 143872.73,
       },
     },
@@ -69,7 +69,7 @@ describe("calculateRD", () => {
       interestRate: 5,
       expected: {
         maturityAmount: 0,
-        totalDeposits: 0,
+        totalDeposit: 0,
         interestEarned: 0,
       },
     },
@@ -80,7 +80,7 @@ describe("calculateRD", () => {
       interestRate: 5,
       expected: {
         maturityAmount: 0,
-        totalDeposits: 0,
+        totalDeposit: 0,
         interestEarned: 0,
       },
     },
@@ -91,7 +91,7 @@ describe("calculateRD", () => {
       interestRate: 0,
       expected: {
         maturityAmount: 12000,
-        totalDeposits: 12000,
+        totalDeposit: 12000,
         interestEarned: 0,
       },
     },
@@ -102,7 +102,7 @@ describe("calculateRD", () => {
       interestRate: 12,
       expected: {
         maturityAmount: 1280.11,
-        totalDeposits: 1200,
+        totalDeposit: 1200,
         interestEarned: 80.11,
       },
     },
@@ -113,7 +113,7 @@ describe("calculateRD", () => {
       interestRate: 5,
       expected: {
         maturityAmount: 5033449.46,
-        totalDeposits: 4200000,
+        totalDeposit: 4200000,
         interestEarned: 833449.46,
       },
     },

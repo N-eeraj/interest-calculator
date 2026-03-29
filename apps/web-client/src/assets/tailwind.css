@@ -126,6 +126,13 @@
     label {
       @apply cursor-pointer disabled:cursor-not-allowed;
     }
+
+    input[type="number"] {
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        @apply appearance-none m-0;
+      }
+    }
   }
 
   ::selection {

@@ -1,6 +1,6 @@
 interface Returns {
   maturityAmount: number;
-  totalDeposits: number;
+  totalDeposit: number;
   interestEarned: number;
 }
 
@@ -28,7 +28,7 @@ export default function calculateRD(
     throw new Error("Invalid interest rate");
   }
 
-  const totalDeposits = +(monthlyDeposit * tenure).toFixed(2);
+  const totalDeposit = +(monthlyDeposit * tenure).toFixed(2);
   let maturityAmount;
   if (interestRate) {
     const quarterlyRate = interestRate / 400;
@@ -41,14 +41,14 @@ export default function calculateRD(
       )
     ).toFixed(2);
   } else {
-    maturityAmount = totalDeposits;
+    maturityAmount = totalDeposit;
   }
 
-  const interestEarned = +(maturityAmount - totalDeposits).toFixed(2);
+  const interestEarned = +(maturityAmount - totalDeposit).toFixed(2);
 
   return {
     maturityAmount,
-    totalDeposits,
+    totalDeposit,
     interestEarned,
   };
 }

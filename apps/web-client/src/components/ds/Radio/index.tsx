@@ -4,31 +4,34 @@ import {
 } from "react";
 import clsx from "clsx";
 import { CheckCircleFillW400 } from "@material-symbols-svg/react/icons/check-circle";
+import { CircleW400 } from "@material-symbols-svg/react/icons/circle";
 
 import {
   themeCheckVariants,
+  themeDescriptionVariants,
   themeItemVariants,
   themeLabelVariants,
   type Theme,
 } from "./definitions";
 
 type OptionType = string | Record<string, string | number>;
-type OptionValueType<T extends OptionType = string> = T extends string ? string : string | number | boolean;
+type OptionValueType = string | number | boolean;
 
-interface Props<T extends OptionType = string> {
-  value?: OptionValueType<T>;
-  options: Array<T extends string ? string : Record<string, string | number>>;
-  labelKey?: T extends string ? never : string;
-  valueKey?: T extends string ? never : string;
+interface Props {
+  value?: OptionValueType;
+  options: Array<string | Record<string, string | number>>;
+  labelKey?: string;
+  valueKey?: string;
   name?: string;
   containerProps?: HTMLAttributes<HTMLUListElement>;
   itemProps?: HTMLAttributes<HTMLElement>;
   disabled?: boolean;
+  descriptionRender?: (optionValue: OptionType) => string;
   theme?: Theme;
-  onChange?: (optionValue: OptionValueType<T>) => void;
+  onChange?: (optionValue: OptionValueType) => void;
 }
 
-export default function DsRadio<T extends OptionType = string>({
+export default function DsRadio({
   value,
   options,
   labelKey,
@@ -37,9 +40,10 @@ export default function DsRadio<T extends OptionType = string>({
   containerProps,
   itemProps,
   disabled,
+  descriptionRender,
   theme = "primary",
   onChange,
-}: Props<T>) {
+}: Props) {
   const id = useId();
 
   const getOptionLabel = (option: OptionType) => {
@@ -49,7 +53,7 @@ export default function DsRadio<T extends OptionType = string>({
 
   const getOptionValue = (option: OptionType) => {
     if (typeof option === "string") return option;
-    return option[valueKey ?? "label"];
+    return option[valueKey ?? "value"];
   };
 
   return (
@@ -64,13 +68,13 @@ export default function DsRadio<T extends OptionType = string>({
           <label
             {...itemProps}
             className={clsx(
-              "flex justify-between items-center gap-x-4 px-3 py-2 rounded-lg border transition-all duration-300",
+              "group flex justify-between items-center flex-wrap gap-x-4 gap-y-1 px-3 py-2 rounded-lg border transition-all duration-300",
               themeItemVariants[theme],
               itemProps?.className,
             )}>
             <span className={clsx(
               themeLabelVariants[theme],
-              "brightness-75"
+              "group-not-has-checked:brightness-75"
             )}>
               {getOptionLabel(option)}
             </span>
@@ -83,12 +87,29 @@ export default function DsRadio<T extends OptionType = string>({
               defaultChecked={getOptionValue(option) === value}
               className="peer hidden"
               onChange={({ target }) => onChange?.(target.value)} />
+
             <CheckCircleFillW400
               className={clsx(
-                "size-5",
-                getOptionValue(option) && "not-peer-checked:hidden",
+                "shrink-0 size-5",
                 themeCheckVariants[theme],
+                getOptionValue(option) && "not-peer-checked:hidden",
               )} />
+            <CircleW400
+              className={clsx(
+                "shrink-0 size-5",
+                themeCheckVariants[theme],
+                getOptionValue(option) && "peer-checked:hidden",
+              )} />
+
+            {descriptionRender && (
+              <p
+                className={clsx(
+                  "w-full text-xs",
+                  themeDescriptionVariants[theme],
+                )}>
+                {descriptionRender(option)}
+              </p>
+            )}
           </label>
         </li>
       ))}
