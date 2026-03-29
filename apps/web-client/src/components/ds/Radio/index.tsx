@@ -3,6 +3,14 @@ import {
   type HTMLAttributes,
 } from "react";
 import clsx from "clsx";
+import { CheckCircleFillW400 } from "@material-symbols-svg/react/icons/check-circle";
+
+import {
+  themeCheckVariants,
+  themeItemVariants,
+  themeLabelVariants,
+  type Theme,
+} from "./definitions";
 
 type OptionType = string | Record<string, string | number>;
 type OptionValueType<T extends OptionType = string> = T extends string ? string : string | number | boolean;
@@ -12,9 +20,11 @@ interface Props<T extends OptionType = string> {
   options: Array<T extends string ? string : Record<string, string | number>>;
   labelKey?: T extends string ? never : string;
   valueKey?: T extends string ? never : string;
+  name?: string;
   containerProps?: HTMLAttributes<HTMLUListElement>;
   itemProps?: HTMLAttributes<HTMLElement>;
   disabled?: boolean;
+  theme?: Theme;
   onChange?: (optionValue: OptionValueType<T>) => void;
 }
 
@@ -23,12 +33,14 @@ export default function DsRadio<T extends OptionType = string>({
   options,
   labelKey,
   valueKey,
+  name,
   containerProps,
   itemProps,
   disabled,
+  theme = "primary",
   onChange,
 }: Props<T>) {
-  const name = useId();
+  const id = useId();
 
   const getOptionLabel = (option: OptionType) => {
     if (typeof option === "string") return option;
@@ -52,24 +64,31 @@ export default function DsRadio<T extends OptionType = string>({
           <label
             {...itemProps}
             className={clsx(
-              "flex items-center gap-x-2 px-3 py-2 hover:bg-primary/20 rounded-lg border border-primary transition-all duration-300",
+              "flex justify-between items-center gap-x-4 px-3 py-2 rounded-lg border transition-all duration-300",
+              themeItemVariants[theme],
               itemProps?.className,
             )}>
-            <input
-              type="radio"
-              disabled={disabled}
-              name={name}
-              value={getOptionValue(option)}
-              defaultChecked={getOptionValue(option) === value}
-              className={clsx(
-                "accent-primary"
-              )}
-              onChange={({ target }) => onChange?.(target.value)} />
             <span className={clsx(
-              "text-primary"
+              themeLabelVariants[theme],
+              "brightness-75"
             )}>
               {getOptionLabel(option)}
             </span>
+
+            <input
+              type="radio"
+              disabled={disabled}
+              name={name || id}
+              value={getOptionValue(option)}
+              defaultChecked={getOptionValue(option) === value}
+              className="peer hidden"
+              onChange={({ target }) => onChange?.(target.value)} />
+            <CheckCircleFillW400
+              className={clsx(
+                "size-5",
+                getOptionValue(option) && "not-peer-checked:hidden",
+                themeCheckVariants[theme],
+              )} />
           </label>
         </li>
       ))}

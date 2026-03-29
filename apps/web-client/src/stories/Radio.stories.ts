@@ -4,6 +4,7 @@ import type {
 } from "@storybook/react-vite";
 
 import DsRadio from "@components/ds/Radio";
+import { themes } from "@components/ds/Radio/definitions";
 
 const meta = {
   title: "Design System/Radio",
@@ -17,6 +18,10 @@ const meta = {
     },
     valueKey: {
       control: "text",
+    },
+    theme: {
+      control: "select",
+      options: themes,
     },
   },
   args: {
