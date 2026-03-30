@@ -74,7 +74,7 @@ export default function DsRadio({
             )}>
             <span className={clsx(
               themeLabelVariants[theme],
-              "group-not-has-checked:brightness-75"
+              "font-medium group-not-has-checked:brightness-75"
             )}>
               {getOptionLabel(option)}
             </span>
