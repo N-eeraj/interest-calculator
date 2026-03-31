@@ -1,11 +1,12 @@
+import { eq } from "drizzle-orm";
+
+import { SchemeRateResourceListSchema } from "@app/schemas/schemes";
+
 import { db } from "#db/index";
 import {
   schemeRates,
   schemes,
 } from "#db/schemas/index";
-
-import { SchemeRateResourceListSchema } from "@app/schemas/schemes";
-import { eq } from "drizzle-orm";
 
 export default class InvestmentService {
   static async schemeRates(): Promise<SchemeRateResourceListSchema> {
