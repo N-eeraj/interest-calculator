@@ -3,6 +3,7 @@ import {
   type HTMLAttributes,
 } from "react";
 import clsx from "clsx";
+import { LucideChevronDown } from "lucide-react";
 
 import { SCHEMES } from "@app/definitions/constants/map";
 import {
@@ -15,20 +16,29 @@ import {
 } from "@app/definitions/constants/scheme/tenures";
 import type { SchemeType } from "@app/definitions/enums/schemes";
 
-import { Slider } from "@components/ui/slider";
-import { Switch } from "@components/ui/switch"
 import DsInput from "@components/ds/Input";
 import DsRadio from "@components/ds/Radio";
+import DsButton from "@components/ds/Button";
+import { Slider } from "@components/ui/slider";
+import { Switch } from "@components/ui/switch"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@components/ui/dropdown-menu";
 
 interface Props extends HTMLAttributes<HTMLElement> {
   scheme: SchemeType;
   investment: number;
   tenure: number;
   isSeniorCitizen: boolean;
+  tenureType: "month" | "year";
   setScheme: React.Dispatch<React.SetStateAction<SchemeType>>;
   setInvestment:  React.Dispatch<React.SetStateAction<number>>;
   setTenure: React.Dispatch<React.SetStateAction<number>>;
   setIsSeniorCitizen: React.Dispatch<React.SetStateAction<boolean>>;
+  setTenureType: React.Dispatch<React.SetStateAction<"month" | "year">>;
 }
 
 export default function InvestmentForm({
@@ -36,10 +46,12 @@ export default function InvestmentForm({
   investment,
   tenure,
   isSeniorCitizen,
+  tenureType,
   setScheme,
   setInvestment,
   setTenure,
   setIsSeniorCitizen,
+  setTenureType,
   className,
 }: Props) {
   const schemeOptions = Object.entries(SCHEMES)
@@ -48,14 +60,15 @@ export default function InvestmentForm({
   const minInvestment = MIN_INVESTMENT_AMOUNT[scheme];
   const maxInvestment = MAX_INVESTMENT_AMOUNT[scheme];
 
-  const minTenure = MIN_TENURE_MONTHS[scheme];
-  const maxTenure = MAX_TENURE_MONTHS[scheme];
+  const minTenure = MIN_TENURE_MONTHS[scheme] / (tenureType === "month" ? 1 : 12);
+  const maxTenure = MAX_TENURE_MONTHS[scheme] / (tenureType === "month" ? 1 : 12);
 
   useEffect(() => {
     setInvestment(Math.min(Math.max(minInvestment, investment), maxInvestment));
     setTenure(Math.min(Math.max(minTenure, tenure), maxTenure));
   }, [
     scheme,
+    tenureType,
   ]);
 
   return (
@@ -91,9 +104,29 @@ export default function InvestmentForm({
       </div>
 
       <div className="flex justify-between items-center gap-y-4 flex-wrap">
-        <label>
-          Tenure
-        </label>
+        <div className="flex items-center gap-x-2">
+          <label>
+            Tenure
+          </label>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <DsButton
+                variant="outline"
+                className="gap-x-1 h-full pr-px! capitalize">
+                {`${tenureType}s`}
+                <LucideChevronDown />
+              </DsButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTenureType("month")}>
+                Months
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTenureType("year")}>
+                Years
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <DsInput
           value={tenure}
           type="number"
@@ -106,6 +139,7 @@ export default function InvestmentForm({
           value={[tenure]}
           min={minTenure}
           max={maxTenure}
+          step={tenureType === "month" ? 1 : 0.25}
           className="w-full"
           onValueChange={([value]) => setTenure(value)} />
       </div>

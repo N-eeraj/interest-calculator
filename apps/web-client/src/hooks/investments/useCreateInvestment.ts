@@ -15,23 +15,24 @@ export default function useCreateInvestment() {
 
   const [scheme, setScheme] = useState(SchemeType.FD);
   const [investment, setInvestment] = useState(MIN_INVESTMENT_AMOUNT[scheme]);
-  const [tenure, setTenure] = useState(MIN_TENURE_MONTHS[scheme]);
+  const [tenure, setTenure] = useState(MIN_TENURE_MONTHS[scheme] / 12);
   const [isSeniorCitizen, setIsSeniorCitizen] = useState(false);
+  const [tenureType, setTenureType] = useState<"month" | "year">("year");
 
   const {
     data: schemeRates,
     isFetchingData: isFetchingSchemeRates,
   } = useAuthRefreshQuery(trpc.investment.scheme.rates.queryOptions());
-  
 
+  const tenureMonths = tenure * (tenureType === "year" ? 12 : 1);
   let interestRate = 0;
   if (
     schemeRates?.length &&
-    tenure >= MIN_TENURE_MONTHS[scheme]
+    tenureMonths >= MIN_TENURE_MONTHS[scheme]
   ) {
     interestRate = resolveInterestRate(
       schemeRates.filter((schemeRate) => schemeRate.scheme === scheme),
-      tenure,
+      tenureMonths,
       isSeniorCitizen,
     );
   }
@@ -41,22 +42,23 @@ export default function useCreateInvestment() {
     returns: 0,
     totalValue: 0,
     monthlyPayout: 0,
+    interestRate,
   };
 
   switch (scheme) {
     case SchemeType.FD:
-      const calculatedFD = calculateFD(investment, tenure, interestRate);
+      const calculatedFD = calculateFD(investment, tenureMonths, interestRate);
       summary.returns = calculatedFD.interestEarned;
       summary.totalValue = calculatedFD.maturityAmount;
       break;
     case SchemeType.RD:
-      const calculatedRD = calculateRD(investment, tenure, interestRate);
+      const calculatedRD = calculateRD(investment, tenureMonths, interestRate);
       summary.investedAmount = calculatedRD.totalDeposit;
       summary.returns = calculatedRD.interestEarned;
       summary.totalValue = calculatedRD.maturityAmount;
       break;
     case SchemeType.MIS:
-      const calculatedMIS = calculateMIS(investment, tenure, interestRate);
+      const calculatedMIS = calculateMIS(investment, tenureMonths, interestRate);
       summary.monthlyPayout = calculatedMIS.monthlyPayout;
       summary.returns = calculatedMIS.totalReturns;
       break;
@@ -67,10 +69,16 @@ export default function useCreateInvestment() {
     investment,
     tenure,
     isSeniorCitizen,
+    tenureType,
     setScheme,
     setInvestment,
     setTenure,
     setIsSeniorCitizen,
+    setTenureType,
+  };
+
+  const saveInvestment = () => {
+    console.log({scheme, tenureMonths, isSeniorCitizen, investment});
   };
 
   return {
@@ -78,5 +86,6 @@ export default function useCreateInvestment() {
     schemeRates,
     formProps,
     summary,
+    saveInvestment,
   };
 }
