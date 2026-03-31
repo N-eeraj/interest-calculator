@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-router";
 
 import SplashScreen from "@components/SplashScreen";
-import Navbar from "@/components/navbar";
+import Navbar from "@components/navbar";
 import {
   refreshAccessToken,
   clearTokensAndLogout,
