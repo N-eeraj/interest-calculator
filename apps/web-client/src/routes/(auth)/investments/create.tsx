@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import InvestmentForm from "@components/investment/Form";
+import InvestmentChart from "@components/investment/Chart";
 import InvestmentSummary from "@components/investment/Summary";
 import DsSpinner from "@components/ds/Spinner";
 import useCreateInvestment from "@hooks/investments/useCreateInvestment";
@@ -29,9 +30,10 @@ function RouteComponent() {
     <section className="grid md:grid-cols-2 gap-x-12 gap-y-6">
       <InvestmentForm {...formProps} />
 
-      <div className="max-md:order-1">
-        {/* chart */}
-      </div>
+      <InvestmentChart
+        invested={summary.investedAmount}
+        returns={summary.returns}
+        className="max-md:order-1 w-full max-w-80" />
 
       <InvestmentSummary {...summary} />
     </section>

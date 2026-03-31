@@ -58,6 +58,7 @@ export default function useCreateInvestment() {
     case SchemeType.MIS:
       const calculatedMIS = calculateMIS(investment, tenure, interestRate);
       summary.monthlyPayout = calculatedMIS.monthlyPayout;
+      summary.returns = calculatedMIS.totalReturns;
       break;
   }
 

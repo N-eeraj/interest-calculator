@@ -45,13 +45,24 @@ export default function InvestmentSummary({
   }
 
   return (
-    <div className="flex flex-col items-center gap-y-1">
-      <span className="text-lg">
-        Total Value
-      </span>
-      <strong className="font-semibold">
-        <DsAnimatedCounter value={monthlyPayout} />
-      </strong>
+    <div className="grid md:grid-cols-2 gap-3">
+      <div className="flex flex-col items-center gap-y-1">
+        <span className="text-lg">
+          Monthly Payout
+        </span>
+        <strong className="font-semibold">
+          <DsAnimatedCounter value={monthlyPayout} />
+        </strong>
+      </div>
+
+      <div className="flex flex-col items-center gap-y-1">
+        <span className="text-lg">
+          Total Value
+        </span>
+        <strong className="font-semibold">
+          <DsAnimatedCounter value={returns} />
+        </strong>
+      </div>
     </div>
   );
 }
