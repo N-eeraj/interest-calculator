@@ -6,6 +6,7 @@ import {
 import pingProcedure from "#procedures/ping";
 import authProcedures from "#procedures/auth/index";
 import profileProcedures from "#procedures/profile/index";
+import investmentProcedures from "#procedures/investment/index";
 
 const appRouter = router({
   /**
@@ -22,6 +23,11 @@ const appRouter = router({
    * Profile related procedures.
    */
   profile: profileProcedures,
+
+  /**
+   * Investment related procedures.
+   */
+  investment: investmentProcedures,
 });
 
 const trpcAppRouter = trpcExpress.createExpressMiddleware({
