@@ -16,6 +16,7 @@ import {
 import type { SchemeType } from "@app/definitions/enums/schemes";
 
 import { Slider } from "@components/ui/slider";
+import { Switch } from "@components/ui/switch"
 import DsInput from "@components/ds/Input";
 import DsRadio from "@components/ds/Radio";
 
@@ -23,18 +24,22 @@ interface Props extends HTMLAttributes<HTMLElement> {
   scheme: SchemeType;
   investment: number;
   tenure: number;
+  isSeniorCitizen: boolean;
   setScheme: React.Dispatch<React.SetStateAction<SchemeType>>;
   setInvestment:  React.Dispatch<React.SetStateAction<number>>;
-  setTenure:  React.Dispatch<React.SetStateAction<number>>;
+  setTenure: React.Dispatch<React.SetStateAction<number>>;
+  setIsSeniorCitizen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function InvestmentForm({
   scheme,
   investment,
   tenure,
+  isSeniorCitizen,
   setScheme,
   setInvestment,
   setTenure,
+  setIsSeniorCitizen,
   className,
 }: Props) {
   const schemeOptions = Object.entries(SCHEMES)
@@ -103,6 +108,16 @@ export default function InvestmentForm({
           max={maxTenure}
           className="w-full"
           onValueChange={([value]) => setTenure(value)} />
+      </div>
+
+      <div className="flex justify-between items-center">
+        <label>
+          Senior Citizen
+        </label>
+        <Switch
+          checked={isSeniorCitizen}
+          className="data-[state=unchecked]:bg-primary/30!"
+          onCheckedChange={setIsSeniorCitizen} />
       </div>
     </div>
   );
