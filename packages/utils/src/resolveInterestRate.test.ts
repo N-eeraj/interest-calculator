@@ -5,6 +5,7 @@ import {
 } from "vitest";
 import {
   resolveInterestRate,
+  getMatchedMonths,
   type SchemeRates,
 } from "./resolveInterestRate";
 
@@ -228,3 +229,75 @@ describe("resolveInterestRate", () => {
     }
   }
 })
+
+describe("getMatchedMonths", () => {
+  const SCHEME_MONTHS = [36, 3, 120, 5, 48, 60, 200, 12, 24, 84];
+
+  const TEST_CASES = [
+    {
+      caseName: "Below min tenure",
+      tenure: 2,
+      expected: null,
+    },
+    {
+      caseName: "Exact match 3 months",
+      tenure: 3,
+      expected: 3,
+    },
+    {
+      caseName: "Between 3 and 5 months",
+      tenure: 4,
+      expected: 3,
+    },
+    {
+      caseName: "Exact match 5 months",
+      tenure: 5,
+      expected: 5,
+    },
+    {
+      caseName: "Between 5 and 12 months",
+      tenure: 7,
+      expected: 5,
+    },
+    {
+      caseName: "Exact match 12 months",
+      tenure: 12,
+      expected: 12,
+    },
+    {
+      caseName: "Between 12 and 24 months",
+      tenure: 14,
+      expected: 12,
+    },
+    {
+      caseName: "Exact match 24 months",
+      tenure: 24,
+      expected: 24,
+    },
+    {
+      caseName: "Between 24 and 36 months",
+      tenure: 30,
+      expected: 24,
+    },
+    {
+      caseName: "Above max tenure",
+      tenure: 10000,
+      expected: 200,
+    },
+    {
+      caseName: "Negative tenure",
+      tenure: -5,
+      expected: null,
+    },
+  ] as const;
+
+  for (const { caseName, tenure, expected } of TEST_CASES) {
+    it(caseName, () => {
+      expect(getMatchedMonths(SCHEME_MONTHS, tenure)).toBe(expected);
+    });
+  }
+
+  it("Empty array should return null", () => {
+    expect(getMatchedMonths([], 10)).toBeNull();
+  });
+});
