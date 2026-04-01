@@ -16,14 +16,14 @@ export const Route = createFileRoute("/(auth)/investments/create")({
 
 function RouteComponent() {
   const {
-    isFetchingSchemeRates,
-    schemeRates,
+    isFetchingData,
     formProps,
     summary,
     saveInvestment,
+    savingInvestment,
   } = useCreateInvestment()
 
-  if (isFetchingSchemeRates || !schemeRates) {
+  if (isFetchingData) {
     return (
       <section className="grid place-content-center h-[calc(100svh-160px)]">
         <DsSpinner className="size-16" />
@@ -46,11 +46,13 @@ function RouteComponent() {
             className="grow">
             <DsButton
               variant="secondary-outline"
+              disabled={savingInvestment}
               className="w-full">
               Cancel
             </DsButton>
           </Link>
           <DsButton
+            loading={savingInvestment}
             className="grow"
             onClick={saveInvestment}>
             Save Investment

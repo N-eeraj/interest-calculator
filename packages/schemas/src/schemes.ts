@@ -1,5 +1,14 @@
 import * as z from "zod";
 import { SchemeType } from "@app/definitions/enums/schemes";
+import { INVESTMENT } from "#messages";
+
+export const schemesSchema = z.array(
+  z.object({
+    id: z.number(),
+    type: z.enum(SchemeType),
+  })
+);
+export type SchemesSchema = z.infer<typeof schemesSchema>;
 
 export const schemeRateSchema = z.object({
   schemeId: z.coerce.number(),
@@ -20,3 +29,12 @@ export type SchemeRateListSchema = z.infer<typeof schemeRateListSchema>;
 
 export const schemeRateResourceListSchema = z.array(schemeRateResourceSchema);
 export type SchemeRateResourceListSchema = z.infer<typeof schemeRateResourceListSchema>;
+
+export const createInvestmentSchema = z.object({
+  schemeId: z.number({ error: INVESTMENT.create.schemeId.required }),
+  tenureMonths: z.number({ error: INVESTMENT.create.tenureMonths.required }),
+  isSeniorCitizen: z.boolean({ error: INVESTMENT.create.isSeniorCitizen.valid })
+    .optional(),
+    investment: z.number({ error: INVESTMENT.create.investment.valid })
+});
+export type CreateInvestmentSchema = z.infer<typeof createInvestmentSchema>;
