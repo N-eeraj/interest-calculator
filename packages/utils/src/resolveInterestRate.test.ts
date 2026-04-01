@@ -3,7 +3,8 @@ import {
   expect,
   it,
 } from "vitest";
-import resolveInterestRate, {
+import {
+  resolveInterestRate,
   type SchemeRates,
 } from "./resolveInterestRate";
 
