@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 import { SchemeType } from "@app/definitions/enums/schemes";
-import resolveInterestRate from "@app/utils/resolveInterestRate";
+import { resolveInterestRate } from "@app/utils/resolveInterestRate";
 import calculateFD from "@app/utils/calculateFD";
 import calculateRD from "@app/utils/calculateRD";
 import calculateMIS from "@app/utils/calculateMIS";

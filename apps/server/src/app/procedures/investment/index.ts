@@ -40,10 +40,7 @@ const investment = {
   create: protectedProcedure
     .input(createInvestmentSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log({
-        userId: ctx.user.id,
-        input,
-      })
+      await InvestmentService.createInvestment(ctx.user.id, input);
     }),
 };
 

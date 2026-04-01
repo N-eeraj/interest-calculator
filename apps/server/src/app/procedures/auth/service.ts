@@ -101,32 +101,33 @@ export default class AuthService {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const data = await db.transaction(async (tx) => {
-      const [result] = await tx
-        .insert(users)
-        .values({
+    const data = await db
+      .transaction(async (tx) => {
+        const [result] = await tx
+          .insert(users)
+          .values({
+            email,
+            name,
+            avatarUrl: null,
+            password: hashedPassword,
+          });
+        const user = {
           email,
           name,
+          id: result.insertId,
           avatarUrl: null,
-          password: hashedPassword,
-        });
-      const user = {
-        email,
-        name,
-        id: result.insertId,
-        avatarUrl: null,
-      };
-  
-      const {
-        accessToken,
-        refreshToken,
-      } = await this.authenticate(user, tx);
-      return {
-        ...user,
-        accessToken,
-        refreshToken,
-      };
-    })
+        };
+    
+        const {
+          accessToken,
+          refreshToken,
+        } = await this.authenticate(user, tx);
+        return {
+          ...user,
+          accessToken,
+          refreshToken,
+        };
+      })
 
     return data;
   }
