@@ -64,3 +64,25 @@ export const PROFILE = {
     },
   },
 } as const;
+
+const AMOUNT = {
+  valid: "Please enter a valid amount",
+  required: "Please enter an amount",
+} as const;
+
+export const INVESTMENT = {
+  create: {
+    schemeId: {
+      required: "Scheme id is required",
+    },
+    tenureMonths: {
+      required: "Please select a tenure",
+    },
+    isSeniorCitizen: {
+      valid: "Please select a valid boolean value"
+    },
+    investment: {
+      ...AMOUNT,
+    },
+  },
+} as const;

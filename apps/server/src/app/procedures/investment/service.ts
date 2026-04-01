@@ -1,6 +1,9 @@
 import { eq } from "drizzle-orm";
 
-import { SchemeRateResourceListSchema } from "@app/schemas/schemes";
+import {
+  SchemesSchema,
+  SchemeRateResourceListSchema,
+} from "@app/schemas/schemes";
 
 import { db } from "#db/index";
 import {
@@ -9,6 +12,16 @@ import {
 } from "#db/schemas/index";
 
 export default class InvestmentService {
+  static async schemes(): Promise<SchemesSchema> {
+    const schemesData = await db
+      .select({
+        id: schemes.id,
+        type: schemes.type,
+      })
+      .from(schemes);
+    return schemesData;
+  }
+
   static async schemeRates(): Promise<SchemeRateResourceListSchema> {
     const schemeRatesList = await db
       .select({

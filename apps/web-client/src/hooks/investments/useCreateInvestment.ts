@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 import { SchemeType } from "@app/definitions/enums/schemes";
 import resolveInterestRate from "@app/utils/resolveInterestRate";
@@ -7,11 +9,16 @@ import calculateRD from "@app/utils/calculateRD";
 import calculateMIS from "@app/utils/calculateMIS";
 import { MIN_INVESTMENT_AMOUNT } from "@app/definitions/constants/scheme/amounts";
 import { MIN_TENURE_MONTHS } from "@app/definitions/constants/scheme/tenures";
-import { useAuthRefreshQuery } from "@hooks/useAuthRefreshQuery";
-import { useTRPC } from "@/utils/trpc";
+
+import {
+  useAuthRefreshMutation,
+  useAuthRefreshQuery,
+} from "@hooks/useAuthRefreshQuery";
+import { useTRPC } from "@utils/trpc";
 
 export default function useCreateInvestment() {
   const trpc = useTRPC();
+  const navigate = useNavigate();
 
   const [scheme, setScheme] = useState(SchemeType.FD);
   const [investment, setInvestment] = useState(MIN_INVESTMENT_AMOUNT[scheme]);
@@ -23,6 +30,10 @@ export default function useCreateInvestment() {
     data: schemeRates,
     isFetchingData: isFetchingSchemeRates,
   } = useAuthRefreshQuery(trpc.investment.scheme.rates.queryOptions());
+  const {
+    data: schemes,
+    isFetchingData: isFetchingSchemes,
+  } = useAuthRefreshQuery(trpc.investment.scheme.get.queryOptions());
 
   const tenureMonths = tenure * (tenureType === "year" ? 12 : 1);
   let interestRate = 0;
@@ -30,8 +41,9 @@ export default function useCreateInvestment() {
     schemeRates?.length &&
     tenureMonths >= MIN_TENURE_MONTHS[scheme]
   ) {
+    const selectedSchemeRates = schemeRates.filter((schemeRate) => schemeRate.scheme === scheme);
     interestRate = resolveInterestRate(
-      schemeRates.filter((schemeRate) => schemeRate.scheme === scheme),
+      selectedSchemeRates,
       tenureMonths,
       isSeniorCitizen,
     );
@@ -77,15 +89,35 @@ export default function useCreateInvestment() {
     setTenureType,
   };
 
+  const saveInvestmentMutation = useAuthRefreshMutation(trpc.investment.create.mutationOptions({
+    onSuccess: () => {
+      toast.success("Saved Investment");
+      navigate({
+        to: "/",
+      });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  }));
+
   const saveInvestment = () => {
-    console.log({scheme, tenureMonths, isSeniorCitizen, investment});
+    const selectedScheme = schemes?.find(({ type }) => type === scheme);
+    if (!selectedScheme) return;
+    saveInvestmentMutation.mutate({
+      schemeId: selectedScheme.id,
+      tenureMonths,
+      isSeniorCitizen,
+      investment,
+    });
   };
 
   return {
-    isFetchingSchemeRates,
+    isFetchingData: isFetchingSchemeRates || isFetchingSchemes,
     schemeRates,
     formProps,
     summary,
     saveInvestment,
+    savingInvestment: saveInvestmentMutation.isSubmittingData,
   };
 }

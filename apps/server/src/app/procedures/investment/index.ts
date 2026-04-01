@@ -1,6 +1,11 @@
 import { protectedProcedure } from "#app/trpc";
 
-import { schemeRateResourceListSchema } from "@app/schemas/schemes";
+import {
+  schemesSchema,
+  schemeRateResourceListSchema,
+  createInvestmentSchema,
+} from "@app/schemas/schemes";
+
 import InvestmentService from "#procedures/investment/service";
 
 const investment = {
@@ -8,6 +13,16 @@ const investment = {
    * Investment schemes.
    */
   scheme: {
+    /**
+     * Get schemes.
+     */
+    get: protectedProcedure
+      .output(schemesSchema)
+      .query(async () => {
+        const data = await InvestmentService.schemes();
+        return data;
+      }),
+
     /**
      * Get interest rates.
      */
@@ -18,6 +33,18 @@ const investment = {
         return data;
       }),
   },
+
+  /**
+   * Create an investment.
+   */
+  create: protectedProcedure
+    .input(createInvestmentSchema)
+    .mutation(async ({ ctx, input }) => {
+      console.log({
+        userId: ctx.user.id,
+        input,
+      })
+    }),
 };
 
 export default investment;
