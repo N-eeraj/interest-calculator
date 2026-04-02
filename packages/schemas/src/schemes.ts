@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { SchemeType } from "@app/definitions/enums/schemes";
+import { SortByOption } from "@app/definitions/enums/sort";
 import { INVESTMENT } from "#messages";
 
 export const schemesSchema = z.array(
@@ -38,3 +39,18 @@ export const createInvestmentSchema = z.object({
     investment: z.number({ error: INVESTMENT.create.investment.valid })
 });
 export type CreateInvestmentSchema = z.infer<typeof createInvestmentSchema>;
+
+export const investmentFilterSchema = z.object({
+  page: z.number()
+    .optional(),
+  limit: z.number()
+    .optional(),
+  sortBy: z.enum(SortByOption)
+    .optional(),
+  sortOrder: z.literal([
+    "asc",
+    "desc",
+  ])
+    .optional(),
+}).optional();
+export type InvestmentFilterSchema = z.infer<typeof investmentFilterSchema>;

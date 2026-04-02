@@ -1,10 +1,15 @@
-import { eq } from "drizzle-orm";
+import {
+  eq,
+  asc,
+  desc,
+} from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
 import {
   SchemesSchema,
   SchemeRateResourceListSchema,
   CreateInvestmentSchema,
+  InvestmentFilterSchema,
 } from "@app/schemas/schemes";
 import {
   getMatchedMonths,
@@ -17,6 +22,7 @@ import {
   SchemeType,
   InvestmentType,
 } from "@app/definitions/enums/schemes";
+import { SortByOption } from "@app/definitions/enums/sort";
 
 import { db } from "#db/index";
 import {
@@ -24,6 +30,13 @@ import {
   schemeRates,
   schemes,
 } from "#db/schemas/index";
+
+const DEFAULT_LIST_OPTIONS: NonNullable<Required<InvestmentFilterSchema>> = {
+  page: 1,
+  limit: 10,
+  sortBy: SortByOption.DATE,
+  sortOrder: "desc",
+} as const;
 
 export default class InvestmentService {
   static async schemes(): Promise<SchemesSchema> {
@@ -127,5 +140,36 @@ export default class InvestmentService {
     await db
       .insert(investments)
       .values(investmentData);
+  }
+
+  static async list(userId: number, {
+    page = DEFAULT_LIST_OPTIONS.page,
+    limit = DEFAULT_LIST_OPTIONS.limit,
+    sortBy = DEFAULT_LIST_OPTIONS.sortBy,
+    sortOrder = DEFAULT_LIST_OPTIONS.sortOrder,
+  }: InvestmentFilterSchema = DEFAULT_LIST_OPTIONS) {
+    const orderBy = sortOrder === "asc" ? asc : desc;
+
+    const userInvestments = await db
+      .select({
+        id: investments.id,
+        schemeType: schemes.type,
+        tenureMonths: investments.tenureMonths,
+        isSeniorCitizen: investments.isSeniorCitizen,
+        principalAmount: investments.principalAmount,
+        monthlyDeposit: investments.monthlyDeposit,
+        interestRate: investments.interestRate,
+        maturityAmount: investments.maturityAmount,
+        monthlyPayout: investments.monthlyPayout,
+        updatedAt: investments.updatedAt,
+      })
+      .from(investments)
+      .where(eq(investments.userId, userId))
+      .leftJoin(schemes, eq(schemes.id, investments.schemeId))
+      .orderBy(orderBy(investments[sortBy]))
+      .offset(limit * (page - 1))
+      .limit(limit);
+
+    return userInvestments;
   }
 }

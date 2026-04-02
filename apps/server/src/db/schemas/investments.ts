@@ -41,12 +41,12 @@ const investments = mysqlTable("investments", {
   isSeniorCitizen: boolean("is_senior_citizen")
     .default(false),
   principalAmount: decimal("principal_amount", {
-    mode: "bigint",
+    mode: "number",
     unsigned: true,
     scale: 2,
   }),
   monthlyDeposit: decimal("monthly_deposit", {
-    mode: "bigint",
+    mode: "number",
     unsigned: true,
     scale: 2,
   }),
@@ -57,12 +57,12 @@ const investments = mysqlTable("investments", {
   })
     .notNull(),
   maturityAmount: decimal("maturity_amount", {
-    mode: "bigint",
+    mode: "number",
     unsigned: true,
     scale: 2,
   }),
   monthlyPayout: decimal("monthly_payout", {
-    mode: "bigint",
+    mode: "number",
     unsigned: true,
     scale: 2,
   }),
