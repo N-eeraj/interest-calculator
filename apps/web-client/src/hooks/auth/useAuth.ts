@@ -14,9 +14,14 @@ import {
 } from "@utils/tokens";
 
 export default function useAuth(form: AnyFormApi) {
-  const loginSearchParams = useSearch({
-    from: "/(guest)/login",
-  });
+  let loginSearchParams = {
+    redirect: "/",
+  };
+  try {
+    loginSearchParams = useSearch({
+      from: "/(guest)/login",
+    });
+  } catch {}
 
   const navigate = useNavigate();
 
@@ -29,7 +34,7 @@ export default function useAuth(form: AnyFormApi) {
     setRefreshToken(refreshToken);
 
     navigate({
-      href: loginSearchParams.redirect ?? "/",
+      href: loginSearchParams.redirect,
     });
   };
 

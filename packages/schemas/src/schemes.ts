@@ -36,7 +36,7 @@ export const createInvestmentSchema = z.object({
   tenureMonths: z.number({ error: INVESTMENT.create.tenureMonths.required }),
   isSeniorCitizen: z.boolean({ error: INVESTMENT.create.isSeniorCitizen.valid })
     .optional(),
-    investment: z.number({ error: INVESTMENT.create.investment.valid })
+  investment: z.number({ error: INVESTMENT.create.investment.valid }),
 });
 export type CreateInvestmentSchema = z.infer<typeof createInvestmentSchema>;
 
@@ -54,3 +54,24 @@ export const investmentFilterSchema = z.object({
     .optional(),
 }).optional();
 export type InvestmentFilterSchema = z.infer<typeof investmentFilterSchema>;
+
+export const investmentSchema = z.object({
+  id: z.number(),
+  schemeType: z.enum(SchemeType),
+  tenureMonths: z.number(),
+  isSeniorCitizen: z.boolean()
+    .nullable(),
+  principalAmount: z.number()
+    .nullable(),
+  monthlyDeposit: z.number()
+    .nullable(),
+  interestRate: z.number(),
+  maturityAmount: z.number(),
+  monthlyPayout: z.number()
+    .nullable(),
+  updatedAt: z.date(),
+});
+export type InvestmentSchema = z.infer<typeof investmentSchema>;
+
+export const investmentListSchema = z.array(investmentSchema);
+export type InvestmentListSchema = z.infer<typeof investmentListSchema>;

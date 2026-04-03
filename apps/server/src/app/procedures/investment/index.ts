@@ -5,6 +5,7 @@ import {
   schemeRateResourceListSchema,
   createInvestmentSchema,
   investmentFilterSchema,
+  investmentListSchema,
 } from "@app/schemas/schemes";
 
 import InvestmentService from "#procedures/investment/service";
@@ -49,6 +50,7 @@ const investment = {
    */
   list: protectedProcedure
     .input(investmentFilterSchema)
+    .output(investmentListSchema)
     .query(async ({ ctx, input }) => {
       const data = await InvestmentService.list(ctx.user.id, input);
       return data;
