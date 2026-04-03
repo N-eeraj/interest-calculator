@@ -10,6 +10,8 @@ import {
   SchemeRateResourceListSchema,
   CreateInvestmentSchema,
   InvestmentFilterSchema,
+  InvestmentListSchema,
+  investmentListSchema,
 } from "@app/schemas/schemes";
 import {
   getMatchedMonths,
@@ -147,7 +149,7 @@ export default class InvestmentService {
     limit = DEFAULT_LIST_OPTIONS.limit,
     sortBy = DEFAULT_LIST_OPTIONS.sortBy,
     sortOrder = DEFAULT_LIST_OPTIONS.sortOrder,
-  }: InvestmentFilterSchema = DEFAULT_LIST_OPTIONS) {
+  }: InvestmentFilterSchema = DEFAULT_LIST_OPTIONS): Promise<InvestmentListSchema> {
     const orderBy = sortOrder === "asc" ? asc : desc;
 
     const userInvestments = await db
@@ -170,6 +172,7 @@ export default class InvestmentService {
       .offset(limit * (page - 1))
       .limit(limit);
 
-    return userInvestments;
+    const data = investmentListSchema.parse(userInvestments);
+    return data;
   }
 }
