@@ -2,17 +2,22 @@ import {
   useState,
   useEffect,
 } from "react";
+import { useIntersectionObserver } from "@uidotdev/usehooks";
 
 import { SortByOption } from "@app/definitions/enums/sort";
 import type { InvestmentListSchema } from "@app/schemas/schemes";
 
+import DsSpinner from "@components/ds/Spinner";
 import { useAuthRefreshQuery } from "@hooks/useAuthRefreshQuery";
 import { useTRPC } from "@utils/trpc";
 
+const LIMIT = 12;
+
 export default function InvestmentList() {
+  const [ref, entry] = useIntersectionObserver({ threshold: 0 });
+
   const [investments, setInvestments] = useState<InvestmentListSchema>([]);
 
-  const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState(SortByOption.DATE);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -24,7 +29,7 @@ export default function InvestmentList() {
     data,
     isFetchingData,
   } = useAuthRefreshQuery(trpc.investment.list.queryOptions({
-    limit,
+    limit: LIMIT,
     page,
     sortBy,
     sortOrder,
@@ -32,7 +37,7 @@ export default function InvestmentList() {
 
   useEffect(() => {
     if (!data) return;
-    if (data.length < limit) {
+    if (data.length !== LIMIT) {
       setEndOfList(true);
     }
 
@@ -49,16 +54,37 @@ export default function InvestmentList() {
     data,
   ]);
 
-  if (isFetchingData) {
-    return (
-      <div>
-        Loading...
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (
+      endOfList ||
+      isFetchingData ||
+      page * LIMIT !== investments.length ||
+      !entry?.isIntersecting
+    ) return;
+    setPage((prev) => prev + 1);
+  }, [
+    entry,
+    isFetchingData,
+    page,
+    investments,
+    endOfList,
+  ]);
+
   return (
-    <section>
-      {JSON.stringify(investments)}
+    <section className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
+      {investments.map(({ id }) => (
+        <div
+          key={id}
+          className="h-48 outline">
+          {id}
+        </div>
+      ))}
+
+      <div ref={ref}>
+        {isFetchingData && (
+          <DsSpinner />
+        )}
+      </div>
     </section>
   );
 }
