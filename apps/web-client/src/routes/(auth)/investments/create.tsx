@@ -21,7 +21,7 @@ function RouteComponent() {
     summary,
     saveInvestment,
     savingInvestment,
-  } = useCreateInvestment()
+  } = useCreateInvestment();
 
   if (isFetchingData) {
     return (

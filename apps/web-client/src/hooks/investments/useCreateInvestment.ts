@@ -15,6 +15,7 @@ import {
   useAuthRefreshQuery,
 } from "@hooks/useAuthRefreshQuery";
 import { useTRPC } from "@utils/trpc";
+import { queryClient } from "@/TRPCQueryProvider";
 
 export default function useCreateInvestment() {
   const trpc = useTRPC();
@@ -94,6 +95,9 @@ export default function useCreateInvestment() {
       toast.success("Saved Investment");
       navigate({
         to: "/",
+      });
+      queryClient.invalidateQueries({
+        queryKey: trpc.investment.list.queryKey(),
       });
     },
     onError: (error) => {
