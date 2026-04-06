@@ -31,7 +31,11 @@ interface Props {
   className?: string;
 }
 
-export default function InvestmentChart({ invested, returns, className }: Props) {
+export default function InvestmentChart({
+  invested,
+  returns,
+  className = "w-sm"
+}: Props) {
   const chartData = [
     {
       name: "invested",
@@ -62,7 +66,9 @@ export default function InvestmentChart({ invested, returns, className }: Props)
         <Pie
           data={chartData}
           dataKey="value"
-          innerRadius={80} />
+          innerRadius={"55%"}
+          startAngle={90}
+          endAngle={-270} />
       </PieChart>
     </ChartContainer>
   );

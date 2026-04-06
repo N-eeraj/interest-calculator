@@ -6,6 +6,7 @@ import {
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 
 import DsSpinner from "@components/ds/Spinner";
+import InvestmentCard from "@components/investment/List/Card";
 import { InvestmentContext } from "@contexts/InvestmentList";
 import { useAuthRefreshQuery } from "@hooks/useAuthRefreshQuery";
 import { useTRPC } from "@utils/trpc";
@@ -75,11 +76,9 @@ export default function Data() {
   return (
     <>
       <ul className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
-        {investments.map(({ id }) => (
-          <li
-            key={id}
-            className="h-48 outline">
-            {id}
+        {investments.map((investment) => (
+          <li key={investment.id}>
+            <InvestmentCard {...investment}  />
           </li>
         ))}
       </ul>

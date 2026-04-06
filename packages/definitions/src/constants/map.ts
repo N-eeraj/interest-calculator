@@ -41,7 +41,7 @@ export const INVESTMENT_TYPE_OPTIONS: Record<InvestmentType, string> = {
 } as const;
 
 export const SORT_BY_OPTIONS: Record<SortByOption, string> = {
-  [SortByOption.DATE]: "Create",
+  [SortByOption.DATE]: "Created Date",
   [SortByOption.RATE]: "Interest Rate",
   [SortByOption.AMOUNT]: "Maturity Amount",
 } as const;
