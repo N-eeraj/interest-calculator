@@ -5,6 +5,7 @@ import {
 } from "react";
 import { Link } from "@tanstack/react-router";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
+import { AccountBalanceFillW500 } from "@material-symbols-svg/react/icons/account-balance";
 
 import DsSpinner from "@components/ds/Spinner";
 import InvestmentCard from "@components/investment/List/Card";
@@ -24,7 +25,7 @@ export default function Data() {
     setPage,
   } = use(InvestmentContext);
 
-  const [ref, entry] = useIntersectionObserver({ threshold: 0 });
+  const [endOfListRef, entry] = useIntersectionObserver({ threshold: 0 });
 
   const [endOfList, setEndOfList] = useState(false);
 
@@ -74,6 +75,17 @@ export default function Data() {
     endOfList,
   ]);
 
+  if (!investments.length) {
+    return (
+      <section className="flex flex-col justify-center items-center gap-y-2 flex-1">
+        <AccountBalanceFillW500 className="size-32 text-secondary/50" />
+        <span className="text-secondary text-2xl font-medium">
+          No Investments to show
+        </span>
+      </section>
+    );
+  }
+
   return (
     <>
       <ul className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
@@ -82,13 +94,15 @@ export default function Data() {
             <Link
               to={"/investments/$investmentId"}
               params={{ investmentId: String(investment.id) }}>
-              <InvestmentCard {...investment} />
+              <InvestmentCard
+                {...investment}
+                onRefresh={() => setInvestments([])} />
             </Link>
           </li>
         ))}
       </ul>
 
-      <div ref={ref}>
+      <div ref={endOfListRef}>
         {isFetchingData && (
           <DsSpinner />
         )}

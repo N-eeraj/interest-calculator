@@ -62,8 +62,8 @@ const investment = {
    */
   delete: protectedProcedure
     .input(investmentIdSchema)
-    .mutation(async ({ input }) => {
-      console.log(input);
+    .mutation(async ({ ctx, input }) => {
+      await InvestmentService.delete(ctx.user.id, input);
     }),
 };
 

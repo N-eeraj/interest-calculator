@@ -13,6 +13,10 @@ import { useAuthRefreshMutation } from "@hooks/useAuthRefreshQuery";
 import { useTRPC } from "@utils/trpc";
 import { queryClient } from "@/TRPCQueryProvider";
 
+interface Props extends InvestmentSchema {
+  onRefresh?: () => void;
+}
+
 export default function InvestmentCard({
   id,
   principalAmount,
@@ -24,7 +28,8 @@ export default function InvestmentCard({
   isSeniorCitizen,
   interestRate,
   updatedAt,
-}: InvestmentSchema) {
+  onRefresh,
+}: Props) {
   const trpc = useTRPC();
 
   const years = Math.floor(tenureMonths / 12);
@@ -32,6 +37,7 @@ export default function InvestmentCard({
 
   const mutation = useAuthRefreshMutation(trpc.investment.delete.mutationOptions({
     onSuccess: () => {
+      onRefresh?.();
       queryClient.invalidateQueries({
         queryKey: trpc.investment.list.queryKey(),
       });

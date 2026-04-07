@@ -2,6 +2,7 @@ import {
   eq,
   asc,
   desc,
+  and,
 } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
@@ -12,6 +13,7 @@ import {
   InvestmentFilterSchema,
   InvestmentListSchema,
   investmentListSchema,
+  InvestmentIdSchema,
 } from "@app/schemas/schemes";
 import {
   getMatchedMonths,
@@ -174,5 +176,28 @@ export default class InvestmentService {
 
     const data = investmentListSchema.parse(userInvestments);
     return data;
+  }
+
+  static async delete(userId: number, { id }: InvestmentIdSchema) {
+    const investment = await db
+      .select({
+        id: investments.id,
+      })
+      .from(investments)
+      .where(and(
+        eq(investments.id, id),
+        eq(investments.userId, userId),
+      ));
+
+    if (!investment.length) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Investment not found",
+      });
+    }
+
+    await db
+      .delete(investments)
+      .where(eq(investments.id, id));
   }
 }
