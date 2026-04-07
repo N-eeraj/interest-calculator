@@ -75,3 +75,8 @@ export type InvestmentSchema = z.infer<typeof investmentSchema>;
 
 export const investmentListSchema = z.array(investmentSchema);
 export type InvestmentListSchema = z.infer<typeof investmentListSchema>;
+
+export const investmentIdSchema = investmentSchema.pick({
+  id: true,
+});
+export type InvestmentIdSchema = z.infer<typeof investmentIdSchema>;

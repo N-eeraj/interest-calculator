@@ -31,7 +31,7 @@ export default function useProfileUpdate() {
   const mutation = useAuthRefreshMutation(trpc.profile.update.mutationOptions({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: trpc.auth.me.queryOptions().queryKey,
+        queryKey: trpc.auth.me.queryKey(),
       });
       toast.success("Updated profile details");
     },

@@ -20,7 +20,7 @@ export default function useLogout() {
       removeRefreshToken();
 
       queryClient.invalidateQueries({
-        queryKey: trpc.auth.me.queryOptions().queryKey,
+        queryKey: trpc.auth.me.queryKey(),
       });
 
       navigate({
