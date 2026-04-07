@@ -3,6 +3,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { Link } from "@tanstack/react-router";
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 
 import DsSpinner from "@components/ds/Spinner";
@@ -78,7 +79,11 @@ export default function Data() {
       <ul className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
         {investments.map((investment) => (
           <li key={investment.id}>
-            <InvestmentCard {...investment}  />
+            <Link
+              to={"/investments/$investmentId"}
+              params={{ investmentId: String(investment.id) }}>
+              <InvestmentCard {...investment} />
+            </Link>
           </li>
         ))}
       </ul>

@@ -17,6 +17,7 @@ import { Route as guestLoginRouteImport } from './routes/(guest)/login'
 import { Route as authProfileIndexRouteImport } from './routes/(auth)/profile/index'
 import { Route as authProfileUpdatePasswordRouteImport } from './routes/(auth)/profile/update-password'
 import { Route as authInvestmentsCreateRouteImport } from './routes/(auth)/investments/create'
+import { Route as authInvestmentsInvestmentIdRouteImport } from './routes/(auth)/investments/$investmentId'
 
 const guestRouteRoute = guestRouteRouteImport.update({
   id: '/(guest)',
@@ -57,11 +58,18 @@ const authInvestmentsCreateRoute = authInvestmentsCreateRouteImport.update({
   path: '/investments/create',
   getParentRoute: () => authRouteRoute,
 } as any)
+const authInvestmentsInvestmentIdRoute =
+  authInvestmentsInvestmentIdRouteImport.update({
+    id: '/investments/$investmentId',
+    path: '/investments/$investmentId',
+    getParentRoute: () => authRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/login': typeof guestLoginRoute
   '/register': typeof guestRegisterRoute
   '/': typeof authIndexRoute
+  '/investments/$investmentId': typeof authInvestmentsInvestmentIdRoute
   '/investments/create': typeof authInvestmentsCreateRoute
   '/profile/update-password': typeof authProfileUpdatePasswordRoute
   '/profile/': typeof authProfileIndexRoute
@@ -70,6 +78,7 @@ export interface FileRoutesByTo {
   '/login': typeof guestLoginRoute
   '/register': typeof guestRegisterRoute
   '/': typeof authIndexRoute
+  '/investments/$investmentId': typeof authInvestmentsInvestmentIdRoute
   '/investments/create': typeof authInvestmentsCreateRoute
   '/profile/update-password': typeof authProfileUpdatePasswordRoute
   '/profile': typeof authProfileIndexRoute
@@ -81,6 +90,7 @@ export interface FileRoutesById {
   '/(guest)/login': typeof guestLoginRoute
   '/(guest)/register': typeof guestRegisterRoute
   '/(auth)/': typeof authIndexRoute
+  '/(auth)/investments/$investmentId': typeof authInvestmentsInvestmentIdRoute
   '/(auth)/investments/create': typeof authInvestmentsCreateRoute
   '/(auth)/profile/update-password': typeof authProfileUpdatePasswordRoute
   '/(auth)/profile/': typeof authProfileIndexRoute
@@ -91,6 +101,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/'
+    | '/investments/$investmentId'
     | '/investments/create'
     | '/profile/update-password'
     | '/profile/'
@@ -99,6 +110,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/'
+    | '/investments/$investmentId'
     | '/investments/create'
     | '/profile/update-password'
     | '/profile'
@@ -109,6 +121,7 @@ export interface FileRouteTypes {
     | '/(guest)/login'
     | '/(guest)/register'
     | '/(auth)/'
+    | '/(auth)/investments/$investmentId'
     | '/(auth)/investments/create'
     | '/(auth)/profile/update-password'
     | '/(auth)/profile/'
@@ -177,11 +190,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authInvestmentsCreateRouteImport
       parentRoute: typeof authRouteRoute
     }
+    '/(auth)/investments/$investmentId': {
+      id: '/(auth)/investments/$investmentId'
+      path: '/investments/$investmentId'
+      fullPath: '/investments/$investmentId'
+      preLoaderRoute: typeof authInvestmentsInvestmentIdRouteImport
+      parentRoute: typeof authRouteRoute
+    }
   }
 }
 
 interface authRouteRouteChildren {
   authIndexRoute: typeof authIndexRoute
+  authInvestmentsInvestmentIdRoute: typeof authInvestmentsInvestmentIdRoute
   authInvestmentsCreateRoute: typeof authInvestmentsCreateRoute
   authProfileUpdatePasswordRoute: typeof authProfileUpdatePasswordRoute
   authProfileIndexRoute: typeof authProfileIndexRoute
@@ -189,6 +210,7 @@ interface authRouteRouteChildren {
 
 const authRouteRouteChildren: authRouteRouteChildren = {
   authIndexRoute: authIndexRoute,
+  authInvestmentsInvestmentIdRoute: authInvestmentsInvestmentIdRoute,
   authInvestmentsCreateRoute: authInvestmentsCreateRoute,
   authProfileUpdatePasswordRoute: authProfileUpdatePasswordRoute,
   authProfileIndexRoute: authProfileIndexRoute,

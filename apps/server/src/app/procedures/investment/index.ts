@@ -6,6 +6,7 @@ import {
   createInvestmentSchema,
   investmentFilterSchema,
   investmentListSchema,
+  investmentIdSchema,
 } from "@app/schemas/schemes";
 
 import InvestmentService from "#procedures/investment/service";
@@ -54,6 +55,15 @@ const investment = {
     .query(async ({ ctx, input }) => {
       const data = await InvestmentService.list(ctx.user.id, input);
       return data;
+    }),
+
+  /**
+   * Delete investment.
+   */
+  delete: protectedProcedure
+    .input(investmentIdSchema)
+    .mutation(async ({ input }) => {
+      console.log(input);
     }),
 };
 

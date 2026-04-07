@@ -21,7 +21,7 @@ export default function useProfilePictureDelete() {
     onSuccess: () => {
       setIsRemoveConfirmationOpen(false);
       queryClient.invalidateQueries({
-        queryKey: trpc.auth.me.queryOptions().queryKey,
+        queryKey: trpc.auth.me.queryKey(),
       });
     },
     onError: (error) => {

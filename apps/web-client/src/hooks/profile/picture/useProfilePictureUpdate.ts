@@ -26,7 +26,7 @@ export default function useProfilePictureUpdate() {
   const updateProfilePictureMutation = useAuthRefreshMutation(trpc.profile.avatar.update.mutationOptions({
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: trpc.auth.me.queryOptions().queryKey,
+        queryKey: trpc.auth.me.queryKey(),
       });
       setTempUrl(null);
     },
