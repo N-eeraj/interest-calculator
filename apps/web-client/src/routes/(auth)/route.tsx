@@ -53,7 +53,7 @@ export const Route = createFileRoute("/(auth)")({
     return (
       <>
         <Navbar className="sticky top-0 mb-10" />
-        <main className="min-h-[calc(100svh-124px)] px-3 md:px-5 pb-8">
+        <main className="flex flex-col min-h-[calc(100svh-124px)] px-3 md:px-5 pb-8">
           <Outlet />
         </main>
       </>

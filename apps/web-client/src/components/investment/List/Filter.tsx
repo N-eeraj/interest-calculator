@@ -17,11 +17,14 @@ import { InvestmentContext } from "@contexts/InvestmentList";
 
 export default function Filter() {
   const {
+    investments,
     sortBy,
     sortOrder,
     setSortBy,
     setSortOrder,
   } = use(InvestmentContext);
+
+  if (!investments.length) return;
 
   const sortByOptions = Object.keys(SORT_BY_OPTIONS) as Array<keyof typeof SORT_BY_OPTIONS>;
 

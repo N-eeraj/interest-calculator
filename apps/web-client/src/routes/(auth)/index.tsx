@@ -14,7 +14,7 @@ export const Route = createFileRoute("/(auth)/")({
 export default function RouteComponent() {
 
   return (
-    <div>
+    <>
       <InvestmentList />
 
       <Link
@@ -26,6 +26,6 @@ export default function RouteComponent() {
           <AddW600 className="size-8" />
         </DsButton>
       </Link>
-    </div>
+    </>
   );
 }
