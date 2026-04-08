@@ -46,6 +46,7 @@ const meta = {
     monthlyDeposit: null,
     monthlyPayout: null,
     updatedAt: new Date(),
+    onDelete: () => {},
   },
 } satisfies Meta<typeof InvestmentCard>;
 
