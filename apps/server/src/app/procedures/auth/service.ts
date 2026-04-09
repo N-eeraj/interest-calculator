@@ -3,7 +3,10 @@ import jwt, {
   type SignOptions,
 } from "jsonwebtoken";
 import crypto from "crypto";
-import { eq, ExtractTablesWithRelations } from "drizzle-orm";
+import {
+  eq,
+  type ExtractTablesWithRelations,
+} from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 
 import type {
@@ -27,7 +30,10 @@ import {
 } from "#db/schemas/index";
 import { JWT_SECRET } from "#server/config";
 import { MySqlTransaction } from "drizzle-orm/mysql-core";
-import { MySql2PreparedQueryHKT, MySql2QueryResultHKT } from "drizzle-orm/mysql2";
+import type {
+  MySql2QueryResultHKT,
+  MySql2PreparedQueryHKT,
+} from "drizzle-orm/mysql2";
 
 export default class AuthService {
   private static TOKEN_EXPIRY_TIME: number = 2_59_20_00_000; // 30 days in ms
