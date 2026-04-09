@@ -5,9 +5,9 @@ import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 
 import {
-  ProfileUpdateSchema,
-  PasswordUpdateSchema,
-  ProfilePictureSchema,
+  type ProfileUpdateSchema,
+  type PasswordUpdateSchema,
+  type ProfilePictureSchema,
 } from "@app/schemas/profile";
 
 import { db } from "#db/index";

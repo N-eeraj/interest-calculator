@@ -6,6 +6,7 @@
   "author": "N-eeraj",
   "type": "module",
   "scripts": {
+    "start": "node --env-file=.env --import tsx src/server/index.ts",
     "dev": "node --watch --env-file=.env --import tsx src/server/index.ts",
     "db:generate": "npx drizzle-kit generate  --name \"$npm_config_name\"",
     "db:generate-custom": "npx drizzle-kit generate --custom  --name \"$npm_config_name\"",
