@@ -7,13 +7,15 @@ import {
 import { TRPCError } from "@trpc/server";
 
 import {
-  SchemesSchema,
-  SchemeRateResourceListSchema,
-  CreateInvestmentSchema,
-  InvestmentFilterSchema,
-  InvestmentListSchema,
+  investmentSchema,
   investmentListSchema,
-  InvestmentIdSchema,
+  type SchemesSchema,
+  type SchemeRateResourceListSchema,
+  type CreateInvestmentSchema,
+  type InvestmentFilterSchema,
+  type InvestmentSchema,
+  type InvestmentListSchema,
+  type InvestmentIdSchema,
 } from "@app/schemas/schemes";
 import {
   getMatchedMonths,
@@ -175,6 +177,40 @@ export default class InvestmentService {
       .limit(limit);
 
     const data = investmentListSchema.parse(userInvestments);
+    return data;
+  }
+
+  static async getById(userId: number, { id }: InvestmentIdSchema): Promise<InvestmentSchema> {
+    const [investment] = await db
+      .select({
+        id: investments.id,
+        schemeType: schemes.type,
+        tenureMonths: investments.tenureMonths,
+        isSeniorCitizen: investments.isSeniorCitizen,
+        principalAmount: investments.principalAmount,
+        monthlyDeposit: investments.monthlyDeposit,
+        interestRate: investments.interestRate,
+        maturityAmount: investments.maturityAmount,
+        monthlyPayout: investments.monthlyPayout,
+        updatedAt: investments.updatedAt,
+      })
+      .from(investments)
+      .where(and(
+        eq(investments.id, id),
+        eq(investments.userId, userId),
+      ))
+      .leftJoin(schemes, eq(schemes.id, investments.schemeId))
+      .limit(1);
+
+    if (!investment) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Investment not found",
+      });
+    }
+
+    const data = investmentSchema.parse(investment);
+
     return data;
   }
 
