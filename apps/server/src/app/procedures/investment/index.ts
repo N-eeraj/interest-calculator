@@ -1,5 +1,3 @@
-import { protectedProcedure } from "#app/trpc";
-
 import {
   schemesSchema,
   schemeRateResourceListSchema,
@@ -7,8 +5,10 @@ import {
   investmentFilterSchema,
   investmentListSchema,
   investmentIdSchema,
+  investmentSchema,
 } from "@app/schemas/schemes";
 
+import { protectedProcedure } from "#app/trpc";
 import InvestmentService from "#procedures/investment/service";
 
 const investment = {
@@ -54,6 +54,17 @@ const investment = {
     .output(investmentListSchema)
     .query(async ({ ctx, input }) => {
       const data = await InvestmentService.list(ctx.user.id, input);
+      return data;
+    }),
+
+  /**
+   * Get user investment by id.
+   */
+  getById: protectedProcedure
+    .input(investmentIdSchema)
+    .output(investmentSchema)
+    .query(async ({ ctx, input }) => {
+      const data = await InvestmentService.getById(ctx.user.id, input);
       return data;
     }),
 
