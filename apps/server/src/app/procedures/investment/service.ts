@@ -16,6 +16,7 @@ import {
   type InvestmentSchema,
   type InvestmentListSchema,
   type InvestmentIdSchema,
+  type UpdateInvestmentSchema,
 } from "@app/schemas/schemes";
 import {
   getMatchedMonths,
@@ -71,12 +72,12 @@ export default class InvestmentService {
     return schemeRatesList as SchemeRateResourceListSchema;
   }
 
-  static async createInvestment(userId: number, {
+  private static async getSchemeData({
     investment,
     schemeId,
     tenureMonths,
-    isSeniorCitizen = false
-  }: CreateInvestmentSchema) {
+    isSeniorCitizen = false,
+  }: CreateInvestmentSchema): Promise<Omit<typeof investments.$inferInsert, "userId">> {
     const schemeRatesByScheme = await db
       .select({
         id: schemeRates.id,
@@ -131,7 +132,6 @@ export default class InvestmentService {
     }
 
     const investmentData = {
-      userId,
       schemeId,
       schemeRateId: matchedSchemeRate.id,
       tenureMonths,
@@ -141,6 +141,33 @@ export default class InvestmentService {
       interestRate,
       maturityAmount,
       monthlyPayout,
+    };
+
+    return investmentData as Omit<typeof investments.$inferInsert, "userId">;
+  }
+
+  private static byIdAndUser(investmentId: InvestmentSchema["id"], userId: number) {
+    return and(
+      eq(investments.id, investmentId),
+      eq(investments.userId, userId),
+    )
+  }
+
+  static async createInvestment(userId: number, {
+    investment,
+    schemeId,
+    tenureMonths,
+    isSeniorCitizen = false,
+  }: CreateInvestmentSchema) {
+    const schemeData = await this.getSchemeData({
+      investment,
+      schemeId,
+      tenureMonths,
+      isSeniorCitizen,
+    });
+    const investmentData = {
+      ...schemeData,
+      userId,
     } as typeof investments.$inferInsert;
 
     await db
@@ -195,12 +222,8 @@ export default class InvestmentService {
         updatedAt: investments.updatedAt,
       })
       .from(investments)
-      .where(and(
-        eq(investments.id, id),
-        eq(investments.userId, userId),
-      ))
-      .leftJoin(schemes, eq(schemes.id, investments.schemeId))
-      .limit(1);
+      .where(this.byIdAndUser(id, userId))
+      .leftJoin(schemes, eq(schemes.id, investments.schemeId));
 
     if (!investment) {
       throw new TRPCError({
@@ -214,16 +237,54 @@ export default class InvestmentService {
     return data;
   }
 
+  static async update(userId: number, {
+    id,
+    investment,
+    schemeId,
+    tenureMonths,
+    isSeniorCitizen = false,
+  }: UpdateInvestmentSchema) {
+    const [currentInvestment] = await db
+      .select({
+        id: investments.id,
+      })
+      .from(investments)
+      .where(this.byIdAndUser(id, userId));
+
+    if (!currentInvestment) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Investment not found",
+      });
+    }
+
+    const schemeData = await this.getSchemeData({
+      investment,
+      schemeId,
+      tenureMonths,
+      isSeniorCitizen,
+    });
+    const investmentData = {
+      ...schemeData,
+      userId,
+    } as typeof investments.$inferInsert;
+
+    await db
+      .update(investments)
+      .set({
+        ...currentInvestment,
+        ...investmentData,
+      })
+      .where(this.byIdAndUser(id, userId));
+  }
+
   static async delete(userId: number, { id }: InvestmentIdSchema) {
     const investment = await db
       .select({
         id: investments.id,
       })
       .from(investments)
-      .where(and(
-        eq(investments.id, id),
-        eq(investments.userId, userId),
-      ));
+      .where(this.byIdAndUser(id, userId));
 
     if (!investment.length) {
       throw new TRPCError({

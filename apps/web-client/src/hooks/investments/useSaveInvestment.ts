@@ -18,7 +18,7 @@ import {
 import { useTRPC } from "@utils/trpc";
 import { queryClient } from "@/TRPCQueryProvider";
 
-export type InitialData = Pick<InvestmentSchema, "schemeType" | "principalAmount" | "monthlyDeposit" | "tenureMonths" | "isSeniorCitizen">;
+export type InitialData = Pick<InvestmentSchema, "id" | "schemeType" | "principalAmount" | "monthlyDeposit" | "tenureMonths" | "isSeniorCitizen">;
 
 export default function useSaveInvestment(initialData?: InitialData) {
   const trpc = useTRPC();
@@ -114,6 +114,11 @@ export default function useSaveInvestment(initialData?: InitialData) {
       queryClient.invalidateQueries({
         queryKey: trpc.investment.list.queryKey(),
       });
+      if (isUpdate) {
+        queryClient.invalidateQueries({
+          queryKey: trpc.investment.getById.queryKey({ id: initialData.id }),
+        });
+      }
     },
     onError: (error) => {
       toast.error(error.message);
@@ -124,6 +129,7 @@ export default function useSaveInvestment(initialData?: InitialData) {
     const selectedScheme = schemes?.find(({ type }) => type === scheme);
     if (!selectedScheme) return;
     saveInvestmentMutation.mutate({
+      id: initialData?.id as number, // only for update
       schemeId: selectedScheme.id,
       tenureMonths,
       isSeniorCitizen,
