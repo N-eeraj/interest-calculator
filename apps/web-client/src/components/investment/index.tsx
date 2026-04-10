@@ -34,7 +34,7 @@ export default function Investment({ initialData }: Props) {
     <section className="grid md:grid-cols-2 gap-x-12 gap-y-6">
       <InvestmentForm {...formProps} />
 
-      <div className="max-md:order-1">
+      <div className="max-md:order-1 space-y-2">
         <InvestmentChart
           invested={summary.investedAmount}
           returns={summary.returns}

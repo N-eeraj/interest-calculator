@@ -2,7 +2,15 @@ import type { MouseEvent } from "react";
 import { ArrowRightAltW700 } from "@material-symbols-svg/react/rounded/icons/arrow-right-alt";
 import { DeleteW500 } from "@material-symbols-svg/react/rounded/icons/delete";
 
-import { SchemeType } from "@app/definitions/enums/schemes";
+import {
+  CompoundingType,
+  SchemeType,
+} from "@app/definitions/enums/schemes";
+import {
+  COMPOUNDING_TYPE_OPTIONS,
+  INVESTMENT_TYPE_OPTIONS,
+  SCHEMES,
+} from "@app/definitions/constants/map";
 import type { InvestmentSchema } from "@app/schemas/schemes";
 
 import DsButton from "@components/ds/Button";
@@ -18,6 +26,8 @@ export default function InvestmentCard({
   id,
   principalAmount,
   schemeType,
+  investmentType,
+  compoundingType,
   monthlyDeposit,
   monthlyPayout,
   maturityAmount,
@@ -69,14 +79,20 @@ export default function InvestmentCard({
 
   return (
     <DsCard className="flex flex-col items-stretch gap-y-4 h-full py-5!">
-      <div className="flex justify-between items-center">
-        {
-          isSeniorCitizen && (
-            <span className="text-xs px-4 py-0.75 bg-primary/10 text-primary rounded-full border border-primary">
-              Senior
-            </span>
-          )
-        }
+      <div className="flex justify-between items-center flex-wrap gap-2.5">
+        <div className="flex items-center flex-wrap gap-1.5">
+          <span className="text-xs px-4 py-0.75 bg-primary/10 text-primary rounded-full border border-primary">
+            {SCHEMES[schemeType].shortName}
+          </span>
+          {
+            isSeniorCitizen && (
+              <span className="text-xs px-4 py-0.75 bg-secondary/10 text-secondary rounded-full border border-secondary">
+                Senior Citizen
+              </span>
+            )
+          }
+        </div>
+
         {onDelete && (
           <DsButton
             variant="destructive"
@@ -135,6 +151,17 @@ export default function InvestmentCard({
         <div className="col-start-2 flex items-end justify-end text-[10px] text-foreground/40">
           Updated at {updatedAt.toDateString()}
         </div>
+      </div>
+
+      <div className="flex justify-end items-center flex-wrap gap-1.5">
+        <span className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary rounded-full border border-primary">
+          Investment: {INVESTMENT_TYPE_OPTIONS[investmentType]}
+        </span>
+        {compoundingType !== CompoundingType.NONE && (
+          <span className="text-[10px] px-2 py-0.5 bg-secondary/10 text-secondary rounded-full border border-secondary">
+            Compounds: {COMPOUNDING_TYPE_OPTIONS[compoundingType]}
+          </span>
+        )}
       </div>
     </DsCard>
   );
