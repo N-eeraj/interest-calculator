@@ -77,6 +77,9 @@ export default function InvestmentCard({
       break;
   }
 
+  const investmentTypeText = INVESTMENT_TYPE_OPTIONS[investmentType];
+  const compoundingTypeText = COMPOUNDING_TYPE_OPTIONS[compoundingType];
+
   return (
     <DsCard className="flex flex-col items-stretch gap-y-4 h-full py-5!">
       <div className="flex justify-between items-center flex-wrap gap-2.5">
@@ -154,12 +157,14 @@ export default function InvestmentCard({
       </div>
 
       <div className="flex justify-end items-center flex-wrap gap-1.5">
-        <span className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary rounded-full border border-primary">
-          Investment: {INVESTMENT_TYPE_OPTIONS[investmentType]}
-        </span>
-        {compoundingType !== CompoundingType.NONE && (
+        {investmentTypeText && (
+          <span className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary rounded-full border border-primary">
+            Investment: {investmentTypeText}
+          </span>
+        )}
+        {(compoundingTypeText && compoundingType !== CompoundingType.NONE) && (
           <span className="text-[10px] px-2 py-0.5 bg-secondary/10 text-secondary rounded-full border border-secondary">
-            Compounds: {COMPOUNDING_TYPE_OPTIONS[compoundingType]}
+            Compounds: {compoundingTypeText}
           </span>
         )}
       </div>
