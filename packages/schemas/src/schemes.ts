@@ -1,5 +1,9 @@
 import * as z from "zod";
-import { SchemeType } from "@app/definitions/enums/schemes";
+import {
+  SchemeType,
+  InvestmentType,
+  CompoundingType,
+} from "@app/definitions/enums/schemes";
 import { SortByOption } from "@app/definitions/enums/sort";
 import { INVESTMENT } from "#messages";
 
@@ -58,6 +62,8 @@ export type InvestmentFilterSchema = z.infer<typeof investmentFilterSchema>;
 export const investmentSchema = z.object({
   id: z.number(),
   schemeType: z.enum(SchemeType),
+  investmentType: z.enum(InvestmentType),
+  compoundingType: z.enum(CompoundingType),
   tenureMonths: z.number(),
   isSeniorCitizen: z.boolean()
     .nullable(),

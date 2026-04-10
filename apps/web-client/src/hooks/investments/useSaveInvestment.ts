@@ -49,7 +49,7 @@ export default function useSaveInvestment(initialData?: InitialData) {
   const {
     data: schemes,
     isFetchingData: isFetchingSchemes,
-  } = useAuthRefreshQuery(trpc.investment.scheme.get.queryOptions());
+  } = useAuthRefreshQuery(trpc.investment.scheme.list.queryOptions());
 
   const tenureMonths = tenure * (tenureType === "year" ? 12 : 1);
   let interestRate = 0;

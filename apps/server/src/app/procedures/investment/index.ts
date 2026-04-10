@@ -18,12 +18,12 @@ const investment = {
    */
   scheme: {
     /**
-     * Get schemes.
+     * Get all schemes.
      */
-    get: protectedProcedure
+    list: protectedProcedure
       .output(schemesSchema)
       .query(async () => {
-        const data = await InvestmentService.schemes();
+        const data = await InvestmentService.schemeList();
         return data;
       }),
 
@@ -70,7 +70,7 @@ const investment = {
     }),
 
   /**
-   * Create an investment.
+   * Update an investment.
    */
   update: protectedProcedure
     .input(updateInvestmentSchema)

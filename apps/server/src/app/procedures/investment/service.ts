@@ -46,7 +46,7 @@ const DEFAULT_LIST_OPTIONS: NonNullable<Required<InvestmentFilterSchema>> = {
 } as const;
 
 export default class InvestmentService {
-  static async schemes(): Promise<SchemesSchema> {
+  static async schemeList(): Promise<SchemesSchema> {
     const schemesData = await db
       .select({
         id: schemes.id,
@@ -187,6 +187,8 @@ export default class InvestmentService {
       .select({
         id: investments.id,
         schemeType: schemes.type,
+        investmentType: schemes.investmentType,
+        compoundingType: schemes.compoundingType,
         tenureMonths: investments.tenureMonths,
         isSeniorCitizen: investments.isSeniorCitizen,
         principalAmount: investments.principalAmount,
@@ -212,6 +214,8 @@ export default class InvestmentService {
       .select({
         id: investments.id,
         schemeType: schemes.type,
+        investmentType: schemes.investmentType,
+        compoundingType: schemes.compoundingType,
         tenureMonths: investments.tenureMonths,
         isSeniorCitizen: investments.isSeniorCitizen,
         principalAmount: investments.principalAmount,
