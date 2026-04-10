@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
@@ -9,6 +9,7 @@ import calculateRD from "@app/utils/calculateRD";
 import calculateMIS from "@app/utils/calculateMIS";
 import { MIN_INVESTMENT_AMOUNT } from "@app/definitions/constants/scheme/amounts";
 import { MIN_TENURE_MONTHS } from "@app/definitions/constants/scheme/tenures";
+import type { InvestmentSchema } from "@app/schemas/schemes";
 
 import {
   useAuthRefreshMutation,
@@ -17,7 +18,9 @@ import {
 import { useTRPC } from "@utils/trpc";
 import { queryClient } from "@/TRPCQueryProvider";
 
-export default function useCreateInvestment() {
+export type InitialData = Pick<InvestmentSchema, "schemeType" | "principalAmount" | "monthlyDeposit" | "tenureMonths" | "isSeniorCitizen">;
+
+export default function useSaveInvestment(initialData?: InitialData) {
   const trpc = useTRPC();
   const navigate = useNavigate();
 
@@ -26,6 +29,18 @@ export default function useCreateInvestment() {
   const [tenure, setTenure] = useState(MIN_TENURE_MONTHS[scheme] / 12);
   const [isSeniorCitizen, setIsSeniorCitizen] = useState(false);
   const [tenureType, setTenureType] = useState<"month" | "year">("year");
+
+  const isUpdate = !!initialData;
+
+  useEffect(() => {
+    if (!initialData) return;
+    setScheme(initialData.schemeType);
+    setInvestment((initialData.principalAmount ?? initialData.monthlyDeposit) as number);
+    setTenure(initialData.tenureMonths / 12);
+    setIsSeniorCitizen(initialData.isSeniorCitizen ?? false);
+  }, [
+    initialData,
+  ]);
 
   const {
     data: schemeRates,
@@ -90,9 +105,9 @@ export default function useCreateInvestment() {
     setTenureType,
   };
 
-  const saveInvestmentMutation = useAuthRefreshMutation(trpc.investment.create.mutationOptions({
+  const saveInvestmentMutation = useAuthRefreshMutation(trpc.investment[isUpdate ? "update" : "create"].mutationOptions({
     onSuccess: () => {
-      toast.success("Saved Investment");
+      toast.success(isUpdate ? "Updated Investment" : "Saved Investment");
       navigate({
         to: "/",
       });

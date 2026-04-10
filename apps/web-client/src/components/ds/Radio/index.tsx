@@ -85,6 +85,7 @@ export default function DsRadio({
               name={name || id}
               value={getOptionValue(option)}
               defaultChecked={getOptionValue(option) === value}
+              checked={onChange ? getOptionValue(option) === value : undefined}
               className="peer hidden"
               onChange={({ target }) => onChange?.(target.value)} />
 
