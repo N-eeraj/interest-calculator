@@ -6,6 +6,7 @@ import {
   investmentListSchema,
   investmentIdSchema,
   investmentSchema,
+  updateInvestmentSchema,
 } from "@app/schemas/schemes";
 
 import { protectedProcedure } from "#app/trpc";
@@ -66,6 +67,15 @@ const investment = {
     .query(async ({ ctx, input }) => {
       const data = await InvestmentService.getById(ctx.user.id, input);
       return data;
+    }),
+
+  /**
+   * Create an investment.
+   */
+  update: protectedProcedure
+    .input(updateInvestmentSchema)
+    .mutation(async ({ ctx, input }) => {
+      await InvestmentService.update(ctx.user.id, input);
     }),
 
   /**

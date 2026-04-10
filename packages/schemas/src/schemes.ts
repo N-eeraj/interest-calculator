@@ -80,3 +80,6 @@ export const investmentIdSchema = investmentSchema.pick({
   id: true,
 });
 export type InvestmentIdSchema = z.infer<typeof investmentIdSchema>;
+
+export const updateInvestmentSchema = createInvestmentSchema.extend(investmentIdSchema.shape);
+export type UpdateInvestmentSchema = z.infer<typeof updateInvestmentSchema>;
