@@ -9,6 +9,7 @@ import {
 
 import DsSpinner from "@components/ds/Spinner";
 import DsButton from "@components/ds/Button";
+import DsChip from "@components/ds/Chip";
 import InvestmentForm from "@components/investment/Form";
 import InvestmentChart from "@components/investment/Chart";
 import InvestmentSummary from "@components/investment/Summary";
@@ -55,14 +56,14 @@ export default function Investment({ initialData }: Props) {
           className="w-full max-w-80" />
         <div className="flex justify-center items-center flex-wrap gap-1.5">
             {investmentTypeText && (
-              <span className="text-xs px-4 py-0.75 bg-primary/10 text-primary rounded-full border border-primary">
+              <DsChip>
                 Investment: {investmentTypeText}
-              </span>
+              </DsChip>
             )}
             {(compoundingTypeText && compoundingType !== CompoundingType.NONE) && (
-              <span className="text-xs px-4 py-0.75 bg-secondary/10 text-secondary rounded-full border border-secondary">
+              <DsChip theme="secondary">
                 Compounds: {compoundingTypeText}
-              </span>
+              </DsChip>
             )}
           </div>
         <div className="flex items-center gap-x-6">

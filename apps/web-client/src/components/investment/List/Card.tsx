@@ -15,6 +15,7 @@ import type { InvestmentSchema } from "@app/schemas/schemes";
 
 import DsButton from "@components/ds/Button";
 import DsCard from "@components/ds/Card";
+import DsChip from "@components/ds/Chip";
 import { formatCurrency } from "@utils/formatting";
 
 interface Props extends InvestmentSchema {
@@ -84,14 +85,14 @@ export default function InvestmentCard({
     <DsCard className="flex flex-col items-stretch gap-y-4 h-full py-5!">
       <div className="flex justify-between items-center flex-wrap gap-2.5">
         <div className="flex items-center flex-wrap gap-1.5">
-          <span className="text-xs px-4 py-0.75 bg-primary/10 text-primary rounded-full border border-primary">
+          <DsChip>
             {SCHEMES[schemeType].shortName}
-          </span>
+          </DsChip>
           {
             isSeniorCitizen && (
-              <span className="text-xs px-4 py-0.75 bg-secondary/10 text-secondary rounded-full border border-secondary">
+              <DsChip theme="secondary">
                 Senior Citizen
-              </span>
+              </DsChip>
             )
           }
         </div>
@@ -158,14 +159,16 @@ export default function InvestmentCard({
 
       <div className="flex justify-end items-center flex-wrap gap-1.5">
         {investmentTypeText && (
-          <span className="text-[10px] px-2 py-0.5 bg-primary/10 text-primary rounded-full border border-primary">
+          <DsChip size="sm">
             Investment: {investmentTypeText}
-          </span>
+          </DsChip>
         )}
         {(compoundingTypeText && compoundingType !== CompoundingType.NONE) && (
-          <span className="text-[10px] px-2 py-0.5 bg-secondary/10 text-secondary rounded-full border border-secondary">
+          <DsChip
+            size="sm"
+            theme="secondary">
             Compounds: {compoundingTypeText}
-          </span>
+          </DsChip>
         )}
       </div>
     </DsCard>
