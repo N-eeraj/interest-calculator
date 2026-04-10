@@ -1,5 +1,12 @@
 import { Link } from "@tanstack/react-router";
 
+import { CompoundingType } from "@app/definitions/enums/schemes";
+import {
+  COMPOUNDING_TYPE_OPTIONS,
+  INVESTMENT_TYPE_OPTIONS,
+  SCHEMES,
+} from "@app/definitions/constants/map";
+
 import DsSpinner from "@components/ds/Spinner";
 import DsButton from "@components/ds/Button";
 import InvestmentForm from "@components/investment/Form";
@@ -30,6 +37,13 @@ export default function Investment({ initialData }: Props) {
     );
   }
 
+  const {
+    investmentType,
+    compoundingType,
+  } = SCHEMES[formProps.scheme];
+  const investmentTypeText = INVESTMENT_TYPE_OPTIONS[investmentType];
+  const compoundingTypeText = COMPOUNDING_TYPE_OPTIONS[compoundingType];
+
   return (
     <section className="grid md:grid-cols-2 gap-x-12 gap-y-6">
       <InvestmentForm {...formProps} />
@@ -39,6 +53,18 @@ export default function Investment({ initialData }: Props) {
           invested={summary.investedAmount}
           returns={summary.returns}
           className="w-full max-w-80" />
+        <div className="flex justify-center items-center flex-wrap gap-1.5">
+            {investmentTypeText && (
+              <span className="text-xs px-4 py-0.75 bg-primary/10 text-primary rounded-full border border-primary">
+                Investment: {investmentTypeText}
+              </span>
+            )}
+            {(compoundingTypeText && compoundingType !== CompoundingType.NONE) && (
+              <span className="text-xs px-4 py-0.75 bg-secondary/10 text-secondary rounded-full border border-secondary">
+                Compounds: {compoundingTypeText}
+              </span>
+            )}
+          </div>
         <div className="flex items-center gap-x-6">
           <Link
             to="/"

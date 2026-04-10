@@ -3,7 +3,11 @@ import type {
   StoryObj,
 } from "@storybook/react-vite";
 
-import { SchemeType } from "@app/definitions/enums/schemes";
+import {
+  SchemeType,
+  InvestmentType,
+  CompoundingType,
+} from "@app/definitions/enums/schemes";
 
 import InvestmentCard from "@components/investment/List/Card";
 
@@ -16,10 +20,25 @@ const meta = {
   argTypes: {
     schemeType: {
       control: "select",
-      options: [ 
+      options: [
         SchemeType.FD,
         SchemeType.RD,
         SchemeType.MIS,
+      ],
+    },
+    investmentType: {
+      control: "select",
+      options: [
+        InvestmentType.LUMP_SUM,
+        InvestmentType.RECURRING,
+      ],
+    },
+    compoundingType: {
+      control: "select",
+      options: [
+        CompoundingType.NONE,
+        CompoundingType.QUARTERLY,
+        CompoundingType.YEARLY,
       ],
     },
     principalAmount: {
@@ -38,6 +57,8 @@ const meta = {
   args: {
     id: 1,
     schemeType: SchemeType.FD,
+    investmentType: InvestmentType.LUMP_SUM,
+    compoundingType: CompoundingType.QUARTERLY,
     principalAmount: 1_000_000,
     maturityAmount: 2_000_000,
     tenureMonths: 60,
