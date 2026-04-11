@@ -2,6 +2,7 @@ import type {
   Meta,
   StoryObj,
 } from "@storybook/react-vite";
+import { fn } from "storybook/test";
 
 import {
   SchemeType,
@@ -67,7 +68,7 @@ const meta = {
     monthlyDeposit: null,
     monthlyPayout: null,
     updatedAt: new Date(),
-    onDelete: () => {},
+    onDelete: fn(),
   },
 } satisfies Meta<typeof InvestmentCard>;
 

@@ -66,7 +66,7 @@ export default function Investment({ initialData }: Props) {
               </DsChip>
             )}
           </div>
-        <div className="flex items-center gap-x-6">
+        <div className="flex items-center gap-x-6 mt-5">
           <Link
             to="/"
             className="grow">

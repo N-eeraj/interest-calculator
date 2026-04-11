@@ -1,5 +1,7 @@
 import { SchemeType } from "#enums/schemes";
 
+export const INVESTMENT_INTERVALS = 100 as const;
+
 export const MIN_INVESTMENT_AMOUNT: Record<SchemeType, number> = {
   [SchemeType.FD]:       1_000, // principal amount
   [SchemeType.RD]:         100, // monthly deposit
