@@ -7,10 +7,12 @@ import { LucideChevronDown } from "lucide-react";
 
 import { SCHEMES } from "@app/definitions/constants/map";
 import {
+  INVESTMENT_INTERVALS,
   MIN_INVESTMENT_AMOUNT,
   MAX_INVESTMENT_AMOUNT,
 } from "@app/definitions/constants/scheme/amounts";
 import {
+  TENURE_MONTHS_INTERVALS,
   MIN_TENURE_MONTHS,
   MAX_TENURE_MONTHS,
 } from "@app/definitions/constants/scheme/tenures";
@@ -60,6 +62,7 @@ export default function InvestmentForm({
   const minInvestment = MIN_INVESTMENT_AMOUNT[scheme];
   const maxInvestment = MAX_INVESTMENT_AMOUNT[scheme];
 
+  const tenureStep = TENURE_MONTHS_INTERVALS / (tenureType === "month" ? 1 : 12)
   const minTenure = MIN_TENURE_MONTHS[scheme] / (tenureType === "month" ? 1 : 12);
   const maxTenure = MAX_TENURE_MONTHS[scheme] / (tenureType === "month" ? 1 : 12);
 
@@ -93,12 +96,14 @@ export default function InvestmentForm({
           inputMode="decimal"
           min={minInvestment}
           max={maxInvestment}
+          step={INVESTMENT_INTERVALS}
           className="w-28 text-right"
           onChange={({ target }) => setInvestment(+target.value)} />
         <Slider
           value={[investment]}
           min={minInvestment}
           max={maxInvestment}
+          step={INVESTMENT_INTERVALS}
           className="w-full"
           onValueChange={([value]) => setInvestment(value)} />
       </div>
@@ -112,7 +117,7 @@ export default function InvestmentForm({
             <DropdownMenuTrigger asChild>
               <DsButton
                 variant="outline"
-                className="gap-x-1 h-full pr-px! capitalize">
+                className="gap-x-1 h-full pr-1.5! capitalize">
                 {`${tenureType}s`}
                 <LucideChevronDown />
               </DsButton>
@@ -131,15 +136,16 @@ export default function InvestmentForm({
           value={tenure}
           type="number"
           inputMode="decimal"
+          step={tenureStep}
           min={minTenure}
           max={maxTenure}
           className="w-28 text-right"
           onChange={({ target }) => setTenure(+target.value)} />
         <Slider
           value={[tenure]}
+          step={tenureStep}
           min={minTenure}
           max={maxTenure}
-          step={tenureType === "month" ? 1 : 0.25}
           className="w-full"
           onValueChange={([value]) => setTenure(value)} />
       </div>

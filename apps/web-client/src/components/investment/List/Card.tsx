@@ -1,85 +1,46 @@
-import type { MouseEvent } from "react";
 import { ArrowRightAltW700 } from "@material-symbols-svg/react/rounded/icons/arrow-right-alt";
 import { DeleteW500 } from "@material-symbols-svg/react/rounded/icons/delete";
 
-import {
-  CompoundingType,
-  SchemeType,
-} from "@app/definitions/enums/schemes";
-import {
-  COMPOUNDING_TYPE_OPTIONS,
-  INVESTMENT_TYPE_OPTIONS,
-  SCHEMES,
-} from "@app/definitions/constants/map";
+import { CompoundingType } from "@app/definitions/enums/schemes";
+import { SCHEMES } from "@app/definitions/constants/map";
 import type { InvestmentSchema } from "@app/schemas/schemes";
 
 import DsButton from "@components/ds/Button";
 import DsCard from "@components/ds/Card";
 import DsChip from "@components/ds/Chip";
+import useInvestmentCard, {
+  type Parameters,
+} from "@hooks/investments/useInvestmentCard";
 import { formatCurrency } from "@utils/formatting";
 
 interface Props extends InvestmentSchema {
   isDeleting?: boolean;
-  onDelete?: (id: InvestmentSchema["id"]) => void;
+  onDelete?: Parameters["onDelete"];
 }
 
 export default function InvestmentCard({
-  id,
-  principalAmount,
-  schemeType,
-  investmentType,
-  compoundingType,
-  monthlyDeposit,
-  monthlyPayout,
-  maturityAmount,
-  tenureMonths,
-  isSeniorCitizen,
-  interestRate,
-  updatedAt,
   isDeleting,
   onDelete,
+  ...investment
 }: Props) {
+  const {
+    tenure,
+    fromLabel,
+    fromAmount,
+    toLabel,
+    toAmount,
+    compoundingType,
+    investmentTypeText,
+    compoundingTypeText,
+    handleDelete,
+  } = useInvestmentCard(investment);
 
-  const years = Math.floor(tenureMonths / 12);
-  const months = tenureMonths % 12;
-
-  const tenure =
-    tenureMonths >= 12
-      ? `${years} year${years > 1 ? "s" : ""}${
-          months ? `, ${months} month${months > 1 ? "s" : ""}` : ""
-        }`
-      : `${tenureMonths} month${tenureMonths > 1 ? "s" : ""}`;
-
-  const handleDelete = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    onDelete?.(id);
-  };
-
-  let fromLabel, fromAmount, toLabel, toAmount;
-
-  switch(schemeType) {
-    case SchemeType.FD:
-      fromLabel = "Invested";
-      fromAmount = principalAmount;
-      toLabel = "Maturity";
-      toAmount = maturityAmount;
-      break;
-    case SchemeType.RD:
-      fromLabel = "Monthly";
-      fromAmount = monthlyDeposit;
-      toLabel = "Maturity";
-      toAmount = maturityAmount;
-      break;
-    case SchemeType.MIS:
-      fromLabel = "Invested";
-      fromAmount = principalAmount;
-      toLabel = "Monthly Payout";
-      toAmount = monthlyPayout;
-      break;
-  }
-
-  const investmentTypeText = INVESTMENT_TYPE_OPTIONS[investmentType];
-  const compoundingTypeText = COMPOUNDING_TYPE_OPTIONS[compoundingType];
+  const {
+    schemeType,
+    isSeniorCitizen,
+    interestRate,
+    updatedAt,
+  } = investment;
 
   return (
     <DsCard className="flex flex-col items-stretch gap-y-4 h-full py-5!">
