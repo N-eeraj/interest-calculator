@@ -1,3 +1,6 @@
+import { INVESTMENT_INTERVALS } from "@app/definitions/constants/scheme/amounts";
+import { TENURE_MONTHS_INTERVALS } from "@app/definitions/constants/scheme/tenures";
+
 const NAME_VALIDATIONS = {
   required: "Please enter a name",
 } as const;
@@ -75,14 +78,16 @@ export const INVESTMENT = {
     schemeId: {
       required: "Scheme id is required",
     },
+    investment: {
+      ...AMOUNT,
+      step: `Amount must be in multiples of ${INVESTMENT_INTERVALS}`,
+    },
     tenureMonths: {
       required: "Please select a tenure",
+      step: `Tenure must be in multiples of ${TENURE_MONTHS_INTERVALS} months.`,
     },
     isSeniorCitizen: {
       valid: "Please select a valid boolean value"
-    },
-    investment: {
-      ...AMOUNT,
     },
   },
 } as const;

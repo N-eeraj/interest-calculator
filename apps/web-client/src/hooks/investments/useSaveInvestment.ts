@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import z, {
+  ZodError,
+} from "zod";
 import { toast } from "sonner";
 
 import { SchemeType } from "@app/definitions/enums/schemes";
@@ -9,7 +12,11 @@ import calculateRD from "@app/utils/calculateRD";
 import calculateMIS from "@app/utils/calculateMIS";
 import { MIN_INVESTMENT_AMOUNT } from "@app/definitions/constants/scheme/amounts";
 import { MIN_TENURE_MONTHS } from "@app/definitions/constants/scheme/tenures";
-import type { InvestmentSchema } from "@app/schemas/schemes";
+import {
+  createInvestmentSchema,
+  updateInvestmentSchema,
+  type InvestmentSchema,
+} from "@app/schemas/schemes";
 
 import {
   useAuthRefreshMutation,
@@ -128,13 +135,27 @@ export default function useSaveInvestment(initialData?: InitialData) {
   const saveInvestment = () => {
     const selectedScheme = schemes?.find(({ type }) => type === scheme);
     if (!selectedScheme) return;
-    saveInvestmentMutation.mutate({
+    const payload = {
       id: initialData?.id as number, // only for update
       schemeId: selectedScheme.id,
       tenureMonths,
       isSeniorCitizen,
       investment,
-    });
+    };
+    const schema = isUpdate ? updateInvestmentSchema : createInvestmentSchema;
+    try {
+      schema.parse(payload);
+      saveInvestmentMutation.mutate(payload);
+    } catch (error) {
+      let errorMessage = "Oops! Failed to save investment";
+      if (error instanceof ZodError) {
+        const { fieldErrors } = z.flattenError(error);
+        if (Object.values(fieldErrors).flat().length) {
+          errorMessage = Object.values(fieldErrors).flat()[0] as string;
+        }
+      }
+      toast.error(errorMessage);
+    }
   };
 
   return {

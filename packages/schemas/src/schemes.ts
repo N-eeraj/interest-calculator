@@ -5,6 +5,8 @@ import {
   CompoundingType,
 } from "@app/definitions/enums/schemes";
 import { SortByOption } from "@app/definitions/enums/sort";
+import { INVESTMENT_INTERVALS } from "@app/definitions/constants/scheme/amounts";
+import { TENURE_MONTHS_INTERVALS } from "@app/definitions/constants/scheme/tenures";
 import { INVESTMENT } from "#messages";
 
 export const schemesSchema = z.array(
@@ -37,10 +39,12 @@ export type SchemeRateResourceListSchema = z.infer<typeof schemeRateResourceList
 
 export const createInvestmentSchema = z.object({
   schemeId: z.number({ error: INVESTMENT.create.schemeId.required }),
-  tenureMonths: z.number({ error: INVESTMENT.create.tenureMonths.required }),
+  investment: z.number({ error: INVESTMENT.create.investment.valid })
+    .multipleOf(INVESTMENT_INTERVALS, { error: INVESTMENT.create.investment.step }),
+  tenureMonths: z.number({ error: INVESTMENT.create.tenureMonths.required })
+    .multipleOf(TENURE_MONTHS_INTERVALS, { error: INVESTMENT.create.tenureMonths.step }),
   isSeniorCitizen: z.boolean({ error: INVESTMENT.create.isSeniorCitizen.valid })
     .optional(),
-  investment: z.number({ error: INVESTMENT.create.investment.valid }),
 });
 export type CreateInvestmentSchema = z.infer<typeof createInvestmentSchema>;
 
