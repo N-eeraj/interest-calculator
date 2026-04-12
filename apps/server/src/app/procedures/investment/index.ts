@@ -44,7 +44,7 @@ const investment = {
   create: protectedProcedure
     .input(createInvestmentSchema)
     .mutation(async ({ ctx, input }) => {
-      await InvestmentService.createInvestment(ctx.user.id, input);
+      await InvestmentService.create(ctx.user.id, input);
     }),
 
   /**

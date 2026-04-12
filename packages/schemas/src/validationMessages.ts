@@ -74,6 +74,16 @@ const AMOUNT = {
 } as const;
 
 export const INVESTMENT = {
+  minMax: {
+    tenureMonths: {
+      min: "Please choose a longer tenure for this scheme",
+      max: "Please choose a shorter tenure for this scheme",
+    },
+    investment: {
+      min: "Please enter a higher investment amount for this scheme",
+      max: "Please enter a lower investment amount for this scheme",
+    },
+  },
   create: {
     schemeId: {
       required: "Scheme id is required",

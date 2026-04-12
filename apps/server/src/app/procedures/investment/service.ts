@@ -9,6 +9,7 @@ import { TRPCError } from "@trpc/server";
 import {
   investmentSchema,
   investmentListSchema,
+  investmentMinMaxSchema,
   type SchemesSchema,
   type SchemeRateResourceListSchema,
   type CreateInvestmentSchema,
@@ -17,6 +18,7 @@ import {
   type InvestmentListSchema,
   type InvestmentIdSchema,
   type UpdateInvestmentSchema,
+  type InvestmentMinMaxSchema,
 } from "@app/schemas/schemes";
 import {
   getMatchedMonths,
@@ -37,6 +39,8 @@ import {
   schemeRates,
   schemes,
 } from "#db/schemas/index";
+
+type SchemeData = Omit<typeof investments.$inferInsert, "userId"> & { schemeType: SchemeType };
 
 const DEFAULT_LIST_OPTIONS: NonNullable<Required<InvestmentFilterSchema>> = {
   page: 1,
@@ -77,7 +81,7 @@ export default class InvestmentService {
     schemeId,
     tenureMonths,
     isSeniorCitizen = false,
-  }: CreateInvestmentSchema): Promise<Omit<typeof investments.$inferInsert, "userId">> {
+  }: CreateInvestmentSchema): Promise<SchemeData> {
     const schemeRatesByScheme = await db
       .select({
         id: schemeRates.id,
@@ -132,6 +136,7 @@ export default class InvestmentService {
     }
 
     const investmentData = {
+      schemeType: matchedSchemeRate.schemeType,
       schemeId,
       schemeRateId: matchedSchemeRate.id,
       tenureMonths,
@@ -143,7 +148,19 @@ export default class InvestmentService {
       monthlyPayout,
     };
 
-    return investmentData as Omit<typeof investments.$inferInsert, "userId">;
+    return investmentData as SchemeData;
+  }
+
+  private static validateInvestmentMinMax(input: InvestmentMinMaxSchema) {
+    const {
+      error,
+    } = investmentMinMaxSchema.safeParse(input);
+    if (error) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        cause: error,
+      });
+    }
   }
 
   private static byIdAndUser(investmentId: InvestmentSchema["id"], userId: number) {
@@ -153,7 +170,7 @@ export default class InvestmentService {
     )
   }
 
-  static async createInvestment(userId: number, {
+  static async create(userId: number, {
     investment,
     schemeId,
     tenureMonths,
@@ -165,6 +182,13 @@ export default class InvestmentService {
       tenureMonths,
       isSeniorCitizen,
     });
+    
+    this.validateInvestmentMinMax({
+      scheme: schemeData.schemeType,
+      tenureMonths,
+      investment,
+    });
+
     const investmentData = {
       ...schemeData,
       userId,
@@ -268,6 +292,13 @@ export default class InvestmentService {
       tenureMonths,
       isSeniorCitizen,
     });
+    
+    this.validateInvestmentMinMax({
+      scheme: schemeData.schemeType,
+      tenureMonths,
+      investment,
+    });
+
     const investmentData = {
       ...schemeData,
       userId,
