@@ -74,6 +74,15 @@ export default function InvestmentForm({
     tenureType,
   ]);
 
+  const handleInvestmentChange = (value: number) => {
+    const safeValue = Math.max(Math.min(value, maxInvestment), minInvestment);
+    setInvestment(safeValue);
+  };
+  const handleTenureChange = (value: number) => {
+    const safeValue = Math.max(Math.min(value, maxTenure), minTenure);
+    setTenure(safeValue);
+  };
+
   return (
     <div className={clsx(
       "space-y-8",
@@ -98,7 +107,7 @@ export default function InvestmentForm({
           max={maxInvestment}
           step={INVESTMENT_INTERVALS}
           className="w-28 text-right"
-          onChange={({ target }) => setInvestment(+target.value)} />
+          onChange={({ target }) => handleInvestmentChange(+target.value)} />
         <Slider
           value={[investment]}
           min={minInvestment}
@@ -140,7 +149,7 @@ export default function InvestmentForm({
           min={minTenure}
           max={maxTenure}
           className="w-28 text-right"
-          onChange={({ target }) => setTenure(+target.value)} />
+          onChange={({ target }) => handleTenureChange(+target.value)} />
         <Slider
           value={[tenure]}
           step={tenureStep}
