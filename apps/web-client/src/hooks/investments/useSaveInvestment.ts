@@ -14,6 +14,7 @@ import { MIN_INVESTMENT_AMOUNT } from "@app/definitions/constants/scheme/amounts
 import { MIN_TENURE_MONTHS } from "@app/definitions/constants/scheme/tenures";
 import {
   createInvestmentSchema,
+  investmentMinMaxSchema,
   updateInvestmentSchema,
   type InvestmentSchema,
 } from "@app/schemas/schemes";
@@ -128,22 +129,33 @@ export default function useSaveInvestment(initialData?: InitialData) {
       }
     },
     onError: (error) => {
-      toast.error(error.message);
+      let errorMessage = error.message;
+      const fieldErrors = Object.values(error.shape?.fieldErrors ?? []).flat();
+      if (fieldErrors.length) {
+        errorMessage = fieldErrors[0] as string;
+      }
+      toast.error(errorMessage);
     },
   }));
 
   const saveInvestment = () => {
     const selectedScheme = schemes?.find(({ type }) => type === scheme);
     if (!selectedScheme) return;
-    const payload = {
-      id: initialData?.id as number, // only for update
-      schemeId: selectedScheme.id,
-      tenureMonths,
-      isSeniorCitizen,
-      investment,
-    };
-    const schema = isUpdate ? updateInvestmentSchema : createInvestmentSchema;
     try {
+      investmentMinMaxSchema.parse({
+        scheme,
+        tenureMonths,
+        investment,
+      });
+
+      const payload = {
+        id: initialData?.id as number, // only for update
+        schemeId: selectedScheme.id,
+        tenureMonths,
+        isSeniorCitizen,
+        investment,
+      };
+      const schema = isUpdate ? updateInvestmentSchema : createInvestmentSchema;
       schema.parse(payload);
       saveInvestmentMutation.mutate(payload);
     } catch (error) {

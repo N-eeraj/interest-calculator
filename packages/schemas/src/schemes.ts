@@ -5,8 +5,16 @@ import {
   CompoundingType,
 } from "@app/definitions/enums/schemes";
 import { SortByOption } from "@app/definitions/enums/sort";
-import { INVESTMENT_INTERVALS } from "@app/definitions/constants/scheme/amounts";
-import { TENURE_MONTHS_INTERVALS } from "@app/definitions/constants/scheme/tenures";
+import {
+  INVESTMENT_INTERVALS,
+  MIN_INVESTMENT_AMOUNT,
+  MAX_INVESTMENT_AMOUNT,
+} from "@app/definitions/constants/scheme/amounts";
+import {
+  TENURE_MONTHS_INTERVALS,
+  MIN_TENURE_MONTHS,
+  MAX_TENURE_MONTHS,
+} from "@app/definitions/constants/scheme/tenures";
 import { INVESTMENT } from "#messages";
 
 export const schemesSchema = z.array(
@@ -36,6 +44,47 @@ export type SchemeRateListSchema = z.infer<typeof schemeRateListSchema>;
 
 export const schemeRateResourceListSchema = z.array(schemeRateResourceSchema);
 export type SchemeRateResourceListSchema = z.infer<typeof schemeRateResourceListSchema>;
+
+export const investmentMinMaxSchema = z.object({
+  scheme: z.enum(SchemeType),
+  tenureMonths: z.number(),
+  investment: z.number(),
+})
+  .superRefine(({ scheme, tenureMonths, investment }, ctx) => {
+    const minInvestmentAmount = MIN_INVESTMENT_AMOUNT[scheme];
+    const maxInvestmentAmount = MAX_INVESTMENT_AMOUNT[scheme];
+    const minTenureMonths = MIN_TENURE_MONTHS[scheme];
+    const maxTenureMonths = MAX_TENURE_MONTHS[scheme];
+
+    if (tenureMonths < minTenureMonths) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["tenureMonths"],
+        message: INVESTMENT.minMax.tenureMonths.min,
+      });
+    } else if (tenureMonths > maxTenureMonths) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["tenureMonths"],
+        message: INVESTMENT.minMax.tenureMonths.max,
+      });
+    }
+
+    if (investment < minInvestmentAmount) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["investment"],
+        message: INVESTMENT.minMax.investment.min,
+      });
+    } else if (investment > maxInvestmentAmount) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["investment"],
+        message: INVESTMENT.minMax.investment.max,
+      });
+    }
+  });
+export type InvestmentMinMaxSchema = z.infer<typeof investmentMinMaxSchema>;
 
 export const createInvestmentSchema = z.object({
   schemeId: z.number({ error: INVESTMENT.create.schemeId.required }),
