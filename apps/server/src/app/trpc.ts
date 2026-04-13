@@ -9,7 +9,7 @@ import { eq } from "drizzle-orm";
 
 import {
   profileIdSchema,
-  type ProfileSchema,
+  type Profile,
 } from "@app/schemas/profile";
 import { JWT_SECRET } from "#server/config";
 import { db } from "#db/index";
@@ -58,7 +58,7 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
     });
   }
 
-  const [user]: Array<ProfileSchema> = await db
+  const [user]: Array<Profile> = await db
     .select({
       id: users.id,
       name: users.name,

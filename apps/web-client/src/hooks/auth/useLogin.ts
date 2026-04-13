@@ -3,7 +3,7 @@ import { useForm } from "@tanstack/react-form";
 
 import {
   loginSchema,
-  type LoginSchema,
+  type Login,
 } from "@app/schemas/auth";
 
 import useAuth from "@hooks/auth/useAuth";
@@ -16,7 +16,7 @@ export default function useLogin() {
     defaultValues: {
       email: "",
       password: "",
-    } satisfies LoginSchema,
+    } satisfies Login,
     validators: {
       onSubmit: loginSchema,
     },

@@ -6,15 +6,15 @@ import {
 } from "react";
 
 import { SortByOption } from "@app/definitions/enums/sort";
-import type { InvestmentListSchema } from "@app/schemas/schemes";
+import type { InvestmentList } from "@app/schemas/schemes";
 
 
 interface InvestmentContext {
-  investments: InvestmentListSchema;
+  investments: InvestmentList;
   page: number;
   sortBy: SortByOption;
   sortOrder: "asc" | "desc";
-  setInvestments: React.Dispatch<React.SetStateAction<InvestmentListSchema>>;
+  setInvestments: React.Dispatch<React.SetStateAction<InvestmentList>>;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   setSortBy: React.Dispatch<React.SetStateAction<SortByOption>>;
   setSortOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>;
@@ -32,7 +32,7 @@ export const InvestmentContext = createContext<InvestmentContext>({
 });
 
 export default function InvestmentContextProvider({ children }: PropsWithChildren) {
-  const [investments, setInvestments] = useState<InvestmentListSchema>([]);
+  const [investments, setInvestments] = useState<InvestmentList>([]);
 
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState<SortByOption>(SortByOption.DATE);

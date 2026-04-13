@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 import {
   passwordUpdateSchema,
-  type PasswordUpdateSchema,
+  type PasswordUpdate,
 } from "@app/schemas/profile";
 
 import { useAuthRefreshMutation } from "@hooks/useAuthRefreshQuery";
@@ -20,7 +20,7 @@ export default function usePasswordUpdate() {
     defaultValues: {
       password: "",
       newPassword:  "",
-    } satisfies PasswordUpdateSchema,
+    } satisfies PasswordUpdate,
     validators: {
       onSubmit: passwordUpdateSchema,
     },

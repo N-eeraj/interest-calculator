@@ -1,14 +1,14 @@
 import type { MouseEvent } from "react";
 
 import { SchemeType } from "@app/definitions/enums/schemes";
-import type { InvestmentSchema } from "@app/schemas/schemes";
+import type { Investment } from "@app/schemas/schemes";
 import {
   COMPOUNDING_TYPE_OPTIONS,
   INVESTMENT_TYPE_OPTIONS,
 } from "@app/definitions/constants/map";
 
-export interface Parameters extends InvestmentSchema {
-  onDelete?: (id: InvestmentSchema["id"]) => void;
+export interface Parameters extends Investment {
+  onDelete?: (id: Investment["id"]) => void;
 }
 
 export default function useInvestmentCard({

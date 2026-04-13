@@ -10,15 +10,15 @@ import {
   investmentSchema,
   investmentListSchema,
   investmentMinMaxSchema,
-  type SchemesSchema,
-  type SchemeRateResourceListSchema,
-  type CreateInvestmentSchema,
-  type InvestmentFilterSchema,
-  type InvestmentSchema,
-  type InvestmentListSchema,
-  type InvestmentIdSchema,
-  type UpdateInvestmentSchema,
-  type InvestmentMinMaxSchema,
+  type Schemes,
+  type SchemeRateResourceList,
+  type CreateInvestment,
+  type InvestmentFilter,
+  type Investment,
+  type InvestmentList,
+  type InvestmentId,
+  type UpdateInvestment,
+  type InvestmentMinMax,
 } from "@app/schemas/schemes";
 import {
   getMatchedMonths,
@@ -42,7 +42,7 @@ import {
 
 type SchemeData = Omit<typeof investments.$inferInsert, "userId"> & { schemeType: SchemeType };
 
-const DEFAULT_LIST_OPTIONS: NonNullable<Required<InvestmentFilterSchema>> = {
+const DEFAULT_LIST_OPTIONS: NonNullable<Required<InvestmentFilter>> = {
   page: 1,
   limit: 10,
   sortBy: SortByOption.DATE,
@@ -50,7 +50,7 @@ const DEFAULT_LIST_OPTIONS: NonNullable<Required<InvestmentFilterSchema>> = {
 } as const;
 
 export default class InvestmentService {
-  static async schemeList(): Promise<SchemesSchema> {
+  static async schemeList(): Promise<Schemes> {
     const schemesData = await db
       .select({
         id: schemes.id,
@@ -60,7 +60,7 @@ export default class InvestmentService {
     return schemesData;
   }
 
-  static async schemeRates(): Promise<SchemeRateResourceListSchema> {
+  static async schemeRates(): Promise<SchemeRateResourceList> {
     const schemeRatesList = await db
       .select({
         id: schemeRates.id,
@@ -73,7 +73,7 @@ export default class InvestmentService {
       .from(schemeRates)
       .leftJoin(schemes, eq(schemes.id, schemeRates.schemeId));
 
-    return schemeRatesList as SchemeRateResourceListSchema;
+    return schemeRatesList as SchemeRateResourceList;
   }
 
   private static async getSchemeData({
@@ -81,7 +81,7 @@ export default class InvestmentService {
     schemeId,
     tenureMonths,
     isSeniorCitizen = false,
-  }: CreateInvestmentSchema): Promise<SchemeData> {
+  }: CreateInvestment): Promise<SchemeData> {
     const schemeRatesByScheme = await db
       .select({
         id: schemeRates.id,
@@ -151,7 +151,7 @@ export default class InvestmentService {
     return investmentData as SchemeData;
   }
 
-  private static validateInvestmentMinMax(input: InvestmentMinMaxSchema) {
+  private static validateInvestmentMinMax(input: InvestmentMinMax) {
     const {
       error,
     } = investmentMinMaxSchema.safeParse(input);
@@ -163,7 +163,7 @@ export default class InvestmentService {
     }
   }
 
-  private static byIdAndUser(investmentId: InvestmentSchema["id"], userId: number) {
+  private static byIdAndUser(investmentId: Investment["id"], userId: number) {
     return and(
       eq(investments.id, investmentId),
       eq(investments.userId, userId),
@@ -175,7 +175,7 @@ export default class InvestmentService {
     schemeId,
     tenureMonths,
     isSeniorCitizen = false,
-  }: CreateInvestmentSchema) {
+  }: CreateInvestment) {
     const schemeData = await this.getSchemeData({
       investment,
       schemeId,
@@ -204,7 +204,7 @@ export default class InvestmentService {
     limit = DEFAULT_LIST_OPTIONS.limit,
     sortBy = DEFAULT_LIST_OPTIONS.sortBy,
     sortOrder = DEFAULT_LIST_OPTIONS.sortOrder,
-  }: InvestmentFilterSchema = DEFAULT_LIST_OPTIONS): Promise<InvestmentListSchema> {
+  }: InvestmentFilter = DEFAULT_LIST_OPTIONS): Promise<InvestmentList> {
     const orderBy = sortOrder === "asc" ? asc : desc;
 
     const userInvestments = await db
@@ -233,7 +233,7 @@ export default class InvestmentService {
     return data;
   }
 
-  static async getById(userId: number, { id }: InvestmentIdSchema): Promise<InvestmentSchema> {
+  static async getById(userId: number, { id }: InvestmentId): Promise<Investment> {
     const [investment] = await db
       .select({
         id: investments.id,
@@ -271,7 +271,7 @@ export default class InvestmentService {
     schemeId,
     tenureMonths,
     isSeniorCitizen = false,
-  }: UpdateInvestmentSchema) {
+  }: UpdateInvestment) {
     const [currentInvestment] = await db
       .select({
         id: investments.id,
@@ -313,7 +313,7 @@ export default class InvestmentService {
       .where(this.byIdAndUser(id, userId));
   }
 
-  static async delete(userId: number, { id }: InvestmentIdSchema) {
+  static async delete(userId: number, { id }: InvestmentId) {
     const investment = await db
       .select({
         id: investments.id,

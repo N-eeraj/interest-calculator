@@ -21,7 +21,7 @@ export const registrationSchema = z.object({
       return AUTH.register.password.format
     }}),
 });
-export type RegistrationSchema = z.infer<typeof registrationSchema>;
+export type Registration = z.infer<typeof registrationSchema>;
 
 export const loginSchema = z.object({
   email: z.email({ error: AUTH.login.email.required })
@@ -29,27 +29,27 @@ export const loginSchema = z.object({
   password: z.string({ error: AUTH.login.password.required })
     .nonempty(AUTH.login.password.required)
 });
-export type LoginSchema = z.infer<typeof loginSchema>;
+export type Login = z.infer<typeof loginSchema>;
 
 export const tokensSchema = z.object({
   refreshToken: z.string(),
   accessToken: z.string(),
 });
-export type TokensSchema = z.infer<typeof tokensSchema>;
+export type Tokens = z.infer<typeof tokensSchema>;
 
 export const authSuccessSchema = profileSchema.extend(tokensSchema.shape);
-export type AuthSuccessSchema = z.infer<typeof authSuccessSchema>;
+export type AuthSuccess = z.infer<typeof authSuccessSchema>;
 
 const refreshTokenSchema = tokensSchema.pick({
   refreshToken: true,
 });
 
 export const logoutSchema = refreshTokenSchema;
-export type LogoutSchema = z.infer<typeof logoutSchema>;
+export type Logout = z.infer<typeof logoutSchema>;
 
 export const refreshSchemaInput = refreshTokenSchema;
 export const refreshSchemaOutput = tokensSchema.pick({
   accessToken: true,
 });
-export type RefreshSchemaInput = z.infer<typeof refreshSchemaInput>;
-export type RefreshSchemaOutput = z.infer<typeof refreshSchemaOutput>;
+export type RefreshInput = z.infer<typeof refreshSchemaInput>;
+export type RefreshOutput = z.infer<typeof refreshSchemaOutput>;

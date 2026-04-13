@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-router";
 import type { AnyFormApi } from "@tanstack/react-form";
 
-import type { AuthSuccessSchema } from "@app/schemas/auth";
+import type { AuthSuccess } from "@app/schemas/auth";
 
 import handleFormError from "@utils/handleError";
 import {
@@ -29,7 +29,7 @@ export default function useAuth(form: AnyFormApi) {
     handleFormError(form, error);
   };
 
-  const onSuccess = ({ accessToken, refreshToken }: AuthSuccessSchema) => {
+  const onSuccess = ({ accessToken, refreshToken }: AuthSuccess) => {
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
 

@@ -4,7 +4,7 @@ import Papa from "papaparse";
 
 import {
   schemeRateListSchema,
-  SchemeRateListSchema,
+  SchemeRateList,
 } from "@app/schemas/schemes";
 
 import { db } from "#db/index";
@@ -14,7 +14,7 @@ import { PRIVATE_PATH } from "#server/config";
 const SEED_FILE_PATH = "scheme-rates.csv" as const;
 
 
-async function getSchemeRates(): Promise<SchemeRateListSchema> {
+async function getSchemeRates(): Promise<SchemeRateList> {
   try {
     const schemeRateFilePath = path.join(PRIVATE_PATH, SEED_FILE_PATH);
     const file = await fs.readFile(schemeRateFilePath, "utf8");

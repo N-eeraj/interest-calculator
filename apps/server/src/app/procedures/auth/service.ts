@@ -10,17 +10,17 @@ import {
 import { TRPCError } from "@trpc/server";
 
 import type {
-  RegistrationSchema,
-  AuthSuccessSchema,
-  LoginSchema,
-  TokensSchema,
-  RefreshSchemaInput,
-  RefreshSchemaOutput,
-  LogoutSchema,
+  Registration,
+  AuthSuccess,
+  Login,
+  Tokens,
+  RefreshInput,
+  RefreshOutput,
+  Logout,
 } from "@app/schemas/auth";
 import {
   profileIdSchema,
-  type ProfileSchema,
+  type Profile,
 } from "@app/schemas/profile";
 
 import { db } from "#db/index";
@@ -49,14 +49,14 @@ export default class AuthService {
   }
 
   private static async authenticate(
-    user: ProfileSchema,
+    user: Profile,
     tx?: MySqlTransaction<
       MySql2QueryResultHKT,
       MySql2PreparedQueryHKT,
       Record<string, never>,
       ExtractTablesWithRelations<Record<string, never>>
     >,
-  ): Promise<TokensSchema> {
+  ): Promise<Tokens> {
     const payload = {
       id: user.id,
     };
@@ -90,7 +90,7 @@ export default class AuthService {
     };
   }
 
-  static async register({ email, name, password }: RegistrationSchema): Promise<AuthSuccessSchema> {
+  static async register({ email, name, password }: Registration): Promise<AuthSuccess> {
     const existingUsers = await db
       .select({
         id: users.id,
@@ -138,7 +138,7 @@ export default class AuthService {
     return data;
   }
 
-  static async login({ email, password }: LoginSchema): Promise<AuthSuccessSchema> {
+  static async login({ email, password }: Login): Promise<AuthSuccess> {
     const [userFound] = await db
       .select({
         id: users.id,
@@ -177,7 +177,7 @@ export default class AuthService {
     };
   }
 
-  static async logout({ refreshToken }: LogoutSchema): Promise<void> {
+  static async logout({ refreshToken }: Logout): Promise<void> {
     const hashedToken = this.hashToken(refreshToken);
 
     const [result] = await db
@@ -192,7 +192,7 @@ export default class AuthService {
     }
   }
 
-  static async refresh({ refreshToken }: RefreshSchemaInput): Promise<RefreshSchemaOutput> {
+  static async refresh({ refreshToken }: RefreshInput): Promise<RefreshOutput> {
     const hashedToken = this.hashToken(refreshToken);
 
     const [tokenFound] = await db

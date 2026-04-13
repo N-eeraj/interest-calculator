@@ -6,7 +6,7 @@ import {
 import { useIntersectionObserver } from "@uidotdev/usehooks";
 import { toast } from "sonner";
 
-import type { InvestmentSchema } from "@app/schemas/schemes";
+import type { Investment } from "@app/schemas/schemes";
 
 import { InvestmentContext } from "@contexts/InvestmentList";
 import { useAuthRefreshQuery } from "@hooks/useAuthRefreshQuery";
@@ -89,7 +89,7 @@ export default function useListInvestment() {
     },
   }));
 
-  const handleDelete = (id: InvestmentSchema["id"]) => mutation.mutate({ id });
+  const handleDelete = (id: Investment["id"]) => mutation.mutate({ id });
 
   return {
     investments,

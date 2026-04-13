@@ -3,7 +3,7 @@ import { useForm } from "@tanstack/react-form";
 
 import {
   registrationSchema,
-  type RegistrationSchema,
+  type Registration,
 } from "@app/schemas/auth";
 
 import useAuth from "@hooks/auth/useAuth";
@@ -17,7 +17,7 @@ export default function useRegister() {
       name: "",
       email: "",
       password: "",
-    } satisfies RegistrationSchema,
+    } satisfies Registration,
     validators: {
       onSubmit: registrationSchema,
     },

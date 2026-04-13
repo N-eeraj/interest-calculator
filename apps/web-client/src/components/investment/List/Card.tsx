@@ -3,7 +3,7 @@ import { DeleteW500 } from "@material-symbols-svg/react/rounded/icons/delete";
 
 import { CompoundingType } from "@app/definitions/enums/schemes";
 import { SCHEMES } from "@app/definitions/constants/map";
-import type { InvestmentSchema } from "@app/schemas/schemes";
+import type { Investment } from "@app/schemas/schemes";
 
 import DsButton from "@components/ds/Button";
 import DsCard from "@components/ds/Card";
@@ -13,7 +13,7 @@ import useInvestmentCard, {
 } from "@hooks/investments/useInvestmentCard";
 import { formatCurrency } from "@utils/formatting";
 
-interface Props extends InvestmentSchema {
+interface Props extends Investment {
   isDeleting?: boolean;
   onDelete?: Parameters["onDelete"];
 }

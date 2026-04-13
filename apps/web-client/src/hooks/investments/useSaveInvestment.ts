@@ -16,7 +16,7 @@ import {
   createInvestmentSchema,
   investmentMinMaxSchema,
   updateInvestmentSchema,
-  type InvestmentSchema,
+  type Investment,
 } from "@app/schemas/schemes";
 
 import {
@@ -26,7 +26,7 @@ import {
 import { useTRPC } from "@utils/trpc";
 import { queryClient } from "@/TRPCQueryProvider";
 
-export type InitialData = Pick<InvestmentSchema, "id" | "schemeType" | "principalAmount" | "monthlyDeposit" | "tenureMonths" | "isSeniorCitizen">;
+export type InitialData = Pick<Investment, "id" | "schemeType" | "principalAmount" | "monthlyDeposit" | "tenureMonths" | "isSeniorCitizen">;
 
 export default function useSaveInvestment(initialData?: InitialData) {
   const trpc = useTRPC();

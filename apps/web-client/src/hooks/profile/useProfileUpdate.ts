@@ -4,7 +4,7 @@ import { toast } from "sonner";
 
 import {
   profileUpdateSchema,
-  type ProfileUpdateSchema,
+  type ProfileUpdate,
 } from "@app/schemas/profile";
 
 import { queryClient } from "@/TRPCQueryProvider";
@@ -21,7 +21,7 @@ export default function useProfileUpdate() {
     defaultValues: {
       name: data?.name ?? "",
       email: data?.email ?? "",
-    } satisfies ProfileUpdateSchema,
+    } satisfies ProfileUpdate,
     validators: {
       onSubmit: profileUpdateSchema,
     },

@@ -5,9 +5,9 @@ import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 
 import {
-  type ProfileUpdateSchema,
-  type PasswordUpdateSchema,
-  type ProfilePictureSchema,
+  type ProfileUpdate,
+  type PasswordUpdate,
+  type ProfilePicture,
 } from "@app/schemas/profile";
 
 import { db } from "#db/index";
@@ -20,7 +20,7 @@ import {
 export default class ProfileService {
   private static PROFILE_PICTURE_STORAGE_DIR = `profile-pictures` as const;
 
-  static async update(userId: number, { name, email }: ProfileUpdateSchema) {
+  static async update(userId: number, { name, email }: ProfileUpdate) {
     await db
       .update(users)
       .set({
@@ -30,7 +30,7 @@ export default class ProfileService {
       .where(eq(users.id, userId));
   }
 
-  static async passwordUpdate(userId: number, { password, newPassword }: PasswordUpdateSchema) {
+  static async passwordUpdate(userId: number, { password, newPassword }: PasswordUpdate) {
     const [user] = await db
       .select({
         id: users.id,
@@ -90,7 +90,7 @@ export default class ProfileService {
     }
   }
 
-  static async avatarUpdate(userId: number, file: ProfilePictureSchema) {
+  static async avatarUpdate(userId: number, file: ProfilePicture) {
     await this.deleteCurrentProfilePicture(userId);
 
     const fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1);

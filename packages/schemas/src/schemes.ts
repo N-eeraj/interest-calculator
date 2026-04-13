@@ -23,7 +23,7 @@ export const schemesSchema = z.array(
     type: z.enum(SchemeType),
   })
 );
-export type SchemesSchema = z.infer<typeof schemesSchema>;
+export type Schemes = z.infer<typeof schemesSchema>;
 
 export const schemeRateSchema = z.object({
   schemeId: z.coerce.number(),
@@ -31,19 +31,19 @@ export const schemeRateSchema = z.object({
   regularRate: z.coerce.number(),
   seniorRate: z.coerce.number(),
 });
-export type SchemeRateSchema = z.infer<typeof schemeRateSchema>;
+export type SchemeRate = z.infer<typeof schemeRateSchema>;
 
 export const schemeRateResourceSchema = schemeRateSchema.extend({
   id: z.number(),
   scheme: z.enum(SchemeType),
 });
-export type SchemeRateResourceSchema = z.infer<typeof schemeRateResourceSchema>;
+export type SchemeRateResource = z.infer<typeof schemeRateResourceSchema>;
 
 export const schemeRateListSchema = z.array(schemeRateSchema);
-export type SchemeRateListSchema = z.infer<typeof schemeRateListSchema>;
+export type SchemeRateList = z.infer<typeof schemeRateListSchema>;
 
 export const schemeRateResourceListSchema = z.array(schemeRateResourceSchema);
-export type SchemeRateResourceListSchema = z.infer<typeof schemeRateResourceListSchema>;
+export type SchemeRateResourceList = z.infer<typeof schemeRateResourceListSchema>;
 
 export const investmentMinMaxSchema = z.object({
   scheme: z.enum(SchemeType),
@@ -84,7 +84,7 @@ export const investmentMinMaxSchema = z.object({
       });
     }
   });
-export type InvestmentMinMaxSchema = z.infer<typeof investmentMinMaxSchema>;
+export type InvestmentMinMax = z.infer<typeof investmentMinMaxSchema>;
 
 export const createInvestmentSchema = z.object({
   schemeId: z.number({ error: INVESTMENT.create.schemeId.required }),
@@ -95,7 +95,7 @@ export const createInvestmentSchema = z.object({
   isSeniorCitizen: z.boolean({ error: INVESTMENT.create.isSeniorCitizen.valid })
     .optional(),
 });
-export type CreateInvestmentSchema = z.infer<typeof createInvestmentSchema>;
+export type CreateInvestment = z.infer<typeof createInvestmentSchema>;
 
 export const investmentFilterSchema = z.object({
   page: z.number()
@@ -110,7 +110,7 @@ export const investmentFilterSchema = z.object({
   ])
     .optional(),
 }).optional();
-export type InvestmentFilterSchema = z.infer<typeof investmentFilterSchema>;
+export type InvestmentFilter = z.infer<typeof investmentFilterSchema>;
 
 export const investmentSchema = z.object({
   id: z.number(),
@@ -130,15 +130,15 @@ export const investmentSchema = z.object({
     .nullable(),
   updatedAt: z.date(),
 });
-export type InvestmentSchema = z.infer<typeof investmentSchema>;
+export type Investment = z.infer<typeof investmentSchema>;
 
 export const investmentListSchema = z.array(investmentSchema);
-export type InvestmentListSchema = z.infer<typeof investmentListSchema>;
+export type InvestmentList = z.infer<typeof investmentListSchema>;
 
 export const investmentIdSchema = investmentSchema.pick({
   id: true,
 });
-export type InvestmentIdSchema = z.infer<typeof investmentIdSchema>;
+export type InvestmentId = z.infer<typeof investmentIdSchema>;
 
 export const updateInvestmentSchema = createInvestmentSchema.extend(investmentIdSchema.shape);
-export type UpdateInvestmentSchema = z.infer<typeof updateInvestmentSchema>;
+export type UpdateInvestment = z.infer<typeof updateInvestmentSchema>;

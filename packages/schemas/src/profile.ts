@@ -10,7 +10,7 @@ export const profileSchema = z.object({
   avatarUrl: z.string()
     .nullable(),
 });
-export type ProfileSchema = z.infer<typeof profileSchema>;
+export type Profile = z.infer<typeof profileSchema>;
 
 export const profileIdSchema = profileSchema.pick({ id: true });
 
@@ -19,7 +19,7 @@ export const profileUpdateSchema = profileSchema
     name: true,
     email: true,
   })
-export type ProfileUpdateSchema = z.infer<typeof profileUpdateSchema>;
+export type ProfileUpdate = z.infer<typeof profileUpdateSchema>;
 
 export const passwordUpdateSchema = z.object({
   password: z.string({ error: PROFILE.updatePassword.password.required })
@@ -36,7 +36,7 @@ export const passwordUpdateSchema = z.object({
       return PROFILE.updatePassword.newPassword.format
     }}),
 });
-export type PasswordUpdateSchema = z.infer<typeof passwordUpdateSchema>;
+export type PasswordUpdate = z.infer<typeof passwordUpdateSchema>;
 
 export const profilePictureSchema = z.file({ error: PROFILE.picture.required })
   .max(1_048_576, { error: PROFILE.picture.maxSize })
@@ -49,4 +49,4 @@ export const profilePictureSchema = z.file({ error: PROFILE.picture.required })
     "image/heic",
     "image/gif",
   ], { error: PROFILE.picture.valid })
-export type ProfilePictureSchema = z.infer<typeof profilePictureSchema>;
+export type ProfilePicture = z.infer<typeof profilePictureSchema>;
