@@ -2,14 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
+import DsSelect from "@components/ds/Select";
 import LogoutConfirmation from "@components/navbar/LogoutConfirmation";
-import DsButton from "@components/ds/Button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu";
 import { useTRPC } from "@utils/trpc";
 
 export default function Profile() {
@@ -29,24 +23,23 @@ export default function Profile() {
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <DsButton
-            loading={isLoading}
-            variant="outline">
-            {data?.name}
-          </DsButton>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={navigateToProfile}>
-            Profile
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsLogoutConfirmationOpen(true)}>
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <DsSelect
+        trigger={data?.name}
+        triggerProps={{
+          loading: isLoading,
+        }}
+        options={[
+          {
+            label: "Profile",
+            action: navigateToProfile,
+          },
+          {
+            label: "Logout",
+            action: () => setIsLogoutConfirmationOpen(true),
+          }
+        ]}
+        optionRender={({ label }) => label}
+        onSelect={({ action }) => action()} />
 
       <LogoutConfirmation
         open={isLogoutConfirmationOpen}

@@ -5,14 +5,10 @@ import { ArrowDownwardW700 } from "@material-symbols-svg/react/rounded/icons/arr
 import { LucideChevronDown } from "lucide-react";
 
 import { SORT_BY_OPTIONS } from "@app/definitions/constants/map";
+import type { SortByOption } from "@app/definitions/enums/sort";
 
+import DsSelect from "@components/ds/Select";
 import DsButton from "@components/ds/Button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu";
 import { InvestmentContext } from "@contexts/InvestmentList";
 
 export default function Filter() {
@@ -34,28 +30,14 @@ export default function Filter() {
 
   return (
     <div className="flex justify-end items-center gap-x-4">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <DsButton
-            variant="outline"
-            className="pl-3 pr-1.5!">
-            {SORT_BY_OPTIONS[sortBy]}
-            <span className="sr-only">
-              Sort By
-            </span>
-            <LucideChevronDown />
-          </DsButton>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {sortByOptions.map((optionKey) => (
-            <DropdownMenuItem
-              key={optionKey}
-              onClick={() => setSortBy(optionKey)}>
-              {SORT_BY_OPTIONS[optionKey]}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <DsSelect
+        trigger={<SelectTrigger sortBy={sortBy} />}
+        triggerProps={{
+          className: "pl-3 pr-1.5!",
+        }}
+        options={sortByOptions}
+        optionRender={(optionKey) => <span className="capitalize">{SORT_BY_OPTIONS[optionKey]}</span>}
+        onSelect={setSortBy} />
 
       <DsButton
         size="icon"
@@ -67,5 +49,17 @@ export default function Filter() {
         }
       </DsButton>
     </div>
+  );
+}
+
+function SelectTrigger({ sortBy }: { sortBy: SortByOption }) {
+  return (
+    <>
+      {SORT_BY_OPTIONS[sortBy]}
+      <span className="sr-only">
+        Sort By
+      </span>
+      <LucideChevronDown />
+    </>
   );
 }

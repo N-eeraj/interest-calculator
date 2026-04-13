@@ -20,27 +20,23 @@ import type { SchemeType } from "@app/definitions/enums/schemes";
 
 import DsInput from "@components/ds/Input";
 import DsRadio from "@components/ds/Radio";
-import DsButton from "@components/ds/Button";
+import DsSelect from "@components/ds/Select";
 import { Slider } from "@components/ui/slider";
 import { Switch } from "@components/ui/switch"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu";
+
+type TenureType = "month" | "year";
 
 interface Props extends HTMLAttributes<HTMLElement> {
   scheme: SchemeType;
   investment: number;
   tenure: number;
   isSeniorCitizen: boolean;
-  tenureType: "month" | "year";
+  tenureType: TenureType;
   setScheme: React.Dispatch<React.SetStateAction<SchemeType>>;
   setInvestment:  React.Dispatch<React.SetStateAction<number>>;
   setTenure: React.Dispatch<React.SetStateAction<number>>;
   setIsSeniorCitizen: React.Dispatch<React.SetStateAction<boolean>>;
-  setTenureType: React.Dispatch<React.SetStateAction<"month" | "year">>;
+  setTenureType: React.Dispatch<React.SetStateAction<TenureType>>;
 }
 
 export default function InvestmentForm({
@@ -122,24 +118,22 @@ export default function InvestmentForm({
           <label>
             Tenure
           </label>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <DsButton
-                variant="outline"
-                className="gap-x-1 h-full pr-1.5! capitalize">
+          <DsSelect
+            trigger={(
+              <>
                 {`${tenureType}s`}
-                <LucideChevronDown />
-              </DsButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setTenureType("month")}>
-                Months
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTenureType("year")}>
-                Years
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <LucideChevronDown /> 
+              </>
+            )}
+            options={[
+              "month",
+              "year",
+            ]}
+            triggerProps={{
+              className: "gap-x-1 h-full pr-1.5! capitalize",
+            }}
+            optionRender={(option) => <span className="capitalize">{option as string}s</span>}
+            onSelect={setTenureType} />
         </div>
         <DsInput
           value={tenure}
